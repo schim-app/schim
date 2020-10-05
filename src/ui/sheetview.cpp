@@ -9,6 +9,19 @@ SheetView::SheetView()
     setRubberBandSelectionMode(Qt::ContainsItemShape);
 }
 
+SheetView::SheetView(Sheet *sheet)
+{
+    setScene(new SheetScene(sheet));
+    setDragMode(DragMode::NoDrag);
+    setRubberBandSelectionMode(Qt::ContainsItemShape);
+    // TODO put common commands in the same place
+}
+
+SheetView::~SheetView()
+{
+    delete scene();
+}
+
 SheetScene *SheetView::scene()
 {
     return (SheetScene*) QGraphicsView::scene();

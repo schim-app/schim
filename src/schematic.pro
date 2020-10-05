@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,10 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     fileio/dxf.cpp \
+    fileio/xml.cpp \
+    global.cpp \
     main.cpp \
     model/header.cpp \
     model/line.cpp \
     model/object.cpp \
+    model/project.cpp \
     model/sheet.cpp \
     ui/mainwindow.cpp \
     ui/objects/gheader.cpp \
@@ -26,9 +29,12 @@ SOURCES += \
 
 HEADERS += \
     fileio/dxf.h \
+    fileio/xml.h \
+    global.h \
     model/header.h \
     model/line.h \
     model/object.h \
+    model/project.h \
     model/sheet.h \
     ui/mainwindow.h \
     ui/objects/gheader.h \

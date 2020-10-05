@@ -5,6 +5,8 @@
 
 #include <QGraphicsScene>
 
+class SheetView;
+
 class SheetScene : public QGraphicsScene
 {
     Sheet *sheet;
@@ -18,6 +20,9 @@ public:
     SheetScene();
 
     Sheet *getSheet();
+    void setSheet(Sheet *sheet);
+
+    friend class SheetView;
 };
 
 #endif // SCHEMATICSCENE_H

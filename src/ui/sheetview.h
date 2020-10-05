@@ -12,8 +12,12 @@ class SheetView : public QGraphicsView
 private:
 
 public:
-    /** Initialize a new SheetView with a blank Sheet with a default configuration. */
+    /** Initialize a new SheetView with a blank Sheet of a default configuration. */
     SheetView();
+    /** Initialize a new SheetView tied to the specified sheet */
+    SheetView(Sheet *sheet);
+
+    ~SheetView();
 
     SheetScene *scene();
 

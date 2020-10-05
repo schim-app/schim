@@ -7,9 +7,14 @@ SheetScene::SheetScene(Sheet *sheet)
 }
 
 SheetScene::SheetScene()
-    : SheetScene(new Sheet) { }
+    : SheetScene(nullptr) { }
 
 Sheet *SheetScene::getSheet()
 {
     return sheet;
+}
+
+void SheetScene::setSheet(Sheet *sheet)
+{
+    this->sheet = sheet;
 }
