@@ -16,11 +16,16 @@ public:
     const Object *getObject() const;
     Object *getObject();
 
+
+
     /**
      * Dynamically allocate a GObject, where the actual type depends on the type
      * of \param obj.
      */
-    GObject *createObject(Object *obj);
+    static GObject *assign(Object *obj);
+
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 
 #endif // GOBJECT_H

@@ -1,12 +1,12 @@
 #include "project.h"
 
 Project::Project()
-    : QList<Sheet*>()
+    : QList()
 {
 }
 
 Project::Project(const QList<Sheet *> &sheets)
-    : QList<Sheet*>(sheets)
+    : QList(sheets)
 {
 }
 

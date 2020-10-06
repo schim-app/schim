@@ -3,6 +3,7 @@
 
 #include "fileio/dxf.h"
 #include "ui/mainwindow.h"
+#include "global.h"
 
 // TODO temporary
 #include "model/project.h"
@@ -13,7 +14,7 @@
 void testDxf()
 {
     DL_Dxf *dxf = new DL_Dxf();
-    auto *obj = new Object;
+    auto *obj = new CompositeObject;
     DXFFilter filter(obj);
     bool success = dxf->in("../staging/no-contact.dxf", &filter);
     delete dxf;
@@ -30,10 +31,10 @@ void testXml()
 int main(int argc, char *argv[])
 {
     //TODO test
-    testXml();
+    testDxf();
     //ODOT test
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    mainWindow = new MainWindow;
+    mainWindow->show();
     return a.exec();
 }

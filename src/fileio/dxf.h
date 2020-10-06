@@ -5,13 +5,14 @@
 
 #include "model/line.h"
 #include "model/object.h"
+#include <model/compositeobject.h>
 
 class DXFFilter : public DL_CreationAdapter
 {
-    Object *obj;
+    CompositeObject *obj;
 public:
 
-    DXFFilter(Object *obj);
+    DXFFilter(CompositeObject *obj);
 
     virtual void addLine(const DL_LineData &d);
 };

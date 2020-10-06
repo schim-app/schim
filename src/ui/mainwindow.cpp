@@ -46,6 +46,16 @@ int MainWindow::getTabId() const
     return ui->tabView->currentIndex();
 }
 
+SheetView *MainWindow::getTab() const
+{
+    return (SheetView*) ui->tabView->currentWidget();
+}
+
+QLineEdit *MainWindow::getZoomDisplay() const
+{
+    return nullptr; //TODO implement
+}
+
 Sheet *MainWindow::getSheet()
 {
     return ((SheetView*) ui->tabView->currentWidget())->scene()->getSheet();
@@ -107,7 +117,7 @@ void MainWindow::appendSheet()
     vimdo {
         Sheet *sheet = new Sheet;
         activeProject->append(sheet);
-        ui->tabView->addTab(new SheetView(sheet), "New sheet");
+        ui->tabView->addTab(new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
@@ -120,7 +130,7 @@ void MainWindow::newSheetBefore()
     vimdo {
         Sheet *sheet = new Sheet;
         activeProject->insert(getTabId(), sheet);
-        ui->tabView->insertTab(getTabId(), new SheetView(sheet), "New sheet");
+        ui->tabView->insertTab(getTabId(), new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
@@ -133,7 +143,7 @@ void MainWindow::newSheetAfter()
     vimdo {
         Sheet *sheet = new Sheet;
         activeProject->insert(getTabId() + 1, sheet);
-        ui->tabView->insertTab(getTabId() + 1, new SheetView(sheet), "New sheet");
+        ui->tabView->insertTab(getTabId() + 1, new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
@@ -241,6 +251,9 @@ void MainWindow::setupActions()
         { new QAction("New sheet after", this), {},  {Qt::Key_G, Qt::Key_A}, &MainWindow::newSheetAfter },
         { new QAction("Close tab", this), {},  {Qt::Key_G, Qt::Key_D}, &MainWindow::closeTab },
         { new QAction("Sheet settings", this), {},  {Qt::CTRL + Qt::Key_G}, &MainWindow::openSheetSettings },
+        { new QAction("Zoom in", this), {Qt::CTRL + Qt::Key_Plus}, {Qt::Key_Z, Qt::Key_I}, &MainWindow::zoomIn},
+        { new QAction("Zoom out", this), {Qt::CTRL + Qt::Key_Minus}, {Qt::Key_Z, Qt::Key_O}, &MainWindow::zoomOut},
+        { new QAction("Reset zoom", this), {Qt::CTRL + Qt::Key_0}, {Qt::Key_Z, Qt::Key_Z}, &MainWindow::resetZoom},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
@@ -250,9 +263,12 @@ void MainWindow::setupActions()
         {
             auto qaction = std::get<0>(action); // Alias
             addAction(qaction);
-            // Add the vim keybinding as a shortcut to the action
+
             auto shortcuts = qaction->shortcuts();
-            shortcuts.push_back(std::get<2>(action));
+            // Add an additional keybinding to the action
+            shortcuts.append(std::get<1>(action));
+            // Add the vim keybinding as a shortcut to the action
+            shortcuts.append(std::get<2>(action));
             qaction->setShortcuts(shortcuts);
             if (std::get<3>(action) != nullptr)
                 connect(qaction, &QAction::triggered, this, std::get<3>(action));
@@ -266,7 +282,7 @@ void MainWindow::populateWithProject()
 {
     ui->tabView->clear();
     for (Sheet *sheet : *activeProject)
-        ui->tabView->addTab(new SheetView(sheet), sheet->getTitle());
+        ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
 }
 
 void MainWindow::clearTabs()
@@ -274,4 +290,19 @@ void MainWindow::clearTabs()
     for (int i = 0; i < ui->tabView->count(); ++i)
         delete ui->tabView->widget(i);
     ui->tabView->clear();
+}
+
+void MainWindow::zoomIn()
+{
+    vimdo getTab()->zoomIn();
+}
+
+void MainWindow::zoomOut()
+{
+    vimdo getTab()->zoomOut();
+}
+
+void MainWindow::resetZoom()
+{
+    getTab()->resetZoom();
 }

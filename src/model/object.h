@@ -1,18 +1,14 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include <QList>
-
 class Object
 {
 
-    QList<Object*> children;
+protected:
 
 public:
     Object();
-    ~Object();
-
-    virtual void addChild(Object *child);
+    virtual ~Object();
 };
 
 #endif // ELEMENT_H

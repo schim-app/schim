@@ -1,6 +1,6 @@
 #include "dxf.h"
 
-DXFFilter::DXFFilter(Object *obj)
+DXFFilter::DXFFilter(CompositeObject *obj)
 {
     this->obj = obj;
 }

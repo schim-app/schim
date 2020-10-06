@@ -11,15 +11,19 @@ class Sheet
 private:
     float width = 297, height = 210;
     QList<Object*> objects;
-    Header *header;
+    Header *header = new DefaultHeader;
     QString title{"New sheet"};
 
 public:
     Sheet();
+    ~Sheet();
 
     void addObject(Object *obj);
 
+    float getWidth() const;
+    float getHeight() const;
     QString getTitle() const;
+    Header *getHeader() const;
 
     void setTitle(const QString &title);
 };

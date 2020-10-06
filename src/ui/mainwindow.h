@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QList>
+#include <QLineEdit>
 
 #include <model/project.h>
 
@@ -29,6 +30,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    Ui::MainWindow *ui;
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -37,7 +40,9 @@ public:
     QTabWidget *getTabView() const;
     Sheet *getCurrentSheet() const;
     int getTabId() const;
+    SheetView *getTab() const;
     Sheet *getSheet();
+    QLineEdit *getZoomDisplay() const;
 
     // Setters
 
@@ -83,9 +88,11 @@ private: // Private methods
     void populateWithProject();
     /** Remove all tabs and destroy corresponding widgets */
     void clearTabs();
+    void zoomIn();
+    void zoomOut();
+    void resetZoom();
 
 private: // Private variables
-    Ui::MainWindow *ui;
     int _vimNumber = 0;
     bool vimEnabled = true; //TODO temporarily enabled
     // Actions that cannot be found in the menu + vim-ification of the ones that can

@@ -4,12 +4,14 @@
 #include "model/sheet.h"
 
 #include <QGraphicsScene>
+#include <QGraphicsItem>
 
 class SheetView;
 
 class SheetScene : public QGraphicsScene
 {
     Sheet *sheet;
+
 public:
     /**
      * Create a scene based on the specified sheet.
@@ -22,7 +24,16 @@ public:
     Sheet *getSheet();
     void setSheet(Sheet *sheet);
 
+private:
+
+    void sheetChanged();
+    void updatePageBackground(float zoomLevel);
+
     friend class SheetView;
+
+private:
+
+    QGraphicsRectItem *pageBackgroundItem;
 };
 
 #endif // SCHEMATICSCENE_H
