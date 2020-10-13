@@ -2,25 +2,32 @@
 #include "gline.h"
 #include "gobject.h"
 #include "grect.h"
+#include "global.h"
 
 #include <model/header.h>
 #include <model/rect.h>
 
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
+
 #define if_cast(TYPE, object) if (dynamic_cast<TYPE>(object))
 
-GObject::GObject()
+GObject::GObject(Object *obj)
+    : obj(obj)
 {
+    setFlags(
+                QGraphicsItem::ItemIsMovable |
+                QGraphicsItem::ItemIsSelectable
+                );
+    setAcceptHoverEvents(true);
 }
 
-GObject::GObject(Object *obj)
-    : obj(obj) { }
-
-const Object *GObject::getObject() const
+const Object *GObject::get() const
 {
     return obj;
 }
 
-Object *GObject::getObject()
+Object *GObject::get()
 {
     return obj;
 }
@@ -39,5 +46,21 @@ QRectF GObject::boundingRect() const
 
 void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    auto pen = painter->pen();
+
+    // The order is important
+    if (option->state & QStyle::State_MouseOver)
+        pen.setColor(colorHover);
+
+    if (option->state & QStyle::State_Selected)
+        pen.setColor(colorSelected);
+
+    painter->setPen(pen);
     return;
+}
+
+void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    update(boundingRect());
+    QGraphicsItem::hoverEnterEvent(event);
 }

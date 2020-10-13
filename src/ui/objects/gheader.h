@@ -4,14 +4,18 @@
 #include "gobject.h"
 #include "model/header.h"
 
+#include <QVariant>
+
 class GHeader : public GObject
 {
 public:
     GHeader(Header *obj);
-};
 
-class GDefaultHeader : public GHeader
-{
+    Header *get();
+    const Header *get() const;
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
 };
 
 #endif // GHEADER_H

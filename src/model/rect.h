@@ -3,17 +3,17 @@
 
 #include "object.h"
 
-#include <QPointF>
+#include <QRectF>
 
-class Rect : public Object
+class Rect : public Object, public QRectF
 {
-    QPointF pivot;
-    float width, height;
 
+    // In millimeters
+    float linewidth = 0.5;
     friend class GRect;
 
 public:
-    Rect(QPointF pivot, float width, float height);
+    Rect(qreal x, qreal y, qreal width, qreal height);
 
 };
 

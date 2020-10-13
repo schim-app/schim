@@ -7,6 +7,7 @@
 
 // TODO temporary
 #include "model/project.h"
+#include "model/line.h"
 #include "fileio/xml.h"
 
 // Temporary functions for testing
@@ -31,7 +32,7 @@ void testXml()
 int main(int argc, char *argv[])
 {
     //TODO test
-    testDxf();
+    //testDxf();
     //ODOT test
     QApplication a(argc, argv);
     mainWindow = new MainWindow;

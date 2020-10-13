@@ -40,7 +40,7 @@ public:
     QTabWidget *getTabView() const;
     Sheet *getCurrentSheet() const;
     int getTabId() const;
-    SheetView *getTab() const;
+    SheetView *getTab();
     Sheet *getSheet();
     QLineEdit *getZoomDisplay() const;
 
@@ -90,7 +90,11 @@ private: // Private methods
     void clearTabs();
     void zoomIn();
     void zoomOut();
-    void resetZoom();
+    void setZoom();
+    void scrollUp();
+    void scrollDown();
+    void scrollLeft();
+    void scrollRight();
 
 private: // Private variables
     int _vimNumber = 0;

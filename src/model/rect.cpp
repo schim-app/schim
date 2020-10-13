@@ -1,4 +1,4 @@
 #include "rect.h"
 
-Rect::Rect(QPointF pivot, float width, float height)
-    : Object(), pivot(pivot), width(width), height(height) { }
+Rect::Rect(qreal x, qreal y, qreal width, qreal height)
+    : Object(), QRectF(x, y, width, height) { }

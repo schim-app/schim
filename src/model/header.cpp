@@ -1,5 +1,7 @@
 #include "header.h"
 
+#include "line.h"
+
 Header::Header()
 {
 
@@ -8,5 +10,8 @@ Header::Header()
 DefaultHeader::DefaultHeader()
     : Header()
 {
-    children.append(new Rect({0, 0}, 297, 210)); //TODO temp values
+    children = {
+        new Rect(5, 5, 287, 195),
+        new Line(5, 180, 292, 180),
+    };
 }

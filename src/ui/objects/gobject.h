@@ -8,15 +8,13 @@
 
 class GObject : public QGraphicsItem
 {
+protected:
     Object *obj;
 public:
-    GObject();
     GObject(Object *obj);
 
-    const Object *getObject() const;
-    Object *getObject();
-
-
+    const Object *get() const;
+    Object *get();
 
     /**
      * Dynamically allocate a GObject, where the actual type depends on the type
@@ -26,6 +24,9 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+private:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 };
 
 #endif // GOBJECT_H

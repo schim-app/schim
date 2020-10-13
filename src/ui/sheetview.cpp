@@ -8,6 +8,8 @@
 #include <QScreen>
 #include <QTransform>
 #include <QTimer>
+#include <QApplication>
+#include <QWheelEvent>
 
 QTimer SheetView::timerDisplayZoom{nullptr};
 
@@ -35,26 +37,28 @@ SheetView::~SheetView()
 
 void SheetView::setZoom(float zoom)
 {
+    userZoom = qMin(qMax(zoom, 0.05f), 20.0f);
     resetTransform();
     scale(zoom * baselineZoom, zoom * baselineZoom);
     updateBackground();
 
     // Display the current zoom level
+    //TODO
 }
 
 void SheetView::resetZoom()
 {
-    setZoom(userZoom = 1);
+    setZoom(1);
 }
 
 void SheetView::zoomIn(float step)
 {
-    setZoom(userZoom *= step);
+    setZoom(userZoom * step);
 }
 
 void SheetView::zoomOut(float step)
 {
-    setZoom(userZoom /= step);
+    setZoom(userZoom / step);
 }
 
 SheetScene *SheetView::scene()
@@ -90,7 +94,7 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         setSceneRect(sRect);
         */
     }
-    //QGraphicsView::mouseMoveEvent(event);
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
@@ -104,7 +108,19 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
 
 void SheetView::resizeEvent(QResizeEvent *event)
 {
+    QGraphicsView::resizeEvent(event);
     recalculateBaselineZoom();
+}
+
+void SheetView::wheelEvent(QWheelEvent *event)
+{
+    if (QApplication::keyboardModifiers() & Qt::CTRL)
+    {
+        float delta = event->pixelDelta().isNull() ? event->angleDelta().y() / 600. : event->pixelDelta().y() / 1000.;
+        zoomIn(1 + delta);
+    }
+    else
+        QGraphicsView::wheelEvent(event);
 }
 
 void SheetView::init()
@@ -113,6 +129,7 @@ void SheetView::init()
     setRubberBandSelectionMode(Qt::ContainsItemShape);
     setMouseTracking(true);
     setTransformationAnchor(QGraphicsView::NoAnchor);
+    setRenderHint(QPainter::Antialiasing);
 }
 
 void SheetView::recalculateBaselineZoom()

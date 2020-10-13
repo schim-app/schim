@@ -23,7 +23,8 @@ public:
     float getWidth() const;
     float getHeight() const;
     QString getTitle() const;
-    Header *getHeader() const;
+    Header *getHeader();
+    QList<Object*> &getObjects();
 
     void setTitle(const QString &title);
 };

@@ -2,6 +2,7 @@
 
 #include <QSettings>
 #include <QFileInfo>
+#include <QColor>
 
 /**
  * Dynamically allocate a QSettings object and return a pointer to it.

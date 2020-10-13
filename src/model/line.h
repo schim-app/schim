@@ -3,14 +3,16 @@
 
 #include "object.h"
 
-#include <QPointF>
+#include <QLineF>
 
-class Line : public Object
+class Line : public Object, public QLineF
 {
-    QPointF start, end; // in millimeters
-    float linewidth = 0.5; // in millimeters
+    // Everything is in millimeters
+    float linewidth = 0.5;
 public:
-    Line(const QPointF &start, const QPointF &end);
+    Line(qreal x1, qreal y1, qreal x2, qreal y2);
+
+    friend class GLine;
 };
 
 #endif // LINE_H

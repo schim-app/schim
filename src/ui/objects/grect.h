@@ -7,7 +7,7 @@
 #include <QGraphicsRectItem>
 
 
-class GRect : public GObject, public QGraphicsRectItem
+class GRect : public GObject
 {
 public:
     GRect(Rect *obj);
@@ -15,6 +15,10 @@ public:
 public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QPainterPath shape() const;
+
+    Rect *get();
+    const Rect *get() const;
 };
 
 #endif // GRECT_H

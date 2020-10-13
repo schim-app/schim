@@ -7,14 +7,18 @@
 
 #include <QGraphicsLineItem>
 
-class GLine : public QGraphicsLineItem, public GObject
+class GLine : public GObject
 {
 public:
     GLine(Line *obj);
 
+    Line *get();
+    const Line *get() const;
+
     // QGraphicsItem interface
 public:
     QRectF boundingRect() const;
+    QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 

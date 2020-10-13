@@ -7,6 +7,7 @@
 #include <QDebug> //TODO remove
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,7 +47,7 @@ int MainWindow::getTabId() const
     return ui->tabView->currentIndex();
 }
 
-SheetView *MainWindow::getTab() const
+SheetView *MainWindow::getTab()
 {
     return (SheetView*) ui->tabView->currentWidget();
 }
@@ -253,7 +254,11 @@ void MainWindow::setupActions()
         { new QAction("Sheet settings", this), {},  {Qt::CTRL + Qt::Key_G}, &MainWindow::openSheetSettings },
         { new QAction("Zoom in", this), {Qt::CTRL + Qt::Key_Plus}, {Qt::Key_Z, Qt::Key_I}, &MainWindow::zoomIn},
         { new QAction("Zoom out", this), {Qt::CTRL + Qt::Key_Minus}, {Qt::Key_Z, Qt::Key_O}, &MainWindow::zoomOut},
-        { new QAction("Reset zoom", this), {Qt::CTRL + Qt::Key_0}, {Qt::Key_Z, Qt::Key_Z}, &MainWindow::resetZoom},
+        { new QAction("Reset zoom", this), {Qt::CTRL + Qt::Key_0}, {Qt::Key_Z, Qt::Key_Z}, &MainWindow::setZoom},
+        { new QAction("Scroll up", this), {}, {Qt::CTRL + Qt::Key_K}, &MainWindow::scrollUp},
+        { new QAction("Scroll down", this), {}, {Qt::CTRL + Qt::Key_J}, &MainWindow::scrollDown},
+        { new QAction("Scroll left", this), {}, {Qt::CTRL + Qt::Key_H}, &MainWindow::scrollLeft},
+        { new QAction("Scroll right", this), {}, {Qt::CTRL + Qt::Key_L}, &MainWindow::scrollRight},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
@@ -294,15 +299,55 @@ void MainWindow::clearTabs()
 
 void MainWindow::zoomIn()
 {
-    vimdo getTab()->zoomIn();
+    vimdo if (getTab()) getTab()->zoomIn();
 }
 
 void MainWindow::zoomOut()
 {
-    vimdo getTab()->zoomOut();
+    vimdo if (getTab()) getTab()->zoomOut();
 }
 
-void MainWindow::resetZoom()
+void MainWindow::setZoom()
 {
-    getTab()->resetZoom();
+    if (getTab() == nullptr) return;
+    if (_vimNumber == 0)
+        getTab()->resetZoom();
+    else
+        getTab()->setZoom(vimNumber() / 100.);
+}
+
+void MainWindow::scrollUp()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->verticalScrollBar();
+        bar->setValue(bar->value() - bar->singleStep());
+    }
+}
+
+void MainWindow::scrollDown()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->verticalScrollBar();
+        bar->setValue(bar->value() + bar->singleStep());
+    }
+}
+
+void MainWindow::scrollLeft()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->horizontalScrollBar();
+        bar->setValue(bar->value() - bar->singleStep());
+    }
+}
+
+void MainWindow::scrollRight()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->horizontalScrollBar();
+        bar->setValue(bar->value() + bar->singleStep());
+    }
 }
