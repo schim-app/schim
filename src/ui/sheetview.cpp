@@ -108,8 +108,8 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
 
 void SheetView::resizeEvent(QResizeEvent *event)
 {
-    QGraphicsView::resizeEvent(event);
     recalculateBaselineZoom();
+    QGraphicsView::resizeEvent(event);
 }
 
 void SheetView::wheelEvent(QWheelEvent *event)
@@ -128,7 +128,7 @@ void SheetView::init()
     setDragMode(DragMode::NoDrag);
     setRubberBandSelectionMode(Qt::ContainsItemShape);
     setMouseTracking(true);
-    setTransformationAnchor(QGraphicsView::NoAnchor);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setRenderHint(QPainter::Antialiasing);
 }
 
@@ -137,7 +137,7 @@ void SheetView::recalculateBaselineZoom()
     float widthRatio = parentWidget()->width() / scene()->sheet->getWidth();
     float heightRatio = parentWidget()->height() / scene()->sheet->getHeight();
 
-    baselineZoom = 0.95 * qMin(widthRatio, heightRatio);
+    baselineZoom = 0.9 * qMin(widthRatio, heightRatio);
     setZoom(userZoom);
 
     scene()->updatePageBackground(baselineZoom * userZoom);

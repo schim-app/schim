@@ -17,6 +17,8 @@ public:
     ~CompositeObject();
 
     virtual void addChild(Object *child);
+
+    friend class GCompositeObject;
 };
 
 #endif // COMPOSITEOBJECT_H

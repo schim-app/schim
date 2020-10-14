@@ -11,10 +11,13 @@ SheetScene::SheetScene(Sheet *sheet)
     if (sheet == nullptr) return;
 
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()}, {}, QColorConstants::White);
+
+    // Add the sheet header
+    addItem(GObject::assign(sheet->getHeader()));
+
     // Populate the scene with the sheet contents
     for (auto *obj : sheet->getObjects())
         addItem(GObject::assign(obj));
-    addItem(GObject::assign(sheet->getHeader()));
 }
 
 SheetScene::SheetScene()

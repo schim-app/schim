@@ -16,7 +16,7 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     GObject::paint(painter, option, widget);
 
     auto pen = painter->pen();
-    pen.setWidthF(get()->linewidth);
+    pen.setWidthF(get()->linewidth / 2);
     pen.setJoinStyle(Qt::MiterJoin);
     painter->setPen(pen);
     painter->drawRect(*get());

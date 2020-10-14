@@ -15,6 +15,8 @@ public:
 
     const Object *get() const;
     Object *get();
+    bool isHovered() const;
+    GObject *parentItem();
 
     /**
      * Dynamically allocate a GObject, where the actual type depends on the type
@@ -27,6 +29,10 @@ public:
 
 private:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+
+private:
+    bool hovered = false;
 };
 
 #endif // GOBJECT_H

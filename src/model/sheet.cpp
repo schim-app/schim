@@ -13,9 +13,11 @@ Sheet::Sheet()
     DXFFilter filter(obj);
     bool success = dxf->in("../staging/no-contact.dxf", &filter);
     delete dxf;
-    delete obj;
-    //ODOT temporary
+    obj->setPos({100,100});
+    objects.append(obj);
 
+    objects.append(new Line(200, 200, 240, 200));
+    //ODOT temporary
 }
 
 Sheet::~Sheet()

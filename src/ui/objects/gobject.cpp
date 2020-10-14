@@ -10,7 +10,7 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
-#define if_cast(TYPE, object) if (dynamic_cast<TYPE>(object))
+#define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
 
 GObject::GObject(Object *obj)
     : obj(obj)
@@ -20,6 +20,7 @@ GObject::GObject(Object *obj)
                 QGraphicsItem::ItemIsSelectable
                 );
     setAcceptHoverEvents(true);
+    setPos(obj->getPos());
 }
 
 const Object *GObject::get() const
@@ -32,11 +33,23 @@ Object *GObject::get()
     return obj;
 }
 
+bool GObject::isHovered() const
+{
+    return hovered;
+}
+
+GObject *GObject::parentItem()
+{
+    return (GObject *) QGraphicsItem::parentItem();
+}
+
 GObject *GObject::assign(Object *obj)
 {
-    if_cast(Line*, obj) return new GLine((Line*) obj);
-    if_cast(Rect*, obj) return new GRect((Rect*) obj);
-    if_cast(Header*, obj) return new GHeader((Header*) obj);
+    if_cast_return(Line, obj);
+    if_cast_return(Rect, obj);
+    if_cast_return(Header, obj);
+    if_cast_return(CompositeObject, obj);
+    return nullptr;
 }
 
 QRectF GObject::boundingRect() const
@@ -49,18 +62,28 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     auto pen = painter->pen();
 
     // The order is important
-    if (option->state & QStyle::State_MouseOver)
+    if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
         pen.setColor(colorHover);
 
-    if (option->state & QStyle::State_Selected)
+    if (isSelected() || (parentItem() && parentItem()->isSelected()))
         pen.setColor(colorSelected);
 
     painter->setPen(pen);
-    return;
 }
 
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    update(boundingRect());
+    if (dynamic_cast<GHeader*>(this)) return;
     QGraphicsItem::hoverEnterEvent(event);
+    update(boundingRect());
+    if (flags() & ItemIsSelectable)
+        hovered = true;
+}
+
+void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (dynamic_cast<GHeader*>(this)) return;
+    QGraphicsItem::hoverLeaveEvent(event);
+    if (flags() & ItemIsSelectable)
+        hovered = false;
 }

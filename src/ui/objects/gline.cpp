@@ -45,7 +45,7 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     GObject::paint(painter, option, widget);
     auto pen = painter->pen();
-    pen.setWidthF(get()->linewidth);
+    pen.setWidthF(get()->linewidth / 2);
     painter->setPen(pen);
     painter->drawLine(get()->x1(), get()->y1(), get()->x2(), get()->y2());
 }

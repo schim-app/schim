@@ -3,7 +3,7 @@
 #include "ui/sheetscene.h"
 
 GHeader::GHeader(Header *obj)
-    : GObject(obj)
+    : GCompositeObject(obj)
 {
     setFlags(0);
 }
@@ -29,6 +29,8 @@ QVariant GHeader::itemChange(QGraphicsItem::GraphicsItemChange change, const QVa
             scene()->addItem(assignee);
             assignee->setParentItem(this);
             assignee->setEnabled(false);
+            assignee->setFlag(ItemIsMovable, false);
+            assignee->setFlag(ItemIsSelectable, false);
         }
     return value;
 }
