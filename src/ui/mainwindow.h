@@ -37,10 +37,13 @@ public:
 
     // Getters
 
+	/** Return the tab widget */
     QTabWidget *getTabView() const;
-    Sheet *getCurrentSheet() const;
+	/** Return the current tab id*/
     int getTabId() const;
+	/** Return the current tab as a SheetView* */
     SheetView *getTab();
+    /** Return the Sheet* that is part of the currently active tab */
     Sheet *getSheet();
     QLineEdit *getZoomDisplay() const;
 

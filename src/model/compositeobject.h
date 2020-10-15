@@ -5,6 +5,10 @@
 
 #include <QList>
 
+/**
+ * An object that consists of other child objects.
+ * This is the most general representation of an object.
+ */
 class CompositeObject : public Object
 {
 

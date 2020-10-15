@@ -7,6 +7,10 @@
 #include "model/object.h"
 #include <model/compositeobject.h>
 
+/**
+ * A class that helps dxflib read a DXF file and generate a graphical object.
+ * Refer to the dxflib documentation.
+ */
 class DXFFilter : public DL_CreationAdapter
 {
     CompositeObject *obj;

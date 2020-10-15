@@ -7,29 +7,13 @@
 
 Sheet::Sheet()
 {
-    //TODO temporary
-    DL_Dxf *dxf = new DL_Dxf();
-    auto *obj = new CompositeObject;
-    DXFFilter filter(obj);
-    bool success = dxf->in("../staging/no-contact.dxf", &filter);
-    delete dxf;
-    obj->setPos({100,100});
-    objects.append(obj);
-
-    objects.append(new Line(200, 200, 240, 200));
-    //ODOT temporary
 }
 
 Sheet::~Sheet()
 {
-    for (auto *obj : objects)
+    for (auto *obj : *this)
         delete obj;
     delete header;
-}
-
-void Sheet::addObject(Object *obj)
-{
-    objects.append(obj);
 }
 
 float Sheet::getWidth() const
@@ -50,11 +34,6 @@ QString Sheet::getTitle() const
 Header *Sheet::getHeader()
 {
     return header;
-}
-
-QList<Object *> &Sheet::getObjects()
-{
-    return objects;
 }
 
 void Sheet::setTitle(const QString &title)

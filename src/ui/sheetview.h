@@ -1,5 +1,5 @@
-#ifndef SCHEMATICVIEW_H
-#define SCHEMATICVIEW_H
+#ifndef SHEETVIEW_H
+#define SHEETVIEW_H
 
 #include <QGraphicsView>
 
@@ -52,4 +52,4 @@ private:
 
 };
 
-#endif // SCHEMATICVIEW_H
+#endif // SHEETVIEW_H

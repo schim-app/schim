@@ -1,0 +1,7 @@
+===================
+Class documentation
+===================
+
+.. toctree::
+
+.. doxygenindex::

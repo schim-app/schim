@@ -1,15 +1,5 @@
 #include "object.h"
 
-Object::Object()
-{
-
-}
-
-Object::~Object()
-{
-
-}
-
 QPointF Object::getPos() const
 {
     return pos;

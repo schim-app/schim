@@ -5,6 +5,12 @@
 #include "rect.h"
 #include "compositeobject.h"
 
+/**
+ * Class representing a header for a sheet.
+ * It is a specialization of CompositeObject and its content is user
+ * configurable. For example, the user can enable/disable column and row markers
+ * and set their pattern.
+ */
 class Header : public CompositeObject
 {
     // Both of these strings represent bash-readable arrays

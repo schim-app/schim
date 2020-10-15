@@ -37,11 +37,6 @@ QTabWidget *MainWindow::getTabView() const
     return ui->tabView;
 }
 
-Sheet *MainWindow::getCurrentSheet() const
-{
-    return ((SheetView*) ui->tabView->currentWidget())->scene()->getSheet();
-}
-
 int MainWindow::getTabId() const
 {
     return ui->tabView->currentIndex();

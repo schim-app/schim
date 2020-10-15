@@ -1,5 +1,5 @@
-#ifndef SCHEMATICSCENE_H
-#define SCHEMATICSCENE_H
+#ifndef SHEETSCENE_H
+#define SHEETSCENE_H
 
 #include "model/sheet.h"
 
@@ -36,4 +36,4 @@ private:
     QGraphicsRectItem *pageBackgroundItem;
 };
 
-#endif // SCHEMATICSCENE_H
+#endif // SHEETSCENE_H

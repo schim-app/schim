@@ -14,10 +14,15 @@ help:
 
 .PHONY: help Makefile
 
+clean:
+	rm -rf _build/
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile doxygen
+	@scripts/gen-tree
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 doxygen:
+	@mkdir -p _build/doxygen
 	@doxygen

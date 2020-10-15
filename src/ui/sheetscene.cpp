@@ -16,7 +16,7 @@ SheetScene::SheetScene(Sheet *sheet)
     addItem(GObject::assign(sheet->getHeader()));
 
     // Populate the scene with the sheet contents
-    for (auto *obj : sheet->getObjects())
+    for (auto *obj : *sheet)
         addItem(GObject::assign(obj));
 }
 

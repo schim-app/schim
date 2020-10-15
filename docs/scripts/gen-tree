@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Print the project source tree
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+cd ../..
+
+source_dir="$PWD"
+
+tmpdir=/tmp/"$(shuf -er -n20 {A..Z} {a..z} {0..9} | awk '{printf "%s", $0}')"
+
+mkdir -p "$tmpdir"
+
+files="$(git ls-tree -r master | awk '{print $4}' | sed 's:\(.*\):'"$tmpdir"'/\1:')"
+
+mkdir -p $(dirname $files)
+
+touch $files
+
+cd "$tmpdir"
+
+tree | head -n -2 | tail -n +2 | sed 's/....//' > "$source_dir"/docs/_build/tree.txt
+
+rm -rf "$tmpdir"
+
+exit
+

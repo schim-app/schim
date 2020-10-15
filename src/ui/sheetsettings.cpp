@@ -22,15 +22,15 @@ void SheetSettings::setSheetId(int id)
 
 void SheetSettings::show()
 {
-    parent->getCurrentSheet();
-    ui->editSheetTitle->setText(parent->getCurrentSheet()->getTitle());
+    parent->getSheet();
+    ui->editSheetTitle->setText(parent->getSheet()->getTitle());
     ui->editSheetTitle->setFocus();
     QDialog::show();
 }
 
 void SheetSettings::accept()
 {
-    parent->getCurrentSheet()->setTitle(ui->editSheetTitle->text());
+    parent->getSheet()->setTitle(ui->editSheetTitle->text());
     parent->ui->tabView->setTabText(sheetId, ui->editSheetTitle->text());
     QDialog::accept();
 }

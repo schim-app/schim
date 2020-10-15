@@ -12,9 +12,9 @@
 QSettings *getSettingsObject(const QString &key)
 {
     if (key == "default_path")
-        return new QSettings("schematic", "volatile");
+        return new QSettings("schim", "volatile");
     else
-        return new QSettings("schematic", "schematic");
+        return new QSettings("schim", "schim");
 }
 
 void changeSetting(const QString &key, const QString &value, bool sync)

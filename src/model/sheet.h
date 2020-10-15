@@ -1,16 +1,18 @@
-#ifndef PAGE_H
-#define PAGE_H
+#ifndef SHEET_H
+#define SHEET_H
 
 #include <QList>
 
 #include "header.h"
 #include "object.h"
 
-class Sheet
+/**
+ * This class models a sheet of paper.
+ */
+class Sheet : public QList<Object*>
 {
 private:
     float width = 297, height = 210;
-    QList<Object*> objects;
     Header *header = new DefaultHeader;
     QString title{"New sheet"};
 
@@ -24,9 +26,8 @@ public:
     float getHeight() const;
     QString getTitle() const;
     Header *getHeader();
-    QList<Object*> &getObjects();
 
     void setTitle(const QString &title);
 };
 
-#endif // PAGE_H
+#endif // SHEET_H
