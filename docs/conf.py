@@ -42,5 +42,6 @@ highlight_language = 'cpp'
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
+html_favicon = '../img/icon.svg'
 
 html_static_path = ['_static']
