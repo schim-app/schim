@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Rename some objects that doxygen generates to have shorter names
+
+if [ -z "$1" ]; then
+	echo "You must specify an argument"
+	exit 1
+fi
+
+for file in "$1"/class*__inherit__graph.svg; do
+	mv "$file" "$(echo "$file" | sed 's/inherit__graph/inh/')"
+done

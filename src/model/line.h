@@ -7,8 +7,9 @@
 
 /**
  * Class that represents a line object.
- * It inherits QLineF as well so we don't have to implement convenience
- * functions that are already part of QLineF.
+ *
+ * It inherits QLineF so we don't have to reimplement convenience
+ * functions that QLineF already provides.
  */
 class Line : public Object, public QLineF
 {

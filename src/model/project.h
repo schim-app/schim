@@ -7,13 +7,15 @@
 #include <QString>
 
 /**
- * A project is essentially a list of sheets, along with some project properties.
+ * @brief A project is essentially a list of sheets, along with some project properties.
+ *
  * This class should always take care of the destruction of sheets.
  */
 class Project : public QList<Sheet*>
 {
     QString title{"Untitled Project"};
 public:
+    /** @brief Construct an empty project with default properties. */
     Project();
     Project(const QList<Sheet*> &sheets);
 

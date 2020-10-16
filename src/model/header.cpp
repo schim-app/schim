@@ -37,17 +37,17 @@ void DefaultHeader::update()
 
 void DefaultHeader::init()
 {
-    children = {
+    append({
         new Rect(5, 5, 287, 195),
         new Line(5, 180, 292, 180),
-    };
+    });
 }
 
 void DefaultHeader::clear()
 {
     // The optional objects start from a certain index
-    for (int i = 2; i < children.size(); ++i)
-        delete children[i];
+    for (int i = 2; i < size(); ++i)
+        delete (*this)[i];
 
-    children.erase(children.begin() + 2, children.end());
+    erase(begin() + 2, end());
 }

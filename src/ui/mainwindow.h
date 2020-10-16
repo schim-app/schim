@@ -30,7 +30,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    Ui::MainWindow *ui;
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -99,7 +98,8 @@ private: // Private methods
     void scrollLeft();
     void scrollRight();
 
-private: // Private variables
+private: // Private members
+    Ui::MainWindow *ui;
     int _vimNumber = 0;
     bool vimEnabled = true; //TODO temporarily enabled
     // Actions that cannot be found in the menu + vim-ification of the ones that can

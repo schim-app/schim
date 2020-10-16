@@ -8,11 +8,6 @@ CompositeObject::CompositeObject()
 
 CompositeObject::~CompositeObject()
 {
-    for (Object *child : children)
+    for (Object *child : *this)
         delete child;
-}
-
-void CompositeObject::addChild(Object *child)
-{
-    children.append(child);
 }

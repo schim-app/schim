@@ -5,16 +5,22 @@
 
 #include <QRectF>
 
+/**
+ * @brief Class that represents a Rectangle object.
+ *
+ * It inherits QRectF so we don't have to reimplement convenience
+ * functions that QRectF already provides.
+ */
 class Rect : public Object, public QRectF
 {
 
     // In millimeters
     float linewidth = 0.5;
-    friend class GRect;
 
 public:
     Rect(qreal x, qreal y, qreal width, qreal height);
 
+    friend class GRect;
 };
 
 #endif // RECT_H

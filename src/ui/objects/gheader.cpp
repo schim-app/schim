@@ -23,7 +23,7 @@ QVariant GHeader::itemChange(QGraphicsItem::GraphicsItemChange change, const QVa
     // When the header is added to a scene, add all its children as well and
     // set their parent to this
     if (change == ItemSceneHasChanged && scene() != nullptr)
-        for (auto *child : get()->children)
+        for (auto *child : *get())
         {
             auto *assignee = GObject::assign(child);
             scene()->addItem(assignee);

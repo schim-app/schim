@@ -23,7 +23,7 @@ Documentation
   * `Breathe <https://breathe.readthedocs.io/en/latest/index.html>`_
 
 Directory Structure
--------------------
+===================
 
 .. include:: ../_build/tree.txt
    :literal:

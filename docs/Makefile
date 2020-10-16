@@ -26,3 +26,4 @@ clean:
 doxygen:
 	@mkdir -p _build/doxygen
 	@doxygen
+	@scripts/rename _build/doxygen/html
