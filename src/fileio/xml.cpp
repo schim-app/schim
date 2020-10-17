@@ -8,12 +8,11 @@
 #include <iostream>
 #include <QDebug>
 
-#define read_xml_file(parsingOperation) \
+#define read_xml_file(filename) \
     QFile file(filename); \
     if (!file.open(QIODevice::ReadOnly)) \
         throw std::runtime_error("Unable to open XML file"); \
-    QXmlStreamReader stream(&file); \
-    parsingOperation \
+    QXmlStreamReader stream(&file)
 
 void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 {
@@ -31,9 +30,7 @@ void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 
 Project *xmlParseProject(const QString &filename)
 {
-    read_xml_file(
-
-    // Check if the root tag is appropriate
+    read_xml_file(filename);
     xmlTestRootTag(stream, "project");
 
     Project *project = new Project;
@@ -66,8 +63,6 @@ Project *xmlParseProject(const QString &filename)
         delete project;
         throw;
     }
-
-    );
 
     return project;
 }
@@ -182,11 +177,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 
 Header *xmlParseHeader(const QString &filename)
 {
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly))
-        throw std::runtime_error("Unable to open XML file");
-
-    QXmlStreamReader stream(&file);
+    read_xml_file(filename);
 
     xmlTestRootTag(stream, "header");
 
