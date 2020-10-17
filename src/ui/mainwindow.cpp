@@ -163,7 +163,6 @@ void MainWindow::openSheetSettings()
 
 void MainWindow::newProject()
 {
-    // TODO appropriately dispose of the previously active project
     delete activeProject;
     // Set the new project as active
     activeProject = new Project();

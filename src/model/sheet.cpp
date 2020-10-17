@@ -1,12 +1,13 @@
 #include "sheet.h"
 
-//TODO temporary
 #include "line.h"
-#include <dxflib/dl_dxf.h>
-#include <fileio/dxf.h>
+#include "global.h"
+#include "fileio/xml.h"
 
-Sheet::Sheet()
+Sheet::Sheet(bool defaultHeader)
 {
+    if (defaultHeader)
+        header = xmlParseHeader(QString(resolvePath("headers/defaultheader.xsym")));
 }
 
 Sheet::~Sheet()
@@ -36,7 +37,23 @@ Header *Sheet::getHeader()
     return header;
 }
 
+void Sheet::setWidth(float width)
+{
+    this->width = width;
+}
+
+void Sheet::setHeight(float height)
+{
+    this->height = height;
+}
+
 void Sheet::setTitle(const QString &title)
 {
     this->title = title;
+}
+
+void Sheet::setHeader(Header *header)
+{
+    delete this->header;
+    this->header = header;
 }

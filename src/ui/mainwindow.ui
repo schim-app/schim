@@ -101,6 +101,18 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <widget class="QDockWidget" name="dockSymbols">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="symbolList"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionNewSheet">
    <property name="text">
     <string>New sheet</string>

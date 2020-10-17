@@ -18,6 +18,10 @@ class Line : public Object, public QLineF
 public:
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
 
+    float getWidth() const;
+
+    void setWidth(float w);
+
     friend class GLine;
 };
 

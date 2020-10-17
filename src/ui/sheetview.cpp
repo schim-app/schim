@@ -10,6 +10,9 @@
 #include <QTimer>
 #include <QApplication>
 #include <QWheelEvent>
+#include <QMenu>
+#include <QString>
+#include <QCompleter>
 
 QTimer SheetView::timerDisplayZoom{nullptr};
 
@@ -28,6 +31,14 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
 
     recalculateBaselineZoom();
     updateBackground();
+
+    // Create actions
+    // TODO change this when vim becomes disable-able
+    QAction *actionInsert = new QAction;
+    actionInsert->setShortcut({Qt::Key_I});
+
+    addAction(actionInsert);
+    connect(actionInsert, &QAction::triggered, this, &SheetView::insertTriggered);
 }
 
 SheetView::~SheetView()
@@ -153,6 +164,22 @@ void SheetView::updateBackground()
     auto brush = QBrush(QColor(0, 0, 0, 48), Qt::Dense4Pattern);
     brush.setTransform(QTransform().scale(10 / zoom(), 10 / zoom()));
     setBackgroundBrush(brush);
+}
+
+void SheetView::insertTriggered()
+{
+    //TODO remove this
+    QStringList wordList;
+    wordList << "I" << "indigo" << "ind" << "india" << "am" << "boo boo";
+    QLineEdit *lineEdit = new QLineEdit(this);
+
+    QCompleter *completer = new QCompleter(wordList);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    lineEdit->setCompleter(completer);
+
+    lineEdit->move(QCursor::pos());
+    lineEdit->setFocus();
+    lineEdit->show();
 }
 
 int SheetView::initTimerDisplayZoom()

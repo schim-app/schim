@@ -18,21 +18,30 @@ class Sheet : public QList<Object*>
 {
 private:
     float width = 297, height = 210;
-    Header *header = new DefaultHeader;
+    Header *header = nullptr;
     QString title{"New sheet"};
 
 public:
-    Sheet();
+    Sheet(bool defaultHeader = true);
     ~Sheet();
-
-    void addObject(Object *obj);
 
     float getWidth() const;
     float getHeight() const;
     QString getTitle() const;
     Header *getHeader();
 
+    void setWidth(float width);
+    void setHeight(float height);
+    void setHeight() const;
     void setTitle(const QString &title);
+    /**
+     * @brief Set this sheet's header.
+     *
+     * The sheet becomes the owner of `header` and
+     * is responsible for its deletion when the sheet's
+     * destructor is called.
+     */
+    void setHeader(Header *header);
 };
 
 #endif // SHEET_H

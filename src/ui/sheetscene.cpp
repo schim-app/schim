@@ -2,6 +2,7 @@
 
 #include "objects/gobject.h"
 
+#include <QAction>
 #include <QColor>
 #include "objects/gline.h"
 
@@ -12,12 +13,14 @@ SheetScene::SheetScene(Sheet *sheet)
 
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()}, {}, QColorConstants::White);
 
-    // Add the sheet header
-    addItem(GObject::assign(sheet->getHeader()));
+    // Add the sheet header, if it is defined
+    if (sheet->getHeader())
+        addItem(GObject::assign(sheet->getHeader()));
 
     // Populate the scene with the sheet contents
     for (auto *obj : *sheet)
         addItem(GObject::assign(obj));
+
 }
 
 SheetScene::SheetScene()

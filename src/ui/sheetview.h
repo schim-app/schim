@@ -39,6 +39,7 @@ private:
     void recalculateBaselineZoom();
     float zoom() const;
     void updateBackground();
+    void insertTriggered();
 
     static int initTimerDisplayZoom();
 

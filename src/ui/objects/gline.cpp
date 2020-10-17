@@ -25,7 +25,7 @@ QPainterPath GLine::shape() const
 {
     // TODO what about a null line?
     QPolygonF poly;
-    qreal selectionOffset = 4 * get()->linewidth;
+    qreal selectionOffset = get()->linewidth;
     qreal radAngle = get()->angle() * M_PI / 180;
     qreal dx = selectionOffset * sin(radAngle);
     qreal dy = selectionOffset * cos(radAngle);
