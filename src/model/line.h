@@ -19,6 +19,7 @@ public:
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
 
     float getWidth() const;
+    QPointF getPos() const;
 
     void setWidth(float w);
 

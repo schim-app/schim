@@ -2,10 +2,8 @@
 #define GLOBAL_H
 
 #include <QVariant>
+#include <QColor>
 
-#include "ui/mainwindow.h"
-
-static MainWindow *mainWindow;
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
 
 #ifdef QT_DEBUG

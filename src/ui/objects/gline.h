@@ -22,9 +22,6 @@ public:
     void reload() override;
     void apply() override;
 
-    //TODO temp test
-    void update(const QRectF &rect = {});
-
 private:
 
     void handleChanged(GObjectHandle *handle) override;

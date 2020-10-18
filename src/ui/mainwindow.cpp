@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QScrollBar>
 
+MainWindow* MainWindow::instance{};
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -20,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     setupActions();
 
     connect(ui->tabView, &QTabWidget::tabCloseRequested, this, &MainWindow::tabCloseRequest);
+
+    instance = this;
 }
 
 MainWindow::~MainWindow()
@@ -355,4 +359,10 @@ void MainWindow::on_todoButton_pressed()
 {
     if (getTab() != nullptr)
         getTab()->viewport()->repaint();
+}
+
+//TODO remove
+void MainWindow::dispValue(const QString &str)
+{
+    ui->todoButton->setText(str);
 }

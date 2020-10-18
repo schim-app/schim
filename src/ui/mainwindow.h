@@ -52,6 +52,9 @@ public:
 
     void keyPressEvent(QKeyEvent *event) override;
 
+    //TODO remove
+    void dispValue(const QString &str);
+
 private slots:
     void tabCloseRequest(int index);
 
@@ -113,5 +116,8 @@ private: // Private members
 
     // Added so SheetSettings can use ui->tabView
     friend class SheetSettings;
+
+public:
+    static MainWindow *instance;
 };
 #endif // MAINWINDOW_H

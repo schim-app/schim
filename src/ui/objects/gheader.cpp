@@ -28,6 +28,7 @@ QVariant GHeader::itemChange(QGraphicsItem::GraphicsItemChange change, const QVa
         {
             auto *assignee = GObject::assign(child);
             scene()->addItem(assignee);
+            assignee->reload();
             assignee->setParentItem(this);
             assignee->setEnabled(false);
             assignee->setFlag(ItemIsMovable, false);

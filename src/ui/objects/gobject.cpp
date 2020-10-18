@@ -7,6 +7,8 @@
 #include <model/header.h>
 #include <model/rect.h>
 
+#include <QGraphicsSceneMouseEvent>
+
 #define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
 
 /***********
@@ -22,6 +24,7 @@ GObject::GObject(Object *obj)
                 );
     setAcceptHoverEvents(true);
     setPos(obj->getPos());
+    setRotation(0);
 }
 
 GObject::~GObject()
@@ -72,11 +75,8 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
         pen.setColor(colorHover);
 
-    if (_handleSelected || isSelected() || (parentItem() && parentItem()->isSelected()))
+    if (isSelected() || (parentItem() && parentItem()->isSelected()))
         pen.setColor(colorSelected);
-
-    //TODO temp
-    painter->drawEllipse(QRectF{-5, -5, 10, 10});
 
     painter->setPen(pen);
 }
@@ -100,7 +100,6 @@ void GObject::handleChanged(GObjectHandle *handle) { }
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     QGraphicsItem::hoverEnterEvent(event);
-    update();
     if (flags() & ItemIsSelectable)
         hovered = true;
 }
@@ -112,29 +111,18 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         hovered = false;
 }
 
-void GObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    _objectAboutToBeSelected = true;
-    QGraphicsItem::mousePressEvent(event);
-}
-
 QVariant GObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == QGraphicsItem::ItemSceneHasChanged && scene() != nullptr)
-        for (auto *handle : handles)
-        {
-            moveHandlesAbove();
-            scene()->addItem(handle);
-        }
-    else if (change == QGraphicsItem::ItemSelectedHasChanged)
     {
-        showHandles(_handleAboutToBeSelected || value.toBool());
-        if (value == false && !_handleAboutToBeSelected)
-            _handleSelected = false;
-        _handleAboutToBeSelected = false;
+        moveHandlesAbove();
+        for (auto *handle : handles)
+            scene()->addItem(handle);
     }
     else if (change == QGraphicsItem::ItemZValueHasChanged)
         moveHandlesAbove();
+    else if (change == QGraphicsItem::ItemSelectedHasChanged)
+        showHandles(value.toBool());
 
     return QGraphicsItem::itemChange(change, value);
 }
@@ -167,48 +155,45 @@ GObjectHandle::GObjectHandle(GObject *obj)
 
 }
 
-void GObjectHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QGraphicsRectItem::paint(painter, option, widget);
-}
-
 QVariant GObjectHandle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange)
-        obj->update();
+        obj->update(); //TODO 2
     else if (change == QGraphicsItem::ItemPositionHasChanged)
-        obj->handleChanged(this);
-    else if (change == QGraphicsItem::ItemSelectedHasChanged)
-    {
-        if (value == false && !obj->_objectAboutToBeSelected)
-        {
-            obj->_handleSelected = false;
-            obj->update();
-            obj->showHandles(false);
-        }
-        obj->_objectAboutToBeSelected = false;
-    } //TODO remove
+        obj->handleChanged(this); //TODO 3
 
     return QGraphicsRectItem::itemChange(change, value);
 }
 
 void GObjectHandle::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // This has to be before the superclass method call
-    if (!isSelected())
+    if (event->buttons() == Qt::LeftButton)
     {
-        obj->_handleAboutToBeSelected = true;
-        obj->_handleSelected = true;
+        _dragStartPos = event->scenePos();
+        event->accept();
     }
-    QGraphicsRectItem::mousePressEvent(event);
+    else
+        QGraphicsRectItem::mousePressEvent(event);
 }
 
-QPointF GObjectHandle::getCenterPos() const
+void GObjectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    return pos() + QPointF{1, 1};
+    if (event->buttons() == Qt::LeftButton)
+    {
+        auto delta = event->scenePos() - _dragStartPos;
+        moveBy(delta.x(), delta.y()); //TODO 1
+        _dragStartPos = event->scenePos();
+
+        event->accept();
+    }
+    else
+        QGraphicsRectItem::mouseMoveEvent(event);
 }
 
-void GObjectHandle::setCenterPos(const QPointF &position)
+void GObjectHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    setPos(position + QPointF{1, 1});
+    if (event->buttons() == Qt::LeftButton)
+        mouseMoveEvent(event);
+    else
+        QGraphicsRectItem::mouseMoveEvent(event);
 }

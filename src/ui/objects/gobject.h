@@ -3,6 +3,7 @@
 
 #include "model/object.h"
 #include "model/line.h"
+#include "ui/sheetscene.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsRectItem>
@@ -68,7 +69,6 @@ public:
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
@@ -77,7 +77,6 @@ private:
 
 private:
     bool hovered = false;
-    bool _handleAboutToBeSelected = false, _handleSelected = false, _objectAboutToBeSelected = false; //TODO
 
     friend class GObjectHandle;
 };
@@ -88,16 +87,16 @@ class GObjectHandle : public QGraphicsRectItem
 public:
     GObjectHandle(GObject *obj);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-    QPointF getCenterPos() const;
-    void setCenterPos(const QPointF &pos);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     GObject *obj;
+    bool selected = false;
+    QPointF _dragStartPos;
 
 };
 

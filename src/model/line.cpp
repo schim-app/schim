@@ -8,6 +8,11 @@ float Line::getWidth() const
     return linewidth;
 }
 
+QPointF Line::getPos() const
+{
+    return p1();
+}
+
 void Line::setWidth(float w)
 {
     linewidth = w;
