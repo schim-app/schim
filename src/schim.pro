@@ -20,6 +20,7 @@ SOURCES += \
     model/project.cpp \
     model/rect.cpp \
     model/sheet.cpp \
+    ui/commands.cpp \
     ui/mainwindow.cpp \
     ui/objects/gcompositeobject.cpp \
     ui/objects/gheader.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     model/project.h \
     model/rect.h \
     model/sheet.h \
+    ui/commands.h \
     ui/mainwindow.h \
     ui/objects/gcompositeobject.h \
     ui/objects/gheader.h \

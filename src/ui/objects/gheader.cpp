@@ -6,6 +6,7 @@ GHeader::GHeader(Header *obj)
     : GCompositeObject(obj)
 {
     setFlags(0);
+    setAcceptHoverEvents(false);
 }
 
 Header *GHeader::get()

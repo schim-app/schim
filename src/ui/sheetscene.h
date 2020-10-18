@@ -5,16 +5,20 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QUndoStack>
 
 class SheetView;
+class QMouseEvent;
 
 class SheetScene : public QGraphicsScene
 {
     Sheet *sheet;
+    QUndoStack undoStack{this};
 
 public:
     /**
-     * Create a scene based on the specified sheet.
+     * @brief Create a scene based on the specified sheet.
+     *
      * This should be considered the default constructor,
      * i.e. the one that contains the common functionality.
      */
@@ -22,18 +26,25 @@ public:
     SheetScene();
 
     Sheet *getSheet();
+
     void setSheet(Sheet *sheet);
+
+    /** @brief Start inserting a line into the sheet. */
+    void insertLine();
 
 private:
 
     void sheetChanged();
     void updatePageBackground(float zoomLevel);
 
+    void processInsertLine(QMouseEvent *event);
+
     friend class SheetView;
 
 private:
 
     QGraphicsRectItem *pageBackgroundItem;
+    bool _insertingLine;
 };
 
 #endif // SHEETSCENE_H

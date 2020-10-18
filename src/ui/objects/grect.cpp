@@ -8,7 +8,8 @@ GRect::GRect(Rect *obj)
 
 QRectF GRect::boundingRect() const
 {
-    return shape().boundingRect();
+    float infl = get()->linewidth;
+    return get()->marginsAdded({infl, infl, infl, infl});
 }
 
 void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -24,12 +25,13 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 QPainterPath GRect::shape() const
 {
-    float infl = 2 * get()->linewidth;
+    float infl = get()->linewidth;
     QRectF outer = get()->marginsAdded({infl, infl, infl, infl}),
-            inner = get()->marginsRemoved({1.5 * infl, 1.5 * infl, 1.5 *infl, 1.5 * infl});
+            inner = get()->marginsRemoved({infl, infl, infl, infl});
 
     QPainterPath path;
-    path.addRegion(QRegion(outer.toRect()).subtracted(inner.toRect()));
+    path.addRect(outer);
+    path.addRect(inner);
 
     return path;
 }

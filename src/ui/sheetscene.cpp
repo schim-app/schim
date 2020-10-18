@@ -36,6 +36,11 @@ void SheetScene::setSheet(Sheet *sheet)
     this->sheet = sheet;
 }
 
+void SheetScene::insertLine()
+{
+    _insertingLine = true;
+}
+
 /*****************
  * Miscellaneous *
 ******************/
@@ -50,4 +55,8 @@ void SheetScene::updatePageBackground(float zoomLevel)
     auto pen = pageBackgroundItem->pen();
     pen.setWidth(1 / zoomLevel);
     pageBackgroundItem->setPen(pen);
+}
+
+void SheetScene::processInsertLine(QMouseEvent *event)
+{
 }

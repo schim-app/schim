@@ -191,6 +191,11 @@ void MainWindow::openProject()
     }
 }
 
+void MainWindow::insertLine()
+{
+    getTab()->scene()->insertLine();
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -256,6 +261,7 @@ void MainWindow::setupActions()
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
+        { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
     };
     if (vimEnabled)
         for (auto action : additionalActions)

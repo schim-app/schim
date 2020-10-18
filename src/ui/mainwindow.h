@@ -68,6 +68,8 @@ private slots:
     void newProject();
     void openProject();
 
+    void insertLine();
+
 private: // Private methods
 
     // Vim-specific stuff

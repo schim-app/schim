@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Schim - New Sheet</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../img/icon.svg</normaloff>../../img/icon.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -100,6 +104,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionInsertLine"/>
   </widget>
   <widget class="QDockWidget" name="dockSymbols">
    <attribute name="dockWidgetArea">
@@ -135,6 +140,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionInsertLine">
+   <property name="text">
+    <string>Insert Line</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert a line</string>
    </property>
   </action>
  </widget>
