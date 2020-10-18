@@ -350,3 +350,9 @@ void MainWindow::scrollRight()
         bar->setValue(bar->value() + bar->singleStep());
     }
 }
+
+void MainWindow::on_todoButton_pressed()
+{
+    if (getTab() != nullptr)
+        getTab()->viewport()->repaint();
+}

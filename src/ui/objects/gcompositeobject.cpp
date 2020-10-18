@@ -27,6 +27,9 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
             assignee->setParentItem(this);
             assignee->setFlags(0);
         }
+    else
+        return GObject::itemChange(change, value);
+
     return value;
 }
 

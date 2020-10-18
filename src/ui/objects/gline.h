@@ -6,6 +6,7 @@
 #include "ui/objects/gobject.h"
 
 #include <QGraphicsLineItem>
+#include <QVariant>
 
 class GLine : public GObject
 {
@@ -15,11 +16,19 @@ public:
     Line *get();
     const Line *get() const;
 
-    // QGraphicsItem interface
-public:
-    QRectF boundingRect() const;
     QPainterPath shape() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    void reload() override;
+    void apply() override;
+
+    //TODO temp test
+    void update(const QRectF &rect = {});
+
+private:
+
+    void handleChanged(GObjectHandle *handle) override;
+
 };
 
 #endif // GLINE_H

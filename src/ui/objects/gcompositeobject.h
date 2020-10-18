@@ -13,7 +13,7 @@ public:
     CompositeObject *get();
     const CompositeObject *get() const;
 
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
     QPainterPath shape() const override;
     QRectF boundingRect() const override;

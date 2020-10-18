@@ -5,14 +5,26 @@
 #include "model/line.h"
 
 #include <QGraphicsItem>
+#include <QGraphicsRectItem>
+#include <QPen>
+#include <QBrush>
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
+
+class GObjectHandle;
 
 class GObject : public QGraphicsItem
 {
 protected:
     /** The object that is being wrapped */
     Object *obj;
+    QList<GObjectHandle*> handles;
+
 public:
     GObject(Object *obj);
+    virtual ~GObject();
+
+    // Getters
 
     /**
      * @brief Return the object that is being wrapped by this class
@@ -41,12 +53,52 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-private:
+    /**
+     * @brief Update the graphical representation to match the object from the model.
+     */
+    virtual void reload();
+    /**
+     * @brief Apply changes to the underlying model object.
+     */
+    virtual void apply();
+
+    virtual void showHandles(bool show = true);
+    virtual void handleChanged(GObjectHandle *handle);
+
+protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+
+private:
+    void moveHandlesAbove();
 
 private:
     bool hovered = false;
+    bool _handleAboutToBeSelected = false, _handleSelected = false, _objectAboutToBeSelected = false; //TODO
+
+    friend class GObjectHandle;
+};
+
+class GObjectHandle : public QGraphicsRectItem
+{
+
+public:
+    GObjectHandle(GObject *obj);
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+    QPointF getCenterPos() const;
+    void setCenterPos(const QPointF &pos);
+
+private:
+    GObject *obj;
+
 };
 
 #endif // GOBJECT_H

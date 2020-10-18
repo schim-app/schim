@@ -113,6 +113,13 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <widget class="QPushButton" name="todoButton">
+       <property name="text">
+        <string>todoButton</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QListWidget" name="symbolList"/>
      </item>
     </layout>

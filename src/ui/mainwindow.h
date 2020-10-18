@@ -70,6 +70,8 @@ private slots:
 
     void insertLine();
 
+    void on_todoButton_pressed();
+
 private: // Private methods
 
     // Vim-specific stuff
