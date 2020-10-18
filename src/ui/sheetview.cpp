@@ -16,18 +16,11 @@
 
 QTimer SheetView::timerDisplayZoom{nullptr};
 
-SheetView::SheetView()
-{
-    setScene(new SheetScene());
-    init();
-}
-
 SheetView::SheetView(Sheet *sheet, QWidget *parent)
     : QGraphicsView(parent)
 {
     setScene(new SheetScene(sheet));
     init();
-    // TODO put common commands in the same place
 
     recalculateBaselineZoom();
     updateBackground();
@@ -98,12 +91,6 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         QPointF translation = mapToScene(event->pos()) - mapToScene(_panStartPos);
         translate(translation.x(), translation.y());
         _panStartPos = event->pos();
-
-        /* TODO maybe enable this version of the functionality
-        QRectF sRect = sceneRect();
-        sRect.translate(translation);
-        setSceneRect(sRect);
-        */
     }
     QGraphicsView::mouseMoveEvent(event);
 }

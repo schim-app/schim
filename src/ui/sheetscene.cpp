@@ -45,11 +45,6 @@ void SheetScene::insertLine()
  * Miscellaneous *
 ******************/
 
-void SheetScene::sheetChanged()
-{
-    // TODO implement
-}
-
 void SheetScene::updatePageBackground(float zoomLevel)
 {
     auto pen = pageBackgroundItem->pen();

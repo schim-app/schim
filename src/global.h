@@ -27,8 +27,6 @@ void changeSetting(const QString &key, const QString &value, bool sync = true);
  * @param defaultValue Fallback value if the setting is not found
  */
 QVariant getSetting(const QString &key, const QString &defaultValue);
-/** Return the path to the specified symbol or macro. The path can be either absolute or relative. */
-QString findObject(const QString &name);
 
 QString resolvePath(const QString &path);
 

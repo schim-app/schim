@@ -39,11 +39,6 @@ QVariant getSetting(const QString &key, const QString &defaultValue)
     return value;
 }
 
-QString findObject(const QString &name)
-{
-    //TODO implement
-}
-
 QString resolvePath(const QString &path)
 {
     if (QFile(path).exists()) // The supplied path is either absolute or relative to the installation folder

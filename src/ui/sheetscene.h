@@ -34,7 +34,6 @@ public:
 
 private:
 
-    void sheetChanged();
     void updatePageBackground(float zoomLevel);
 
     void processInsertLine(QMouseEvent *event);

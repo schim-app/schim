@@ -13,9 +13,17 @@ class SheetView : public QGraphicsView
 {
 
 public:
-    /** Initialize a new SheetView with a blank Sheet of a default configuration. */
-    SheetView();
-    /** Initialize a new SheetView tied to the specified sheet */
+    /**
+     * @brief This constructor is only used so that the MainWindow ui can be generated properly.
+     *
+     * It is not to be called elsewhere.
+     */
+    SheetView() = default;
+    /**
+     * @brief Initialize a new SheetView tied to the specified sheet.
+     *
+     * This is the constructor that implements common functionality.
+     */
     SheetView(Sheet *sheet, QWidget *parent = nullptr);
 
     ~SheetView();

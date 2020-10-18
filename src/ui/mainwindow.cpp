@@ -4,7 +4,6 @@
 #include "global.h"
 #include "fileio/xml.h"
 
-#include <QDebug> //TODO remove
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QScrollBar>
