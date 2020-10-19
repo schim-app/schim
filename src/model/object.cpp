@@ -2,10 +2,7 @@
 
 QPointF Object::getPos() const
 {
-    return pos;
+    return {};
 }
 
-void Object::setPos(const QPointF &pos)
-{
-    this->pos = pos;
-}
+void Object::setPos(const QPointF &pos) { }

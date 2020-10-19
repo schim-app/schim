@@ -143,7 +143,7 @@ Line *xmlParseLine(QXmlStreamReader &stream)
             throw std::logic_error("Line attributes are of invalid format");
     }
     Line *line = new Line(x1, y1, x2, y2);
-    line->setWidth(linewidth);
+    line->setLinewidth(linewidth);
     return line;
 }
 

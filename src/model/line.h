@@ -19,9 +19,10 @@ public:
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
 
     float getWidth() const;
-    QPointF getPos() const;
+    QPointF getPos() const override;
 
-    void setWidth(float w);
+    void setLinewidth(float w);
+    void setPos(const QPointF &pos) override;
 
     friend class GLine;
 };

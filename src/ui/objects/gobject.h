@@ -19,7 +19,8 @@ class GObject : public QGraphicsItem
 protected:
     /** The object that is being wrapped */
     Object *obj;
-    QList<GObjectHandle*> handles;
+    /** Dynamically allocated list of handles */
+    QList<GObjectHandle*> *handles{};
 
 public:
     GObject(Object *obj);
@@ -63,6 +64,18 @@ public:
      */
     virtual void apply();
 
+    /**
+     * @brief Display the move/resize/etc. handles for this item.
+     *
+     * The list of handles is dynamically allocated and it exists
+     * only while the handles are visible. This way, the handles
+     * do not take up memory when they are not used.
+     *
+     * @note The base version of this method implements only the
+     * deletion of handles, i.e. when `show = true`.
+     * Each subclass should implement this this method separately,
+     * optionally calling the superclass method **but only as the last statement**.
+     */
     virtual void showHandles(bool show = true);
     virtual void handleChanged(GObjectHandle *handle);
 
@@ -91,7 +104,6 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     GObject *obj;

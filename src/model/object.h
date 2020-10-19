@@ -18,7 +18,6 @@ class Object
 {
 private:
     // The position in the sheet of the upper-left corner of the object
-    QPointF pos;
 
 protected:
 
@@ -35,12 +34,12 @@ public:
     /**
      * @brief Return the position of the object in the sheet.
      */
-    QPointF getPos() const;
+    virtual QPointF getPos() const;
 
     /**
      * @brief Set the position of the object in the sheet.
      */
-    void setPos(const QPointF &pos);
+    virtual void setPos(const QPointF &pos);
 
     friend class GObject;
 

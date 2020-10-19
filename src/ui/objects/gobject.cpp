@@ -20,7 +20,8 @@ GObject::GObject(Object *obj)
 {
     setFlags(
                 QGraphicsItem::ItemIsMovable |
-                QGraphicsItem::ItemIsSelectable
+                QGraphicsItem::ItemIsSelectable |
+                ItemSendsGeometryChanges
                 );
     setAcceptHoverEvents(true);
     setPos(obj->getPos());
@@ -29,8 +30,12 @@ GObject::GObject(Object *obj)
 
 GObject::~GObject()
 {
-    for (auto *handle : handles)
-        delete handle;
+    if (handles != nullptr)
+    {
+        for (auto *handle : *handles)
+            delete handle;
+        delete handles;
+    }
 }
 
 const Object *GObject::get() const
@@ -67,7 +72,7 @@ QRectF GObject::boundingRect() const
     return childrenBoundingRect();
 }
 
-void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     auto pen = painter->pen();
 
@@ -87,15 +92,18 @@ void GObject::apply() { }
 
 void GObject::showHandles(bool show)
 {
-    if (show)
-        for (auto *handle : handles)
-            handle->show();
-    else
-        for (auto *handle : handles)
-            handle->hide();
+    if (show && handles == nullptr)
+        moveHandlesAbove();
+    if (!show && handles != nullptr)
+    {
+        for (auto *handle : *handles)
+            delete handle;
+        delete handles;
+        handles = nullptr;
+    }
 }
 
-void GObject::handleChanged(GObjectHandle *handle) { }
+void GObject::handleChanged(GObjectHandle *) { }
 
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
@@ -113,13 +121,7 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 QVariant GObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    if (change == QGraphicsItem::ItemSceneHasChanged && scene() != nullptr)
-    {
-        moveHandlesAbove();
-        for (auto *handle : handles)
-            scene()->addItem(handle);
-    }
-    else if (change == QGraphicsItem::ItemZValueHasChanged)
+    if (change == QGraphicsItem::ItemZValueHasChanged)
         moveHandlesAbove();
     else if (change == QGraphicsItem::ItemSelectedHasChanged)
         showHandles(value.toBool());
@@ -129,8 +131,9 @@ QVariant GObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVa
 
 void GObject::moveHandlesAbove()
 {
-    for (auto *handle : handles)
-        handle->setZValue(zValue() + 1);
+    if (handles != nullptr)
+        for (auto *handle : *handles)
+            handle->setZValue(zValue() + 1);
 }
 
 /*****************
@@ -141,7 +144,6 @@ GObjectHandle::GObjectHandle(GObject *obj)
     : QGraphicsRectItem(-1, -1, 2, 2),
       obj(obj)
 {
-    hide();
     setAcceptHoverEvents(false);
     setFlags(ItemSendsGeometryChanges);
 
@@ -157,10 +159,8 @@ GObjectHandle::GObjectHandle(GObject *obj)
 
 QVariant GObjectHandle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    if (change == QGraphicsItem::ItemPositionChange)
-        obj->update(); //TODO 2
-    else if (change == QGraphicsItem::ItemPositionHasChanged)
-        obj->handleChanged(this); //TODO 3
+    if (change == QGraphicsItem::ItemPositionHasChanged)
+        obj->handleChanged(this);
 
     return QGraphicsRectItem::itemChange(change, value);
 }
@@ -186,14 +186,6 @@ void GObjectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         event->accept();
     }
-    else
-        QGraphicsRectItem::mouseMoveEvent(event);
-}
-
-void GObjectHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->buttons() == Qt::LeftButton)
-        mouseMoveEvent(event);
     else
         QGraphicsRectItem::mouseMoveEvent(event);
 }

@@ -13,7 +13,12 @@ QPointF Line::getPos() const
     return p1();
 }
 
-void Line::setWidth(float w)
+void Line::setLinewidth(float w)
 {
     linewidth = w;
+}
+
+void Line::setPos(const QPointF &pos)
+{
+    setP1(pos);
 }

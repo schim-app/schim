@@ -20,6 +20,10 @@ class Rect : public Object, public QRectF
 public:
     Rect(qreal x, qreal y, qreal width, qreal height);
 
+    QPointF getPos() const override;
+
+    void setPos(const QPointF &pos) override;
+
     friend class GRect;
 };
 
