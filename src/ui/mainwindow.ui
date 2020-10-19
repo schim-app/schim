@@ -89,8 +89,18 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndoInSheet"/>
+    <addaction name="actionRedoInSheet"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuSheet"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -155,6 +165,44 @@
    </property>
    <property name="toolTip">
     <string>Insert a line</string>
+   </property>
+  </action>
+  <action name="actionUndoInSheet">
+   <property name="text">
+    <string>Undo in sheet</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo the last action in the current sheet</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedoInSheet">
+   <property name="text">
+    <string>Redo in sheet</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo in the current sheet</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>

@@ -49,15 +49,12 @@ private:
     void updateBackground();
     void insertTriggered();
 
-    static int initTimerDisplayZoom();
-
 private:
 
     // Used to compensate for different screen sizes
     float baselineZoom = 1, userZoom = 1;
 
     QPoint _panStartPos;
-    static QTimer timerDisplayZoom;
 
 };
 

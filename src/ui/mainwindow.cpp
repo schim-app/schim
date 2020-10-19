@@ -194,6 +194,82 @@ void MainWindow::openProject()
     }
 }
 
+void MainWindow::save()
+{
+}
+
+void MainWindow::saveAs()
+{
+
+}
+
+void MainWindow::zoomIn()
+{
+    vimdo if (getTab()) getTab()->zoomIn();
+}
+
+void MainWindow::zoomOut()
+{
+    vimdo if (getTab()) getTab()->zoomOut();
+}
+
+void MainWindow::setZoom()
+{
+    if (getTab() == nullptr) return;
+    if (_vimNumber == 0)
+        getTab()->resetZoom();
+    else
+        getTab()->setZoom(vimNumber() / 100.);
+}
+
+void MainWindow::scrollUp()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->verticalScrollBar();
+        bar->setValue(bar->value() - bar->singleStep());
+    }
+}
+
+void MainWindow::scrollDown()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->verticalScrollBar();
+        bar->setValue(bar->value() + bar->singleStep());
+    }
+}
+
+void MainWindow::scrollLeft()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->horizontalScrollBar();
+        bar->setValue(bar->value() - bar->singleStep());
+    }
+}
+
+void MainWindow::scrollRight()
+{
+    if (getTab() == nullptr) return;
+    vimdo {
+        auto *bar = getTab()->horizontalScrollBar();
+        bar->setValue(bar->value() + bar->singleStep());
+    }
+}
+
+void MainWindow::undoInSheet()
+{
+    if (getTab() != nullptr)
+        getTab()->scene()->undo();
+}
+
+void MainWindow::redoInSheet()
+{
+    if (getTab() != nullptr)
+        getTab()->scene()->redo();
+}
+
 void MainWindow::insertLine()
 {
     getTab()->scene()->insertLine();
@@ -263,8 +339,12 @@ void MainWindow::setupActions()
         { new QAction("Scroll right", this), {}, {Qt::CTRL + Qt::Key_L}, &MainWindow::scrollRight},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
+        { ui->actionSave, {}, {}, &MainWindow::save},
+        { ui->actionSaveAs, {}, {}, &MainWindow::saveAs},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
         { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
+        { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet},
+        { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet},
     };
     if (vimEnabled)
         for (auto action : additionalActions)
@@ -298,61 +378,6 @@ void MainWindow::clearTabs()
     for (int i = 0; i < ui->tabView->count(); ++i)
         delete ui->tabView->widget(i);
     ui->tabView->clear();
-}
-
-void MainWindow::zoomIn()
-{
-    vimdo if (getTab()) getTab()->zoomIn();
-}
-
-void MainWindow::zoomOut()
-{
-    vimdo if (getTab()) getTab()->zoomOut();
-}
-
-void MainWindow::setZoom()
-{
-    if (getTab() == nullptr) return;
-    if (_vimNumber == 0)
-        getTab()->resetZoom();
-    else
-        getTab()->setZoom(vimNumber() / 100.);
-}
-
-void MainWindow::scrollUp()
-{
-    if (getTab() == nullptr) return;
-    vimdo {
-        auto *bar = getTab()->verticalScrollBar();
-        bar->setValue(bar->value() - bar->singleStep());
-    }
-}
-
-void MainWindow::scrollDown()
-{
-    if (getTab() == nullptr) return;
-    vimdo {
-        auto *bar = getTab()->verticalScrollBar();
-        bar->setValue(bar->value() + bar->singleStep());
-    }
-}
-
-void MainWindow::scrollLeft()
-{
-    if (getTab() == nullptr) return;
-    vimdo {
-        auto *bar = getTab()->horizontalScrollBar();
-        bar->setValue(bar->value() - bar->singleStep());
-    }
-}
-
-void MainWindow::scrollRight()
-{
-    if (getTab() == nullptr) return;
-    vimdo {
-        auto *bar = getTab()->horizontalScrollBar();
-        bar->setValue(bar->value() + bar->singleStep());
-    }
 }
 
 void MainWindow::on_todoButton_pressed()

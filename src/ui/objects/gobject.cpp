@@ -119,12 +119,17 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         hovered = false;
 }
 
-QVariant GObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if (change == QGraphicsItem::ItemZValueHasChanged)
+    if (change == ItemZValueHasChanged)
         moveHandlesAbove();
-    else if (change == QGraphicsItem::ItemSelectedHasChanged)
+    else if (change == ItemSelectedHasChanged)
         showHandles(value.toBool());
+    else if (change == ItemSceneHasChanged && value.isNull())
+    {
+        setSelected(false);
+        hovered = false;
+    }
 
     return QGraphicsItem::itemChange(change, value);
 }

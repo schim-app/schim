@@ -70,7 +70,17 @@ private slots:
     void openSheetSettings();
     void newProject();
     void openProject();
-
+    void save();
+    void saveAs();
+    void zoomIn();
+    void zoomOut();
+    void setZoom();
+    void scrollUp();
+    void scrollDown();
+    void scrollLeft();
+    void scrollRight();
+    void undoInSheet();
+    void redoInSheet();
     void insertLine();
 
     void on_todoButton_pressed();
@@ -97,13 +107,6 @@ private: // Private methods
     void populateWithProject();
     /** Remove all tabs and destroy corresponding widgets */
     void clearTabs();
-    void zoomIn();
-    void zoomOut();
-    void setZoom();
-    void scrollUp();
-    void scrollDown();
-    void scrollLeft();
-    void scrollRight();
 
 private: // Private members
     Ui::MainWindow *ui;

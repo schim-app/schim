@@ -31,10 +31,14 @@ public:
 
     /** @brief Start inserting a line into the sheet. */
     void insertLine();
+    void undo();
+    void redo();
 
 private:
 
     void updatePageBackground(float zoomLevel);
+
+    void keyPressEvent(QKeyEvent *event) override;
 
     void processInsertLine(QMouseEvent *event);
 

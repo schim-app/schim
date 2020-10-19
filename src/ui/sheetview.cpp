@@ -14,8 +14,6 @@
 #include <QString>
 #include <QCompleter>
 
-QTimer SheetView::timerDisplayZoom{nullptr};
-
 SheetView::SheetView(Sheet *sheet, QWidget *parent)
     : QGraphicsView(parent)
 {
@@ -167,11 +165,4 @@ void SheetView::insertTriggered()
     lineEdit->move(QCursor::pos());
     lineEdit->setFocus();
     lineEdit->show();
-}
-
-int SheetView::initTimerDisplayZoom()
-{
-    timerDisplayZoom.setInterval(1500);
-    timerDisplayZoom.setSingleShot(true);
-    //TODO connect...
 }

@@ -1,10 +1,11 @@
 #include "sheetscene.h"
 
 #include "objects/gobject.h"
+#include "ui/commands.h"
 
 #include <QAction>
 #include <QColor>
-#include "objects/gline.h"
+#include <QKeyEvent>
 
 SheetScene::SheetScene(Sheet *sheet)
     : sheet(sheet)
@@ -41,6 +42,16 @@ void SheetScene::insertLine()
     _insertingLine = true;
 }
 
+void SheetScene::undo()
+{
+    undoStack.undo();
+}
+
+void SheetScene::redo()
+{
+    undoStack.redo();
+}
+
 /*****************
  * Miscellaneous *
 ******************/
@@ -50,6 +61,19 @@ void SheetScene::updatePageBackground(float zoomLevel)
     auto pen = pageBackgroundItem->pen();
     pen.setWidth(1 / zoomLevel);
     pageBackgroundItem->setPen(pen);
+}
+
+void SheetScene::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+        clearSelection();
+    else if (event->key() == Qt::Key_Delete) //TODO create an action
+    {
+        auto x = selectedItems();
+        undoStack.push(new CmdDeleteSelection(selectedItems(), this));
+    }
+
+    QGraphicsScene::keyPressEvent(event);
 }
 
 void SheetScene::processInsertLine(QMouseEvent *event)
