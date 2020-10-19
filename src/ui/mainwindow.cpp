@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "fileio/xml.h"
+#include "ui/objects/gline.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -306,7 +307,8 @@ void MainWindow::redoInSheet()
 
 void MainWindow::insertLine()
 {
-    getTab()->scene()->insertLine();
+    if (getTab())
+        getTab()->scene()->insertObject(new GLine(new Line()));
 }
 
 /**********************

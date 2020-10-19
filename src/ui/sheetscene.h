@@ -9,6 +9,7 @@
 
 class SheetView;
 class QMouseEvent;
+class GObject;
 
 class SheetScene : public QGraphicsScene
 {
@@ -30,7 +31,7 @@ public:
     void setSheet(Sheet *sheet);
 
     /** @brief Start inserting a line into the sheet. */
-    void insertLine();
+    void insertObject(GObject *obj);
     void undo();
     void redo();
 
@@ -39,15 +40,17 @@ private:
     void updatePageBackground(float zoomLevel);
 
     void keyPressEvent(QKeyEvent *event) override;
-
-    void processInsertLine(QMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
     friend class SheetView;
 
 private:
 
     QGraphicsRectItem *pageBackgroundItem;
-    bool _insertingLine;
+    GObject *_insertingObject{};
+    int _insertingState = 0;
 };
 
 #endif // SHEETSCENE_H

@@ -2,21 +2,20 @@
 #define COMMANDS_H
 
 #include <model/sheet.h>
-#include "model/line.h"
 #include "sheetscene.h"
-#include "ui/objects/gline.h"
+#include "ui/objects/gobject.h"
 
 #include <QUndoCommand>
 
-class CmdInsertLine : public QUndoCommand
+class CmdInsertObject : public QUndoCommand
 {
 public:
-    CmdInsertLine(GLine *line, SheetScene *sheet);
+    CmdInsertObject(GObject *obj, SheetScene *sheet);
     void undo() override;
     void redo() override;
 
 private:
-    GLine *line;
+    GObject *obj;
     SheetScene *sheet;
 };
 

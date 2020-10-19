@@ -16,6 +16,7 @@ class Line : public Object, public QLineF
     // Everything is in millimeters
     float linewidth = 0.5;
 public:
+    Line();
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
 
     float getLinewidth() const;

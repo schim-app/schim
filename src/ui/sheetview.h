@@ -47,6 +47,7 @@ private:
     void recalculateBaselineZoom();
     float zoom() const;
     void updateBackground();
+    void updateGuides();
     void insertTriggered();
 
 private:
@@ -54,8 +55,10 @@ private:
     // Used to compensate for different screen sizes
     float baselineZoom = 1, userZoom = 1;
 
-    QPoint _panStartPos;
+    QPoint _panStartPos, _selectStartPos;
+    bool _selectionTypeDetermined = false;
 
+    QGraphicsLineItem *hGuide, *vGuide;
 };
 
 #endif // SHEETVIEW_H

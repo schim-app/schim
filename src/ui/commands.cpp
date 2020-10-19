@@ -2,19 +2,19 @@
 
 #include <algorithm>
 
-CmdInsertLine::CmdInsertLine(GLine *line, SheetScene *sheet)
-    : line(line), sheet(sheet) { }
+CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *sheet)
+    : obj(obj), sheet(sheet) { }
 
-void CmdInsertLine::undo()
+void CmdInsertObject::undo()
 {
-    sheet->removeItem(line);
-    sheet->getSheet()->removeAll(line->get());
+    sheet->removeItem(obj);
+    sheet->getSheet()->removeAll(obj->get());
 }
 
-void CmdInsertLine::redo()
+void CmdInsertObject::redo()
 {
-    sheet->addItem(line);
-    sheet->getSheet()->append(line->get());
+    sheet->addItem(obj);
+    sheet->getSheet()->append(obj->get());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,11 +32,17 @@ CmdDeleteSelection::~CmdDeleteSelection()
 void CmdDeleteSelection::undo()
 {
     for (auto *item : list)
+    {
         sheet->addItem(item);
+        sheet->getSheet()->append(((GObject*) item)->get());
+    }
 }
 
 void CmdDeleteSelection::redo()
 {
     for (auto *item : list)
+    {
         sheet->removeItem(item);
+        sheet->getSheet()->removeAll(((GObject*) item)->get());
+    }
 }
