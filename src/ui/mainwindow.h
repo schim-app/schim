@@ -116,6 +116,7 @@ private: // Private members
     QList<std::tuple<QAction*, QKeySequence, QKeySequence, void (MainWindow::*)()>> additionalActions;
     SheetSettings sheetSettings{this};
     Project *activeProject = nullptr;
+    QString filename;
 
     // Added so SheetSettings can use ui->tabView
     friend class SheetSettings;

@@ -11,8 +11,8 @@
 MainWindow* MainWindow::instance{};
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->tabView->clear();
@@ -184,10 +184,14 @@ void MainWindow::openProject()
     if (filename == "")
         return;
 
-    changeSetting("default_path", filename);
 
     try {
         activeProject = xmlParseProject(filename);
+
+        this->filename = filename;
+        changeSetting("default_path", filename);
+
+        setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
         populateWithProject();
     }  catch (std::exception &e) {
         QMessageBox::critical(this, "Error", "Unable to read file");
@@ -196,11 +200,41 @@ void MainWindow::openProject()
 
 void MainWindow::save()
 {
+    if (activeProject == nullptr) return;
+
+    try
+    {
+        xmlWriteProject(activeProject, filename);
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "Error", "Unable to write file");
+    }
 }
 
 void MainWindow::saveAs()
 {
+    if (activeProject == nullptr) return;
 
+    QString filename = QFileDialog::getSaveFileName(this, "Save project...",
+                            getSetting("default_path", QDir::homePath()).toString());
+
+    if (filename == "")
+        return;
+
+    try
+    {
+        xmlWriteProject(activeProject, filename);
+
+        this->filename = filename;
+        changeSetting("default_path", filename);
+
+        setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "Error", "Unable to write file");
+    }
 }
 
 void MainWindow::zoomIn()

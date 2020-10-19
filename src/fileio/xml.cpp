@@ -11,8 +11,10 @@
 #define read_xml_file(filename) \
     QFile file(filename); \
     if (!file.open(QIODevice::ReadOnly)) \
-        throw std::runtime_error("Unable to open XML file"); \
+        throw std::runtime_error("Unable to open XML file for reading"); \
     QXmlStreamReader stream(&file)
+
+#define write_xml_file(filename)
 
 void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 {
@@ -67,6 +69,22 @@ Project *xmlParseProject(const QString &filename)
     return project;
 }
 
+void xmlWriteProject(Project *project, const QString &filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly))
+        throw std::runtime_error("Unable to open XML file for writing");
+    QXmlStreamWriter stream(&file);
+    stream.setAutoFormatting(true);
+    stream.setAutoFormattingIndent(4); // consider changing this to tabs
+
+    stream.writeStartElement("project");
+    stream.writeAttribute("title", project->getTitle());
+    for (auto *sheet : *project)
+        xmlWriteSheet(sheet, stream);
+    stream.writeEndElement();
+}
+
 Sheet *xmlParseSheet(QXmlStreamReader &stream)
 {
     Sheet *sheet = new Sheet;
@@ -101,6 +119,21 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
     return sheet;
 }
 
+void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("sheet");
+    stream.writeAttribute("title", sheet->getTitle());
+
+    stream.writeStartElement("header");
+    stream.writeAttribute("from", "headers/defaultheader.xsym");
+    stream.writeEndElement();
+
+    for (auto *obj : *sheet)
+        xmlWriteObject(obj, stream);
+
+    stream.writeEndElement();
+}
+
 Object *xmlParseObject(QXmlStreamReader &stream)
 {
     Object *object;
@@ -118,6 +151,15 @@ Object *xmlParseObject(QXmlStreamReader &stream)
         stream.readNext();
 
     return object;
+}
+
+void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
+{
+    // This is chiefly a product of my laziness
+    #define if_cast_parse(obj, TYPE) if (dynamic_cast<TYPE*>(obj)) xmlWrite##TYPE((TYPE*) obj, stream)
+
+    if_cast_parse(obj, Line);
+    if_cast_parse(obj, Rect);
 }
 
 Line *xmlParseLine(QXmlStreamReader &stream)
@@ -147,6 +189,19 @@ Line *xmlParseLine(QXmlStreamReader &stream)
     return line;
 }
 
+void xmlWriteLine(Line *line, QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("line");
+
+    stream.writeAttribute("x1", QString::number(line->p1().x()));
+    stream.writeAttribute("y1", QString::number(line->p1().y()));
+    stream.writeAttribute("x2", QString::number(line->p2().x()));
+    stream.writeAttribute("y2", QString::number(line->p2().y()));
+    stream.writeAttribute("width", QString::number(line->getLinewidth()));
+
+    stream.writeEndElement();
+}
+
 Rect *xmlParseRect(QXmlStreamReader &stream)
 {
     float x = 0, y = 0, w = 50, h = 50;
@@ -168,6 +223,18 @@ Rect *xmlParseRect(QXmlStreamReader &stream)
             throw std::logic_error("Rectangle attributes are of invalid format");
     }
     return new Rect(x, y, w, h);
+}
+
+void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("rect");
+
+    stream.writeAttribute("x", QString::number(rect->left()));
+    stream.writeAttribute("y", QString::number(rect->top()));
+    stream.writeAttribute("w", QString::number(rect->width()));
+    stream.writeAttribute("h", QString::number(rect->height()));
+
+    stream.writeEndElement();
 }
 
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
@@ -192,7 +259,7 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
         if (attr.name() == "from")
         { // The header content is taken from another file
             if (header == nullptr)
-                header = xmlParseHeader(attr.value().toString());
+                header = xmlParseHeader(resolvePath(attr.value().toString()));
         }
     }
 
@@ -213,4 +280,16 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
     }
 
     return header;
+}
+
+void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
+{
+    //TODO detect whether header is the default header and add a
+    // single from="headers/defaultheader.xsym" attribute
+    stream.writeStartElement("header");
+
+    for (auto obj : *header)
+        xmlWriteObject(obj, stream);
+
+    stream.writeEndElement();
 }
