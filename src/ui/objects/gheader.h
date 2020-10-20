@@ -13,6 +13,7 @@ public:
 
     Header *get();
     const Header *get() const;
+    QRectF getContentArea() const;
 
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 };

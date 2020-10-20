@@ -40,6 +40,12 @@ private:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+
+private slots:
+    void onRubberBandChanged(QRect rect, QPointF, QPointF);
+
+private:
+
     void leaveEvent(QEvent *event) override;
     void enterEvent(QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -49,7 +55,7 @@ private:
     void recalculateBaselineZoom();
     float zoom() const;
     void updateBackground();
-    void updateGuides();
+    void updateGuides(bool snapToGrid = false);
     void insertTriggered();
 
 private:
@@ -58,7 +64,7 @@ private:
     float baselineZoom = 1, userZoom = 1;
 
     QPoint _panStartPos, _selectStartPos;
-    bool _selectionTypeDetermined = false;
+    bool _selectionTypeDetermined = false, _rubberBandDragging = false;
 
     QGraphicsLineItem *hGuide, *vGuide;
 };

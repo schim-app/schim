@@ -38,9 +38,6 @@ public:
     const Object *get() const;
     /** @brief Return whether the mouse is over this object. */
     bool isHovered() const;
-    /** @brief Same as base implementation but the return value is cast to GObject*. */
-    GObject *parentItem();
-
     /**
      * Return a dynamically allocated GObject wrapping the specified object.
      *
@@ -54,6 +51,10 @@ public:
 
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    /** @brief Same as base implementation but the return value is cast to GObject*. */
+    GObject *parentItem();
+    SheetScene *scene();
+
 
     /**
      * @brief Update the graphical representation to match the object from the model.
@@ -99,6 +100,8 @@ class GObjectHandle : public QGraphicsRectItem
 
 public:
     GObjectHandle(GObject *obj);
+
+    SheetScene *scene();
 
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 

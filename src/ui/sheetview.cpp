@@ -35,6 +35,7 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     recalculateBaselineZoom();
     updateBackground();
 
+    connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
 
     // Create actions
     // TODO change this when vim becomes disable-able
@@ -82,7 +83,7 @@ SheetScene *SheetView::scene()
 void SheetView::mousePressEvent(QMouseEvent *event)
 {
     // Object selection
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton && !scene()->operation)
     {
         setDragMode(DragMode::RubberBandDrag);
         _selectStartPos = event->pos();
@@ -101,10 +102,23 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 
 void SheetView::mouseMoveEvent(QMouseEvent *event)
 {
-    updateGuides();
+    // If the cursor is busy - i.e. something is selected, an operation is active... - the guides are snapped
+    // I would feel more comfortable if I could implement snapping inside the scene, but I know of no way
+    // to do that right now. TODO
+    if (scene()->isSnapEnabled() &&
+            ((event->buttons() == Qt::LeftButton && !scene()->selectedItems().empty() && !_rubberBandDragging)
+             || scene()->operation))
+    {
+        QPointF p = mapToScene(event->pos());
+        event->setLocalPos(mapFromScene(scene()->snapToGrid(p)));
+        updateGuides(true);
+    }
+    else
+        updateGuides(false);
+
     if (event->buttons() == Qt::MidButton)
     {
-        // TODO doesn't work -- fix it
+        // WARN doesn't work with some settings of ViewportAnchor
         QPointF translation = mapToScene(event->pos()) - mapToScene(_panStartPos);
         translate(translation.x(), translation.y());
         _panStartPos = event->pos();
@@ -132,16 +146,21 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
-    // Object selection
     if (event->button() == Qt::LeftButton || event->button() == Qt::MidButton)
     {
         setDragMode(DragMode::NoDrag);
+        _rubberBandDragging = false;
         viewport()->setCursor(Qt::BlankCursor);
         vGuide->show();
         hGuide->show();
     }
 
     QGraphicsView::mouseReleaseEvent(event);
+}
+
+void SheetView::onRubberBandChanged(QRect rect, QPointF, QPointF)
+{
+    _rubberBandDragging = true;
 }
 
 void SheetView::leaveEvent(QEvent *event)
@@ -172,7 +191,10 @@ void SheetView::wheelEvent(QWheelEvent *event)
         zoomIn(1 + delta);
     }
     else
+    {
         QGraphicsView::wheelEvent(event);
+        updateGuides();
+    }
 }
 
 void SheetView::init()
@@ -183,6 +205,7 @@ void SheetView::init()
     setTransformationAnchor(QGraphicsView::NoAnchor);
     setRenderHint(QPainter::Antialiasing);
     // Needed to update the cursor guides when the viewport is scrolled
+    // TODO Don't know if this is the optimal setting, but Minimal mode doesn't work properly
     setViewportUpdateMode(ViewportUpdateMode::BoundingRectViewportUpdate);
 }
 
@@ -193,8 +216,6 @@ void SheetView::recalculateBaselineZoom()
 
     baselineZoom = 0.9 * qMin(widthRatio, heightRatio);
     setZoom(userZoom);
-
-    scene()->updatePageBackground(baselineZoom * userZoom);
 }
 
 float SheetView::zoom() const
@@ -209,9 +230,11 @@ void SheetView::updateBackground()
     setBackgroundBrush(brush);
 }
 
-void SheetView::updateGuides()
+void SheetView::updateGuides(bool snapToGrid)
 {
-    auto pos = mapToScene(mapFromGlobal(QCursor::pos()));
+    QPointF pos = mapToScene(mapFromGlobal(QCursor::pos()));
+    if (snapToGrid)
+        pos = scene()->snapToGrid(pos);
 
     QRectF rect = {mapToScene(0, 0), mapToScene(viewport()->width(), viewport()->height())};
     hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());

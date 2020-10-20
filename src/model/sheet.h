@@ -29,6 +29,7 @@ public:
     float getHeight() const;
     QString getTitle() const;
     Header *getHeader();
+    QRectF getContentArea() const;
 
     void setWidth(float width);
     void setHeight(float height);

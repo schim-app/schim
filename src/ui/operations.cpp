@@ -80,6 +80,7 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             object()->get()->setBottomRight(pos);
             obj->reload();
+            scene->removeItem(obj);
             scene->command(new CmdInsertObject(obj, scene));
             state = 2;
             scene->operationFinished();

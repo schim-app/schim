@@ -27,25 +27,17 @@ public:
     /** Initialize the graphical model with objects that are non-configurable */
     virtual void init();
 
+    QRectF getContentArea() const;
+
 protected:
     /**
      * Clear all objects that are configurable (display rows, columns, etc.) from the list of children.
      * The objects are also deleted. Objects that are not configurable are untouched.
      */
     virtual void clear();
-};
 
-class DefaultHeader : public Header
-{
-public:
-
-    DefaultHeader();
-
-    virtual void update() override;
-    virtual void init() override;
-
-protected:
-    virtual void clear() override;
+private:
+    QRectF contentArea{5, 5, 287, 175};
 };
 
 #endif // HEADER_H

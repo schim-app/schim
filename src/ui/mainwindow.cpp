@@ -52,11 +52,6 @@ SheetView *MainWindow::getTab()
     return (SheetView*) ui->tabView->currentWidget();
 }
 
-QLineEdit *MainWindow::getZoomDisplay() const
-{
-    return nullptr; //TODO implement
-}
-
 Sheet *MainWindow::getSheet()
 {
     return ((SheetView*) ui->tabView->currentWidget())->scene()->getSheet();
@@ -315,7 +310,28 @@ void MainWindow::insertLine()
 void MainWindow::insertRect()
 {
     if (getTab())
+    {
         getTab()->scene()->startOperation(new RectInsertOperation(getTab()->scene()));
+        getTab()->scene()->update();
+    }
+}
+
+void MainWindow::increaseGridSize()
+{
+    if (getTab())
+    {
+        getTab()->scene()->setGridSize(getTab()->scene()->getGridSize() + QSizeF{1, 1});
+        getTab()->scene()->update();
+    }
+}
+
+void MainWindow::decreaseGridSize()
+{
+    if (getTab())
+    {
+        getTab()->scene()->setGridSize(getTab()->scene()->getGridSize() - QSizeF{1, 1});
+        getTab()->scene()->update();
+    }
 }
 
 /**********************
@@ -380,6 +396,8 @@ void MainWindow::setupActions()
         { new QAction("Scroll down", this), {}, {Qt::CTRL + Qt::Key_J}, &MainWindow::scrollDown},
         { new QAction("Scroll left", this), {}, {Qt::CTRL + Qt::Key_H}, &MainWindow::scrollLeft},
         { new QAction("Scroll right", this), {}, {Qt::CTRL + Qt::Key_L}, &MainWindow::scrollRight},
+        { new QAction("Increase grid", this), {}, {Qt::Key_G, Qt::Key_Plus}, &MainWindow::increaseGridSize},
+        { new QAction("Decrease grid", this), {}, {Qt::Key_G, Qt::Key_Minus}, &MainWindow::decreaseGridSize},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionSave, {}, {}, &MainWindow::save},

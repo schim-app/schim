@@ -44,7 +44,6 @@ public:
     SheetView *getTab();
     /** Return the Sheet* that is part of the currently active tab */
     Sheet *getSheet();
-    QLineEdit *getZoomDisplay() const;
 
     // Setters
 
@@ -83,6 +82,8 @@ private slots:
     void redoInSheet();
     void insertLine();
     void insertRect();
+    void increaseGridSize();
+    void decreaseGridSize();
 
     void on_todoButton_pressed();
 

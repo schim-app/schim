@@ -29,18 +29,31 @@ public:
 
     Sheet *getSheet();
 
+    static bool isGridEnabled();
+    static bool isSnapEnabled();
+    static QSizeF getGridSize();
+
     void setSheet(Sheet *sheet);
+    static void setGridSize(float x, float y = -1);
+    static void setGridSize(QSizeF size);
 
     void undo();
     void redo();
     void command(QUndoCommand *command);
 
     void startOperation(Operation *op);
+    /**
+     * @brief Return the point on the grid that is closest to `pt`.
+     *
+     * Both the argument and return value are in scene coordinates.
+     */
+    QPointF snapToGrid(const QPointF &pt);
+
     void operationFinished(bool success = true);
 
 private:
 
-    void updatePageBackground(float zoomLevel);
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
 
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -53,6 +66,9 @@ private:
 
     QGraphicsRectItem *pageBackgroundItem;
     Operation *operation{};
+    // In millimeters
+    static float gridX, gridY;
+    static bool gridEnabled, snapEnabled; // only for test
 };
 
 #endif // SHEETSCENE_H

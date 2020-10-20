@@ -37,6 +37,14 @@ Header *Sheet::getHeader()
     return header;
 }
 
+QRectF Sheet::getContentArea() const
+{
+    if (header)
+        return header->getContentArea();
+    else
+        return Header().getContentArea();
+}
+
 void Sheet::setWidth(float width)
 {
     this->width = width;
