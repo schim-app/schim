@@ -52,7 +52,7 @@ SheetView::~SheetView()
 
 void SheetView::setZoom(float zoom)
 {
-    userZoom = qMin(qMax(zoom, 0.05f), 20.0f);
+    userZoom = qMin(qMax(zoom, 0.25f), 20.0f);
     resetTransform();
     scale(zoom * baselineZoom, zoom * baselineZoom);
     updateBackground();
@@ -92,6 +92,8 @@ void SheetView::mousePressEvent(QMouseEvent *event)
     {
         setDragMode(DragMode::ScrollHandDrag);
         _panStartPos = event->pos();
+        vGuide->hide();
+        hGuide->hide();
     }
 
     QGraphicsView::mousePressEvent(event);
@@ -135,9 +137,25 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
     {
         setDragMode(DragMode::NoDrag);
         viewport()->setCursor(Qt::BlankCursor);
+        vGuide->show();
+        hGuide->show();
     }
 
     QGraphicsView::mouseReleaseEvent(event);
+}
+
+void SheetView::leaveEvent(QEvent *event)
+{
+    vGuide->hide();
+    hGuide->hide();
+    QGraphicsView::leaveEvent(event);
+}
+
+void SheetView::enterEvent(QEvent *event)
+{
+    vGuide->show();
+    hGuide->show();
+    QGraphicsView::enterEvent(event);
 }
 
 void SheetView::resizeEvent(QResizeEvent *event)
@@ -164,6 +182,8 @@ void SheetView::init()
     setMouseTracking(true);
     setTransformationAnchor(QGraphicsView::NoAnchor);
     setRenderHint(QPainter::Antialiasing);
+    // Needed to update the cursor guides when the viewport is scrolled
+    setViewportUpdateMode(ViewportUpdateMode::BoundingRectViewportUpdate);
 }
 
 void SheetView::recalculateBaselineZoom()
