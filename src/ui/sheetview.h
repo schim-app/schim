@@ -33,6 +33,8 @@ public:
     void zoomIn(float step = 1.2);
     void zoomOut(float step = 1.2);
 
+    void updateGuides(bool snapToGrid = false);
+
     SheetScene *scene();
 
 private:
@@ -55,7 +57,6 @@ private:
     void recalculateBaselineZoom();
     float zoom() const;
     void updateBackground();
-    void updateGuides(bool snapToGrid = false);
     void insertTriggered();
 
 private:

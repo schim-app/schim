@@ -75,6 +75,17 @@ void SheetView::zoomOut(float step)
     setZoom(userZoom / step);
 }
 
+void SheetView::updateGuides(bool snapToGrid)
+{
+    QPointF pos = mapToScene(mapFromGlobal(QCursor::pos()));
+    if (snapToGrid)
+        pos = scene()->snap(pos);
+
+    QRectF rect = {mapToScene(0, 0), mapToScene(viewport()->width(), viewport()->height())};
+    hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());
+    vGuide->setLine(pos.x(), rect.top(), pos.x(), rect.bottom());
+}
+
 SheetScene *SheetView::scene()
 {
     return (SheetScene*) QGraphicsView::scene();
@@ -107,12 +118,8 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     // to do that right now. TODO
     if (scene()->isSnapEnabled() &&
             ((event->buttons() == Qt::LeftButton && !scene()->selectedItems().empty() && !_rubberBandDragging)
-             || scene()->operation))
-    {
-        QPointF p = mapToScene(event->pos());
-        event->setLocalPos(mapFromScene(scene()->snapToGrid(p)));
+             || scene()->operation || event->modifiers() == Qt::SHIFT))
         updateGuides(true);
-    }
     else
         updateGuides(false);
 
@@ -124,7 +131,7 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         _panStartPos = event->pos();
     }
     else if (event->buttons() == Qt::LeftButton && !_selectionTypeDetermined)
-    {
+    { // Determine the rubber band type
         float dx = event->pos().x() - _selectStartPos.x();
         if (dx > 0)
         {
@@ -206,7 +213,7 @@ void SheetView::init()
     setRenderHint(QPainter::Antialiasing);
     // Needed to update the cursor guides when the viewport is scrolled
     // TODO Don't know if this is the optimal setting, but Minimal mode doesn't work properly
-    setViewportUpdateMode(ViewportUpdateMode::BoundingRectViewportUpdate);
+    setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 }
 
 void SheetView::recalculateBaselineZoom()
@@ -228,17 +235,6 @@ void SheetView::updateBackground()
     auto brush = QBrush(QColor(0, 0, 0, 48), Qt::Dense4Pattern);
     brush.setTransform(QTransform().scale(10 / zoom(), 10 / zoom()));
     setBackgroundBrush(brush);
-}
-
-void SheetView::updateGuides(bool snapToGrid)
-{
-    QPointF pos = mapToScene(mapFromGlobal(QCursor::pos()));
-    if (snapToGrid)
-        pos = scene()->snapToGrid(pos);
-
-    QRectF rect = {mapToScene(0, 0), mapToScene(viewport()->width(), viewport()->height())};
-    hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());
-    vGuide->setLine(pos.x(), rect.top(), pos.x(), rect.bottom());
 }
 
 void SheetView::insertTriggered()

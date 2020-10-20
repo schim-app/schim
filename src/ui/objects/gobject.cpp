@@ -136,7 +136,7 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
         hovered = false;
     }
     else if (change == ItemPositionChange && scene() && SheetScene::isSnapEnabled())
-        return scene()->snapToGrid(value.toPointF());
+        return scene()->snap(value.toPointF());
 
     return QGraphicsItem::itemChange(change, value);
 }
@@ -186,7 +186,7 @@ void GObjectHandle::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        _dragStartPos = scene()->snapToGrid(event->scenePos());
+        _dragStartPos = scene()->snap(event->scenePos());
         event->accept();
     }
     else
@@ -197,7 +197,7 @@ void GObjectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto delta = scene()->snapToGrid(event->scenePos()) - _dragStartPos;
+        auto delta = scene()->snap(event->scenePos()) - _dragStartPos;
         moveBy(delta.x(), delta.y());
         _dragStartPos = scenePos();
         event->accept();

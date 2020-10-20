@@ -260,6 +260,8 @@ void MainWindow::scrollUp()
         auto *bar = getTab()->verticalScrollBar();
         bar->setValue(bar->value() - bar->singleStep());
     }
+    getTab()->viewport()->update();
+    getTab()->updateGuides();
 }
 
 void MainWindow::scrollDown()
@@ -269,6 +271,8 @@ void MainWindow::scrollDown()
         auto *bar = getTab()->verticalScrollBar();
         bar->setValue(bar->value() + bar->singleStep());
     }
+    getTab()->viewport()->update();
+    getTab()->updateGuides();
 }
 
 void MainWindow::scrollLeft()
@@ -278,6 +282,8 @@ void MainWindow::scrollLeft()
         auto *bar = getTab()->horizontalScrollBar();
         bar->setValue(bar->value() - bar->singleStep());
     }
+    getTab()->viewport()->update();
+    getTab()->updateGuides();
 }
 
 void MainWindow::scrollRight()
@@ -287,6 +293,8 @@ void MainWindow::scrollRight()
         auto *bar = getTab()->horizontalScrollBar();
         bar->setValue(bar->value() + bar->singleStep());
     }
+    getTab()->viewport()->update();
+    getTab()->updateGuides();
 }
 
 void MainWindow::undoInSheet()

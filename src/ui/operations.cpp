@@ -28,7 +28,7 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = event->scenePos();
+        auto pos = scene->getCursorPos();
         if (state == 0) // Waiting for first point to be placed
         {
             obj = new GLine;
@@ -41,6 +41,7 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             object()->get()->setP2(pos);
             obj->reload();
+            scene->removeItem(obj);
             scene->command(new CmdInsertObject(obj, scene));
             state = 2; // Finished state
             scene->operationFinished();
@@ -52,7 +53,7 @@ void LineInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (state == 1)
     {
-        object()->get()->setP2(event->scenePos());
+        object()->get()->setP2(scene->getCursorPos());
         obj->reload();
         scene->update();
     }
@@ -67,7 +68,7 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = event->scenePos();
+        auto pos = scene->getCursorPos();
         if (state == 0)
         {
             obj = new GRect;
@@ -92,7 +93,7 @@ void RectInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (state == 1)
     {
-        object()->get()->setBottomRight(event->scenePos());
+        object()->get()->setBottomRight(scene->getCursorPos());
         obj->reload();
         scene->update();
     }

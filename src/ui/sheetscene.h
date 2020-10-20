@@ -28,6 +28,7 @@ public:
     SheetScene();
 
     Sheet *getSheet();
+    QPointF getCursorPos();
 
     static bool isGridEnabled();
     static bool isSnapEnabled();
@@ -47,7 +48,7 @@ public:
      *
      * Both the argument and return value are in scene coordinates.
      */
-    QPointF snapToGrid(const QPointF &pt);
+    QPointF snap(const QPointF &pt);
 
     void operationFinished(bool success = true);
 
@@ -66,6 +67,8 @@ private:
 
     QGraphicsRectItem *pageBackgroundItem;
     Operation *operation{};
+    // Cursor position that takes snapping into mind
+    QPointF cursorPos;
     // In millimeters
     static float gridX, gridY;
     static bool gridEnabled, snapEnabled; // only for test

@@ -40,6 +40,11 @@ Sheet *SheetScene::getSheet()
     return sheet;
 }
 
+QPointF SheetScene::getCursorPos()
+{
+    return cursorPos;
+}
+
 bool SheetScene::isGridEnabled()
 {
     return gridEnabled;
@@ -99,7 +104,7 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
-QPointF SheetScene::snapToGrid(const QPointF &pt)
+QPointF SheetScene::snap(const QPointF &pt)
 {
     if (!snapEnabled)
         return pt;
@@ -144,6 +149,7 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
 
 void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    cursorPos = snap(event->scenePos());
     if (operation)
         operation->mousePressEvent(event);
     else
@@ -152,6 +158,7 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    cursorPos = snap(event->scenePos());
     if (operation)
         operation->mouseMoveEvent(event);
     else
@@ -160,6 +167,7 @@ void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    cursorPos = snap(event->scenePos());
     if (operation)
         operation->mouseReleaseEvent(event);
     else
