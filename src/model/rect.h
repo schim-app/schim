@@ -18,6 +18,7 @@ class Rect : public Object, public QRectF
     float linewidth = 0.5;
 
 public:
+    Rect();
     Rect(qreal x, qreal y, qreal width, qreal height);
 
     QPointF getPos() const override;

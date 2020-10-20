@@ -10,6 +10,7 @@
 class SheetView;
 class QMouseEvent;
 class GObject;
+class Operation;
 
 class SheetScene : public QGraphicsScene
 {
@@ -30,10 +31,12 @@ public:
 
     void setSheet(Sheet *sheet);
 
-    /** @brief Start inserting a line into the sheet. */
-    void insertObject(GObject *obj);
     void undo();
     void redo();
+    void command(QUndoCommand *command);
+
+    void startOperation(Operation *op);
+    void operationFinished(bool success = true);
 
 private:
 
@@ -49,8 +52,7 @@ private:
 private:
 
     QGraphicsRectItem *pageBackgroundItem;
-    GObject *_insertingObject{};
-    int _insertingState = 0;
+    Operation *operation{};
 };
 
 #endif // SHEETSCENE_H

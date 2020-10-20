@@ -3,6 +3,7 @@
 #include "objects/gobject.h"
 #include "ui/objects/gline.h"
 #include "ui/commands.h"
+#include "ui/operations.h"
 
 #include <QAction>
 #include <QColor>
@@ -39,12 +40,6 @@ void SheetScene::setSheet(Sheet *sheet)
     this->sheet = sheet;
 }
 
-void SheetScene::insertObject(GObject *obj)
-{
-    _insertingObject = obj;
-    _insertingState = 0;
-}
-
 void SheetScene::undo()
 {
     undoStack.undo();
@@ -53,6 +48,22 @@ void SheetScene::undo()
 void SheetScene::redo()
 {
     undoStack.redo();
+}
+
+void SheetScene::command(QUndoCommand *command)
+{
+    undoStack.push(command);
+}
+
+void SheetScene::startOperation(Operation *op)
+{
+    operation = op;
+}
+
+void SheetScene::operationFinished(bool success)
+{
+    delete operation;
+    operation = nullptr;
 }
 
 /*****************
@@ -71,10 +82,8 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Escape)
     {
         clearSelection();
-        removeItem(_insertingObject);
-        delete _insertingObject;
-        _insertingObject = nullptr;
-        _insertingState = 0;
+        if (operation)
+            operation->cancel();
     }
     else if (event->key() == Qt::Key_Delete) //TODO create an action
         undoStack.push(new CmdDeleteSelection(selectedItems(), this));
@@ -84,49 +93,24 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
 
 void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton)
-    {
-        auto pos = event->scenePos();
-        if (dynamic_cast<GLine*>(_insertingObject))
-        {
-            //TODO one of these days I shall implement a class called Operation and
-            // implement this functionality there
-            auto *obj = (GLine*) _insertingObject;
-            if (_insertingState == 0)
-            {
-                obj->get()->setLine(pos.x(), pos.y(), pos.x(), pos.y());
-                obj->reload();
-                addItem(obj);
-                ++_insertingState;
-            }
-            else if (_insertingState == 1)
-            {
-                obj->get()->setP2(pos);
-                obj->reload();
-
-                sheet->append(obj->get());
-                _insertingObject = nullptr;
-                _insertingState = 0;
-            }
-        }
-    }
-    QGraphicsScene::mousePressEvent(event);
+    if (operation)
+        operation->mousePressEvent(event);
+    else
+        QGraphicsScene::mousePressEvent(event);
 }
 
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (_insertingState == 1 && dynamic_cast<GLine*>(_insertingObject))
-    {
-        auto *obj = (GLine*) _insertingObject;
-        obj->get()->setP2(event->scenePos());
-        obj->reload();
-        update();
-    }
+    if (operation)
+        operation->mouseMoveEvent(event);
     else
         QGraphicsScene::mouseMoveEvent(event);
 }
 
 void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsScene::mouseReleaseEvent(event);
+    if (operation)
+        operation->mouseReleaseEvent(event);
+    else
+        QGraphicsScene::mouseReleaseEvent(event);
 }

@@ -10,7 +10,7 @@
 class GRect : public GObject
 {
 public:
-    GRect(Rect *obj);
+    GRect(Rect *obj = new Rect);
 
 public:
     QRectF boundingRect() const;

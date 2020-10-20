@@ -10,26 +10,27 @@
 class CmdInsertObject : public QUndoCommand
 {
 public:
-    CmdInsertObject(GObject *obj, SheetScene *sheet);
+    CmdInsertObject(GObject *obj, SheetScene *scene);
+    ~CmdInsertObject();
     void undo() override;
     void redo() override;
 
 private:
     GObject *obj;
-    SheetScene *sheet;
+    SheetScene *scene;
 };
 
 class CmdDeleteSelection : public QUndoCommand
 {
 public:
-    CmdDeleteSelection(QList<QGraphicsItem *> list, SheetScene *sheet);
+    CmdDeleteSelection(QList<QGraphicsItem *> list, SheetScene *scene);
     ~CmdDeleteSelection();
     void undo() override;
     void redo() override;
 
 private:
     QList<QGraphicsItem *> list;
-    SheetScene *sheet;
+    SheetScene *scene;
 };
 
 #endif // COMMANDS_H

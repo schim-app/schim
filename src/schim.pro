@@ -27,6 +27,7 @@ SOURCES += \
     ui/objects/gline.cpp \
     ui/objects/gobject.cpp \
     ui/objects/grect.cpp \
+    ui/operations.cpp \
     ui/sheetscene.cpp \
     ui/sheetsettings.cpp \
     ui/sheetview.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     ui/objects/gline.h \
     ui/objects/gobject.h \
     ui/objects/grect.h \
+    ui/operations.h \
     ui/sheetscene.h \
     ui/sheetsettings.h \
     ui/sheetview.h \

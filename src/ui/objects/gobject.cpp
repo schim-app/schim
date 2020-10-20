@@ -4,8 +4,8 @@
 #include "grect.h"
 #include "global.h"
 
-#include <model/header.h>
-#include <model/rect.h>
+#include "model/header.h"
+#include "model/rect.h"
 
 #include <QGraphicsSceneMouseEvent>
 
@@ -186,7 +186,7 @@ void GObjectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (event->buttons() == Qt::LeftButton)
     {
         auto delta = event->scenePos() - _dragStartPos;
-        moveBy(delta.x(), delta.y()); //TODO 1
+        moveBy(delta.x(), delta.y());
         _dragStartPos = event->scenePos();
 
         event->accept();

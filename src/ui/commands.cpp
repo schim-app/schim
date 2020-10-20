@@ -2,25 +2,31 @@
 
 #include <algorithm>
 
-CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *sheet)
-    : obj(obj), sheet(sheet) { }
+CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *scene)
+    : obj(obj), scene(scene) { }
+
+CmdInsertObject::~CmdInsertObject()
+{
+    if (isObsolete())
+        delete obj;
+}
 
 void CmdInsertObject::undo()
 {
-    sheet->removeItem(obj);
-    sheet->getSheet()->removeAll(obj->get());
+    scene->removeItem(obj);
+    scene->getSheet()->removeAll(obj->get());
 }
 
 void CmdInsertObject::redo()
 {
-    sheet->addItem(obj);
-    sheet->getSheet()->append(obj->get());
+    scene->addItem(obj);
+    scene->getSheet()->append(obj->get());
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-CmdDeleteSelection::CmdDeleteSelection(QList<QGraphicsItem *> list, SheetScene *sheet)
-    : list(list), sheet(sheet) { }
+CmdDeleteSelection::CmdDeleteSelection(QList<QGraphicsItem *> list, SheetScene *scene)
+    : list(list), scene(scene) { }
 
 CmdDeleteSelection::~CmdDeleteSelection()
 {
@@ -33,8 +39,8 @@ void CmdDeleteSelection::undo()
 {
     for (auto *item : list)
     {
-        sheet->addItem(item);
-        sheet->getSheet()->append(((GObject*) item)->get());
+        scene->addItem(item);
+        scene->getSheet()->append(((GObject*) item)->get());
     }
 }
 
@@ -42,7 +48,7 @@ void CmdDeleteSelection::redo()
 {
     for (auto *item : list)
     {
-        sheet->removeItem(item);
-        sheet->getSheet()->removeAll(((GObject*) item)->get());
+        scene->removeItem(item);
+        scene->getSheet()->removeAll(((GObject*) item)->get());
     }
 }

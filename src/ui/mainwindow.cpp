@@ -4,6 +4,7 @@
 #include "global.h"
 #include "fileio/xml.h"
 #include "ui/objects/gline.h"
+#include "ui/operations.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -308,7 +309,13 @@ void MainWindow::redoInSheet()
 void MainWindow::insertLine()
 {
     if (getTab())
-        getTab()->scene()->insertObject(new GLine(new Line()));
+        getTab()->scene()->startOperation(new LineInsertOperation(getTab()->scene()));
+}
+
+void MainWindow::insertRect()
+{
+    if (getTab())
+        getTab()->scene()->startOperation(new RectInsertOperation(getTab()->scene()));
 }
 
 /**********************
@@ -379,6 +386,7 @@ void MainWindow::setupActions()
         { ui->actionSaveAs, {}, {}, &MainWindow::saveAs},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
         { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
+        { ui->actionInsertRect, {}, {}, &MainWindow::insertRect},
         { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet},
         { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet},
     };

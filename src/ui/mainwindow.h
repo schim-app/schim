@@ -82,6 +82,7 @@ private slots:
     void undoInSheet();
     void redoInSheet();
     void insertLine();
+    void insertRect();
 
     void on_todoButton_pressed();
 

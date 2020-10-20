@@ -11,7 +11,7 @@
 class GLine : public GObject
 {
 public:
-    GLine(Line *obj);
+    GLine(Line *obj = new Line);
 
     Line *get();
     const Line *get() const;
