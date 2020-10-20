@@ -8,6 +8,8 @@
 #include <QFile>
 #include <exception>
 
+#include "model/text.h"
+
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
@@ -30,6 +32,10 @@ void xmlWriteLine(Line *line, QXmlStreamWriter &stream);
 /** Parse a rect object */
 Rect *xmlParseRect(QXmlStreamReader &stream);
 void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream);
+
+/** Parse a text object */
+Text *xmlParseText(QXmlStreamReader &stream);
+//TODO write
 
 /** Parse a custom object */
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream);

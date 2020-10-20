@@ -20,6 +20,7 @@ SOURCES += \
     model/project.cpp \
     model/rect.cpp \
     model/sheet.cpp \
+    model/text.cpp \
     ui/commands.cpp \
     ui/mainwindow.cpp \
     ui/objects/gcompositeobject.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
     ui/objects/gline.cpp \
     ui/objects/gobject.cpp \
     ui/objects/grect.cpp \
+    ui/objects/gtext.cpp \
     ui/operations.cpp \
     ui/sheetscene.cpp \
     ui/sheetsettings.cpp \
@@ -44,6 +46,7 @@ HEADERS += \
     model/project.h \
     model/rect.h \
     model/sheet.h \
+    model/text.h \
     ui/commands.h \
     ui/mainwindow.h \
     ui/objects/gcompositeobject.h \
@@ -51,6 +54,7 @@ HEADERS += \
     ui/objects/gline.h \
     ui/objects/gobject.h \
     ui/objects/grect.h \
+    ui/objects/gtext.h \
     ui/operations.h \
     ui/sheetscene.h \
     ui/sheetsettings.h \

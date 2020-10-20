@@ -1,11 +1,15 @@
+#include "gobject.h"
+
 #include "gheader.h"
 #include "gline.h"
-#include "gobject.h"
 #include "grect.h"
+#include "gtext.h"
+
 #include "global.h"
 
 #include "model/header.h"
 #include "model/rect.h"
+#include "model/text.h"
 
 #include <QGraphicsSceneMouseEvent>
 
@@ -69,6 +73,7 @@ GObject *GObject::assign(Object *obj)
     if_cast_return(Rect, obj);
     if_cast_return(Header, obj);
     if_cast_return(CompositeObject, obj);
+    if_cast_return(Text, obj);
     return nullptr;
 }
 

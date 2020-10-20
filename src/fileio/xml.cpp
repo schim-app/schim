@@ -141,6 +141,8 @@ Object *xmlParseObject(QXmlStreamReader &stream)
         object = xmlParseLine(stream);
     else if (stream.name() == "rect")
         object = xmlParseRect(stream);
+    else if (stream.name() == "text")
+        object = xmlParseText(stream);
     else
         throw std::logic_error("Unknown object type");
 
@@ -235,6 +237,28 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
     stream.writeAttribute("h", QString::number(rect->height()));
 
     stream.writeEndElement();
+}
+
+Text *xmlParseText(QXmlStreamReader &stream)
+{
+    Text *text = new Text();
+
+    try
+    {
+        for (const auto &attr : stream.attributes())
+        {
+            if (attr.name() == "text")
+                text->setText(attr.value().toString());
+            else
+                throw std::logic_error("Unknown attributes for text object");
+        }
+    }
+    catch (...)
+    {
+        delete text; throw;
+    }
+
+    return text;
 }
 
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)

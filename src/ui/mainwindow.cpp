@@ -181,7 +181,6 @@ void MainWindow::openProject()
     if (filename == "")
         return;
 
-
     try {
         activeProject = xmlParseProject(filename);
 
