@@ -5,7 +5,7 @@
 
 #include "model/text.h"
 
-class GText : public GObject
+class GText : public GObject, public QGraphicsTextItem
 {
 public:
     GText(Text *obj = new Text());
@@ -14,13 +14,21 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
 
-    void reload();
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+
+    void focusOutEvent(QFocusEvent *event) override;
+
+    void reload() override;
 
     Text *get();
     const Text *get() const;
 
-private:
-    float getWidth() const;
 };
 
 #endif // GTEXT_H

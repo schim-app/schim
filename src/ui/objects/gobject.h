@@ -14,7 +14,7 @@
 
 class GObjectHandle;
 
-class GObject : public QGraphicsItem
+class GObject : public QGraphicsItem //TODO keep virtual?
 {
 protected:
     /** The object that is being wrapped */

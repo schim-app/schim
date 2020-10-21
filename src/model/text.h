@@ -24,6 +24,8 @@ public:
 private:
     QString text, font;
     float textHeight = 5;
+
+    friend class GText;
 };
 
 #endif // TEXT_H

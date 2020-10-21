@@ -5,6 +5,7 @@
 #include "ui/objects/gobject.h"
 #include "ui/objects/gline.h"
 #include "ui/objects/grect.h"
+#include "ui/objects/gtext.h"
 
 class QGraphicsSceneMouseEvent;
 class QKeyEvent;
@@ -52,6 +53,20 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     GRect *object() const;
+private:
+    int state = 0;
+};
+
+class TextInsertOperation : public Operation
+{
+public:
+    using Operation::Operation;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
+    GText *object() const;
 private:
     int state = 0;
 };

@@ -317,10 +317,13 @@ void MainWindow::insertLine()
 void MainWindow::insertRect()
 {
     if (getTab())
-    {
         getTab()->scene()->startOperation(new RectInsertOperation(getTab()->scene()));
-        getTab()->scene()->update();
-    }
+}
+
+void MainWindow::insertText()
+{
+    if (getTab())
+        getTab()->scene()->startOperation(new TextInsertOperation(getTab()->scene()));
 }
 
 void MainWindow::increaseGridSize()
@@ -412,6 +415,7 @@ void MainWindow::setupActions()
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
         { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
         { ui->actionInsertRect, {}, {}, &MainWindow::insertRect},
+        { ui->actionInsertText, {}, {}, &MainWindow::insertText},
         { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet},
         { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet},
     };

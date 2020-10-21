@@ -82,6 +82,7 @@ private slots:
     void redoInSheet();
     void insertLine();
     void insertRect();
+    void insertText();
     void increaseGridSize();
     void decreaseGridSize();
 

@@ -2,6 +2,7 @@
 #include "commands.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QLineEdit>
 
 Operation::Operation(SheetScene *scene)
     : scene(scene) { }
@@ -23,6 +24,8 @@ void Operation::cancel()
     delete obj;
     scene->operationFinished(false);
 }
+
+//////////////////////////////////////////////////////////////////////////////////
 
 void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -64,6 +67,8 @@ GLine *LineInsertOperation::object() const
     return (GLine *) obj;
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+
 void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
@@ -103,3 +108,30 @@ GRect *RectInsertOperation::object() const
 {
     return (GRect*) obj;
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+}
+
+void TextInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
+void TextInsertOperation::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (state == 1 && event->buttons() == Qt::LeftButton)
+    {
+    }
+}
+
+GText *TextInsertOperation::object() const
+{
+    return (GText*) obj;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+

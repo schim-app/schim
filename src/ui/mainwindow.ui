@@ -116,6 +116,7 @@
    </attribute>
    <addaction name="actionInsertLine"/>
    <addaction name="actionInsertRect"/>
+   <addaction name="actionInsertText"/>
   </widget>
   <widget class="QDockWidget" name="dockSymbols">
    <attribute name="dockWidgetArea">
@@ -212,6 +213,14 @@
    </property>
    <property name="toolTip">
     <string>Insert a rectangle</string>
+   </property>
+  </action>
+  <action name="actionInsertText">
+   <property name="text">
+    <string>Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert a text object</string>
    </property>
   </action>
  </widget>
