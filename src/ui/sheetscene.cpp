@@ -22,6 +22,9 @@ SheetScene::SheetScene(Sheet *sheet)
 
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()}, {Qt::black, 0}, Qt::white);
 
+    // Init cursor guides, set their display properties
+    //initGuides(); //TODO remove completely
+
     // Add the sheet header, if it is defined
     if (sheet->getHeader())
         addItem(GObject::assign(sheet->getHeader()));
@@ -40,9 +43,19 @@ Sheet *SheetScene::getSheet()
     return sheet;
 }
 
-QPointF SheetScene::getCursorPos()
+QPointF SheetScene::getCursorPos() const
 {
     return cursorPos;
+}
+
+QPointF SheetScene::getSnappedCursorPos() const
+{
+    return snap(getCursorPos());
+}
+
+bool SheetScene::getSnapCursorGuides() const
+{
+    return snapGuides;
 }
 
 bool SheetScene::isGridEnabled()
@@ -63,6 +76,11 @@ QSizeF SheetScene::getGridSize()
 void SheetScene::setSheet(Sheet *sheet)
 {
     this->sheet = sheet;
+}
+
+void SheetScene::setSnapCursorGuides(bool snap)
+{
+    snapGuides = snap;
 }
 
 void SheetScene::setGridSize(float x, float y)
@@ -104,7 +122,24 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
-QPointF SheetScene::snap(const QPointF &pt)
+void SheetScene::initGuides()
+{
+    hGuide = addLine({});
+    vGuide = addLine({});
+    hGuide->setPos({});
+    vGuide->setPos({});
+
+    QPen pen(QColor{96, 96, 96}, 0);
+    hGuide->setPen(pen);
+    vGuide->setPen(pen);
+}
+
+void SheetScene::showGuides(bool show)
+{
+    showCursorGuides = show;
+}
+
+QPointF SheetScene::snap(const QPointF &pt) const
 {
     if (!snapEnabled)
         return pt;
@@ -113,28 +148,50 @@ QPointF SheetScene::snap(const QPointF &pt)
     return center + QPointF{round((pt.x() - center.x()) / gridX) * gridX, round((pt.y() - center.y()) / gridY) * gridY};
 }
 
+void SheetScene::updateGuides()
+{
+    return; //TODO remove the whole functiou
+    QPointF pos = cursorPos;
+    if (snapGuides)
+        pos = snap(pos);
+
+    // The scene rect
+    QRectF rect = {0, 0, width(), height()};
+    hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());
+    vGuide->setLine(pos.x(), rect.top(), pos.x(), rect.bottom());
+}
+
 /*****************
  * Miscellaneous *
 ******************/
 
 void SheetScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
+    if (!gridEnabled) return;
+
+    // Draw the grid
     painter->setPen({Qt::black, 0});
     QRectF contentArea = sheet->getContentArea();
     QPointF center = contentArea.center();
     float Xmin = qMax(rect.left(), contentArea.left()),
-            Xmax = qMin(rect.right(), contentArea.right()),
-            Ymin = qMax(rect.top(), contentArea.top()),
-            Ymax = qMin(rect.bottom(), contentArea.bottom());
+        Xmax = qMin(rect.right(), contentArea.right()),
+        Ymin = qMax(rect.top(), contentArea.top()),
+        Ymax = qMin(rect.bottom(), contentArea.bottom());
     int Imax = (Xmax - center.x()) / gridX,
-            Jmax = (Ymax - center.y()) / gridY;
+        Jmax = (Ymax - center.y()) / gridY;
+
     for (int i = qCeil((Xmin - center.x()) / gridX); i <= Imax; ++i)
         for (int j = qCeil((Ymin - center.y()) / gridY); j <= Jmax; ++j)
-            painter->drawPoint(QPointF{center.x() + i * gridX, center.y() + j * gridY});
+        painter->drawPoint(QPointF{center.x() + i * gridX, center.y() + j * gridY});
 }
 
 void SheetScene::keyPressEvent(QKeyEvent *event)
 {
+    // Should be first to allow children to accept the event
+    QGraphicsScene::keyPressEvent(event);
+
+    if (event->isAccepted()) return;
+
     if (event->key() == Qt::Key_Escape)
     {
         clearSelection();
@@ -143,13 +200,12 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_Delete) //TODO create an action
         command(new CmdDeleteSelection(selectedItems(), this));
-
-    QGraphicsScene::keyPressEvent(event);
 }
 
 void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = snap(event->scenePos());
+    cursorPos = event->scenePos();
+
     if (operation)
         operation->mousePressEvent(event);
     else
@@ -158,7 +214,7 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = snap(event->scenePos());
+    cursorPos = event->scenePos();
     if (operation)
         operation->mouseMoveEvent(event);
     else
@@ -167,7 +223,7 @@ void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = snap(event->scenePos());
+    cursorPos = event->scenePos();
     if (operation)
         operation->mouseReleaseEvent(event);
     else

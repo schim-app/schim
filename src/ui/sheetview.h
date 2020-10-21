@@ -33,8 +33,6 @@ public:
     void zoomIn(float step = 1.2);
     void zoomOut(float step = 1.2);
 
-    void updateGuides(bool snapToGrid = false);
-
     SheetScene *scene();
 
 private:
@@ -53,8 +51,11 @@ private:
     void resizeEvent(QResizeEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
+
     void init();
     void recalculateBaselineZoom();
+    void processRubberBandDrag(QMouseEvent *event);
     float zoom() const;
     void updateBackground();
     void insertTriggered();
@@ -66,8 +67,6 @@ private:
 
     QPoint _panStartPos, _selectStartPos;
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;
-
-    QGraphicsLineItem *hGuide, *vGuide;
 };
 
 #endif // SHEETVIEW_H

@@ -28,13 +28,16 @@ public:
     SheetScene();
 
     Sheet *getSheet();
-    QPointF getCursorPos();
+    QPointF getCursorPos() const;
+    QPointF getSnappedCursorPos() const;
+    bool getSnapCursorGuides() const;
 
     static bool isGridEnabled();
     static bool isSnapEnabled();
     static QSizeF getGridSize();
 
     void setSheet(Sheet *sheet);
+    void setSnapCursorGuides(bool snap);
     static void setGridSize(float x, float y = -1);
     static void setGridSize(QSizeF size);
 
@@ -48,11 +51,15 @@ public:
      *
      * Both the argument and return value are in scene coordinates.
      */
-    QPointF snap(const QPointF &pt);
+    QPointF snap(const QPointF &pt) const;
+    void updateGuides();
 
     void operationFinished(bool success = true);
 
 private:
+
+    void initGuides();
+    void showGuides(bool show);
 
     void drawForeground(QPainter *painter, const QRectF &rect) override;
 
@@ -66,9 +73,15 @@ private:
 private:
 
     QGraphicsRectItem *pageBackgroundItem;
+    QGraphicsLineItem *hGuide, *vGuide;
+
+    // The scene operation that is currently active
     Operation *operation{};
     // Cursor position that takes snapping into mind
     QPointF cursorPos;
+    // This attribute has no effect if snap is not enabled
+    bool snapGuides = false, showCursorGuides = true;
+
     // In millimeters
     static float gridX, gridY;
     static bool gridEnabled, snapEnabled; // only for test

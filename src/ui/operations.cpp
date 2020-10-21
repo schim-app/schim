@@ -19,9 +19,12 @@ void Operation::keyPressEvent(QKeyEvent *event) { }
 
 void Operation::cancel()
 {
-    scene->removeItem(obj);
-    delete obj->get();
-    delete obj;
+    if (obj)
+    {
+        scene->removeItem(obj);
+        delete obj->get();
+        delete obj;
+    }
     scene->operationFinished(false);
 }
 
@@ -31,7 +34,7 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = scene->getCursorPos();
+        auto pos = scene->getSnappedCursorPos();
         if (state == 0) // Waiting for first point to be placed
         {
             obj = new GLine;
@@ -54,9 +57,10 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void LineInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    scene->setSnapCursorGuides(true);
     if (state == 1)
     {
-        object()->get()->setP2(scene->getCursorPos());
+        object()->get()->setP2(scene->getSnappedCursorPos());
         obj->reload();
         scene->update();
     }
@@ -73,7 +77,7 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = scene->getCursorPos();
+        auto pos = scene->getSnappedCursorPos();
         if (state == 0)
         {
             obj = new GRect;
@@ -96,9 +100,10 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void RectInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    scene->setSnapCursorGuides(true);
     if (state == 1)
     {
-        object()->get()->setBottomRight(scene->getCursorPos());
+        object()->get()->setBottomRight(scene->getSnappedCursorPos());
         obj->reload();
         scene->update();
     }

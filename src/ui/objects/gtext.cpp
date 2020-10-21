@@ -2,6 +2,7 @@
 
 #include <QGraphicsSceneEvent>
 #include <QTextCursor>
+#include <QKeyEvent>
 
 GText::GText(Text *obj)
     : GObject(obj), QGraphicsTextItem(obj->getText())
@@ -91,6 +92,8 @@ void GText::keyPressEvent(QKeyEvent *event)
     if (textInteractionFlags() == Qt::TextEditorInteraction)
     {
         QGraphicsTextItem::keyPressEvent(event);
+        // Prevent pressing delete from deleting the object, and disable action keybindings
+        event->accept();
         GObject::scene()->update();
     }
     else

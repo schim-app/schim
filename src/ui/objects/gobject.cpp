@@ -205,6 +205,8 @@ void GObjectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         auto delta = scene()->snap(event->scenePos()) - _dragStartPos;
         moveBy(delta.x(), delta.y());
         _dragStartPos = scenePos();
+
+        scene()->setSnapCursorGuides(true);
         event->accept();
     }
     else

@@ -20,18 +20,8 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     setScene(new SheetScene(sheet));
     init();
 
-    // Initialize guides
-    hGuide = scene()->addLine({});
-    vGuide = scene()->addLine({});
-    hGuide->setPos({});
-    vGuide->setPos({});
-    QPen pen(QColor{96, 96, 96}, 0);
-    hGuide->setPen(pen);
-    vGuide->setPen(pen);
-
     viewport()->setCursor(Qt::BlankCursor);
 
-    updateGuides();
     recalculateBaselineZoom();
     updateBackground();
 
@@ -56,8 +46,9 @@ void SheetView::setZoom(float zoom)
     userZoom = qMin(qMax(zoom, 0.25f), 20.0f);
     resetTransform();
     scale(zoom * baselineZoom, zoom * baselineZoom);
+
     updateBackground();
-    updateGuides();
+    scene()->updateGuides();
 }
 
 void SheetView::resetZoom()
@@ -75,17 +66,6 @@ void SheetView::zoomOut(float step)
     setZoom(userZoom / step);
 }
 
-void SheetView::updateGuides(bool snapToGrid)
-{
-    QPointF pos = mapToScene(mapFromGlobal(QCursor::pos()));
-    if (snapToGrid)
-        pos = scene()->snap(pos);
-
-    QRectF rect = {mapToScene(0, 0), mapToScene(viewport()->width(), viewport()->height())};
-    hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());
-    vGuide->setLine(pos.x(), rect.top(), pos.x(), rect.bottom());
-}
-
 SheetScene *SheetView::scene()
 {
     return (SheetScene*) QGraphicsView::scene();
@@ -94,18 +74,18 @@ SheetScene *SheetView::scene()
 void SheetView::mousePressEvent(QMouseEvent *event)
 {
     // Object selection
-    if (event->button() == Qt::LeftButton && !scene()->operation)
+    if (event->buttons() == Qt::LeftButton && !scene()->operation)
     {
         setDragMode(DragMode::RubberBandDrag);
         _selectStartPos = event->pos();
         _selectionTypeDetermined = false;
     }
-    else if (event->button() == Qt::MidButton)
+    else if (event->buttons() == Qt::MidButton)
     {
         setDragMode(DragMode::ScrollHandDrag);
         _panStartPos = event->pos();
-        vGuide->hide();
-        hGuide->hide();
+
+        scene()->showGuides(false);
     }
 
     QGraphicsView::mousePressEvent(event);
@@ -113,16 +93,6 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 
 void SheetView::mouseMoveEvent(QMouseEvent *event)
 {
-    // If the cursor is busy - i.e. something is selected, an operation is active... - the guides are snapped
-    // I would feel more comfortable if I could implement snapping inside the scene, but I know of no way
-    // to do that right now. TODO
-    if (scene()->isSnapEnabled() &&
-            ((event->buttons() == Qt::LeftButton && !scene()->selectedItems().empty() && !_rubberBandDragging)
-             || scene()->operation || event->modifiers() == Qt::SHIFT))
-        updateGuides(true);
-    else
-        updateGuides(false);
-
     if (event->buttons() == Qt::MidButton)
     {
         // WARN doesn't work with some settings of ViewportAnchor
@@ -130,36 +100,33 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         translate(translation.x(), translation.y());
         _panStartPos = event->pos();
     }
-    else if (event->buttons() == Qt::LeftButton && !_selectionTypeDetermined)
-    { // Determine the rubber band type
-        float dx = event->pos().x() - _selectStartPos.x();
-        if (dx > 0)
-        {
-            setRubberBandSelectionMode(Qt::ContainsItemShape);
-            setStyleSheet("selection-background-color: normal");
-        }
-        else if (dx < 0)
-        {
-            setRubberBandSelectionMode(Qt::IntersectsItemShape);
-            setStyleSheet("selection-background-color: green");
-        }
+    else if (event->buttons() == Qt::LeftButton)
+        processRubberBandDrag(event);
 
-        if (dx > 4 || dx < -4)
-            _selectionTypeDetermined = true;
-    }
-    else
-        QGraphicsView::mouseMoveEvent(event);
+    scene()->setSnapCursorGuides(false);
+
+    QGraphicsView::mouseMoveEvent(event);
+
+    if (event->modifiers() == Qt::SHIFT)
+        scene()->setSnapCursorGuides(true);
+    else if (event->buttons() == Qt::MidButton)
+        scene()->setSnapCursorGuides(false);
+
+    // This is to update the cursor guides in the foreground
+    // TODO maybe there is a way to only update the foreground?
+    viewport()->update();
 }
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton || event->button() == Qt::MidButton)
     {
+        // Disable rubber-band select and pan
         setDragMode(DragMode::NoDrag);
         _rubberBandDragging = false;
         viewport()->setCursor(Qt::BlankCursor);
-        vGuide->show();
-        hGuide->show();
+
+        scene()->showGuides(true);
     }
 
     QGraphicsView::mouseReleaseEvent(event);
@@ -172,15 +139,16 @@ void SheetView::onRubberBandChanged(QRect rect, QPointF, QPointF)
 
 void SheetView::leaveEvent(QEvent *event)
 {
-    vGuide->hide();
-    hGuide->hide();
+    scene()->showGuides(false);
+    viewport()->update();
     QGraphicsView::leaveEvent(event);
+    // TODO implement so that the guides are hidden when the mouse leaves the viewport, not the view
 }
 
 void SheetView::enterEvent(QEvent *event)
 {
-    vGuide->show();
-    hGuide->show();
+    scene()->showGuides(true);
+    viewport()->update();
     QGraphicsView::enterEvent(event);
 }
 
@@ -200,8 +168,29 @@ void SheetView::wheelEvent(QWheelEvent *event)
     else
     {
         QGraphicsView::wheelEvent(event);
-        updateGuides();
+        scene()->updateGuides();
     }
+}
+
+void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
+{
+    QGraphicsView::drawForeground(painter, rect);
+
+    if (!scene()->showCursorGuides) return;
+
+    // Draw the cursor guides
+
+    QPointF pos = scene()->getCursorPos();
+
+    if (scene()->getSnapCursorGuides())
+        pos = scene()->snap(pos);
+
+    painter->setPen({QColor{64, 64, 64}, 0});
+
+    // Horizontal
+    painter->drawLine(rect.left(), pos.y(), rect.right(), pos.y());
+    // Vertical
+    painter->drawLine(pos.x(), rect.top(), pos.x(), rect.bottom());
 }
 
 void SheetView::init()
@@ -223,6 +212,27 @@ void SheetView::recalculateBaselineZoom()
 
     baselineZoom = 0.9 * qMin(widthRatio, heightRatio);
     setZoom(userZoom);
+}
+
+void SheetView::processRubberBandDrag(QMouseEvent *event)
+{
+    if (!_selectionTypeDetermined)
+    { // Determine the rubber band type
+        float dx = event->pos().x() - _selectStartPos.x();
+        if (dx > 0)
+        {
+            setRubberBandSelectionMode(Qt::ContainsItemShape);
+            setStyleSheet("selection-background-color: normal");
+        }
+        else if (dx < 0)
+        {
+            setRubberBandSelectionMode(Qt::IntersectsItemShape);
+            setStyleSheet("selection-background-color: green");
+        }
+
+        if (dx > 4 || dx < -4)
+            _selectionTypeDetermined = true;
+    }
 }
 
 float SheetView::zoom() const
