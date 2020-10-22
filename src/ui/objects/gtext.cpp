@@ -8,6 +8,7 @@ GText::GText(Text *obj)
     : GObject(obj), QGraphicsTextItem(obj->getText())
 {
     reload();
+    GObject::setAcceptHoverEvents(true);
 }
 
 QPainterPath GText::shape() const
@@ -19,23 +20,11 @@ void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     GObject::paint(painter, option, widget);
     QGraphicsTextItem::paint(painter, option, widget);
-
-    return; //TODO remove the rest
-
-    QFont font;
-    if (get()->getFont() != "")
-        font.setFamily(get()->getFont());
-    font.setPixelSize(get()->getTextHeight());
-
-    painter->setFont(font);
-    painter->drawText(QPointF{0, get()->getTextHeight()}, get()->getText());
 }
 
 QRectF GText::boundingRect() const
 {
     return QGraphicsTextItem::boundingRect();
-    auto x = shape().boundingRect().marginsAdded({2, 2, 2, 2});
-    return shape().boundingRect().marginsAdded({2, 2, 2, 2});
 }
 
 QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
@@ -82,6 +71,8 @@ void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         GObject::setFocus();
 
         GObject::setCursor(QCursor(Qt::IBeamCursor));
+
+        GObject::scene()->showGuides(false);
     }
     else
         GObject::mouseDoubleClickEvent(event);
@@ -111,6 +102,19 @@ void GText::keyReleaseEvent(QKeyEvent *event)
         GObject::keyReleaseEvent(event);
 }
 
+void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (textInteractionFlags() == Qt::TextEditorInteraction)
+        GObject::scene()->showGuides(false);
+    QGraphicsTextItem::hoverEnterEvent(event);
+}
+
+void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    GObject::scene()->showGuides(true);
+    QGraphicsTextItem::hoverEnterEvent(event);
+}
+
 void GText::focusOutEvent(QFocusEvent *event)
 {
     setTextInteractionFlags(Qt::NoTextInteraction);
@@ -127,6 +131,11 @@ void GText::focusOutEvent(QFocusEvent *event)
 void GText::reload()
 {
     GObject::setPos(get()->getPos());
+    QFont font;
+    if (get()->getFont() != "")
+        font.setFamily(get()->getFont());
+    font.setPixelSize(get()->getTextHeight());
+    setFont(font);
 }
 
 Text *GText::get()

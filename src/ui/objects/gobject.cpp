@@ -115,6 +115,13 @@ void GObject::showHandles(bool show)
 
 void GObject::handleChanged(GObjectHandle *) { }
 
+void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton)
+        scene()->setSnapCursorGuides(true);
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     QGraphicsItem::hoverEnterEvent(event);

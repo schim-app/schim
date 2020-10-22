@@ -4,6 +4,7 @@
 #include "ui/objects/gline.h"
 #include "ui/commands.h"
 #include "ui/operations.h"
+#include "global.h"
 
 #include <QAction>
 #include <QColor>
@@ -12,7 +13,7 @@
 #include <QtMath>
 
 // Static variables in SheetScene
-float SheetScene::gridX = 5, SheetScene::gridY = 5;
+float SheetScene::gridX = 2.5, SheetScene::gridY = 2.5; //TODO change back to 5
 bool SheetScene::gridEnabled = 5, SheetScene::snapEnabled = 5;
 
 SheetScene::SheetScene(Sheet *sheet)
@@ -134,11 +135,6 @@ void SheetScene::initGuides()
     vGuide->setPen(pen);
 }
 
-void SheetScene::showGuides(bool show)
-{
-    showCursorGuides = show;
-}
-
 QPointF SheetScene::snap(const QPointF &pt) const
 {
     if (!snapEnabled)
@@ -146,6 +142,11 @@ QPointF SheetScene::snap(const QPointF &pt) const
 
     QPointF center = sheet->getContentArea().center();
     return center + QPointF{round((pt.x() - center.x()) / gridX) * gridX, round((pt.y() - center.y()) / gridY) * gridY};
+}
+
+void SheetScene::showGuides(bool show)
+{
+    showCursorGuides = show;
 }
 
 void SheetScene::updateGuides()
@@ -167,22 +168,44 @@ void SheetScene::updateGuides()
 
 void SheetScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    if (!gridEnabled) return;
+
+    QPen pen(Qt::black, dpiInvariant(1));
+    pen.setCosmetic(true);
+    painter->setPen(pen);
 
     // Draw the grid
-    painter->setPen({Qt::black, 0});
-    QRectF contentArea = sheet->getContentArea();
-    QPointF center = contentArea.center();
-    float Xmin = qMax(rect.left(), contentArea.left()),
-        Xmax = qMin(rect.right(), contentArea.right()),
-        Ymin = qMax(rect.top(), contentArea.top()),
-        Ymax = qMin(rect.bottom(), contentArea.bottom());
-    int Imax = (Xmax - center.x()) / gridX,
-        Jmax = (Ymax - center.y()) / gridY;
+    if (gridEnabled)
+    {
+        //TODO hide this implementation detail in a function in global.h
+        QRectF contentArea = sheet->getContentArea();
+        QPointF center = contentArea.center();
+        float Xmin = qMax(rect.left(), contentArea.left()),
+                Xmax = qMin(rect.right(), contentArea.right()),
+                Ymin = qMax(rect.top(), contentArea.top()),
+                Ymax = qMin(rect.bottom(), contentArea.bottom());
+        int Imax = (Xmax - center.x()) / gridX,
+                Jmax = (Ymax - center.y()) / gridY;
 
-    for (int i = qCeil((Xmin - center.x()) / gridX); i <= Imax; ++i)
-        for (int j = qCeil((Ymin - center.y()) / gridY); j <= Jmax; ++j)
-        painter->drawPoint(QPointF{center.x() + i * gridX, center.y() + j * gridY});
+        for (int i = qCeil((Xmin - center.x()) / gridX); i <= Imax; ++i)
+            for (int j = qCeil((Ymin - center.y()) / gridY); j <= Jmax; ++j)
+                painter->drawPoint(QPointF{center.x() + i * gridX, center.y() + j * gridY});
+    }
+
+    // Draw the cursor guides
+    if (showCursorGuides)
+    {
+        QPointF pos = getCursorPos();
+
+        if (getSnapCursorGuides())
+            pos = snap(pos);
+
+        painter->setPen({QColor{64, 64, 64}, 0});
+
+        // Horizontal
+        painter->drawLine(QLineF{rect.left(), pos.y(), rect.right(), pos.y()});
+        // Vertical
+        painter->drawLine(QLineF{pos.x(), rect.top(), pos.x(), rect.bottom()});
+    }
 }
 
 void SheetScene::keyPressEvent(QKeyEvent *event)
@@ -215,6 +238,7 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     cursorPos = event->scenePos();
+
     if (operation)
         operation->mouseMoveEvent(event);
     else

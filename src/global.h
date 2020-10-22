@@ -28,4 +28,9 @@ QVariant getSetting(const QString &key, const QString &defaultValue);
 
 QString resolvePath(const QString &path);
 
+/**
+ * @brief Take an input in pixels and return a value that is independent of screen DPI.
+ */
+float dpiInvariant(float pxInput);
+
 #endif // GLOBAL_H

@@ -3,6 +3,8 @@
 #include <QSettings>
 #include <QFileInfo>
 #include <QColor>
+#include <QApplication>
+#include <QScreen>
 
 /**
  * Dynamically allocate a QSettings object and return a pointer to it.
@@ -48,4 +50,9 @@ QString resolvePath(const QString &path)
     else if (QFile(currentProjectPath + "/" + path).exists()) // The path is relative to the current project
         return currentProjectPath + "/" + path;
     else return path;
+}
+
+float dpiInvariant(float pxInput)
+{
+    return pxInput * QApplication::screens().at(0)->logicalDotsPerInch() / 141.21;
 }

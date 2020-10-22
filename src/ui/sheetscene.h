@@ -52,6 +52,7 @@ public:
      * Both the argument and return value are in scene coordinates.
      */
     QPointF snap(const QPointF &pt) const;
+    void showGuides(bool show);
     void updateGuides();
 
     void operationFinished(bool success = true);
@@ -59,7 +60,6 @@ public:
 private:
 
     void initGuides();
-    void showGuides(bool show);
 
     void drawForeground(QPainter *painter, const QRectF &rect) override;
 

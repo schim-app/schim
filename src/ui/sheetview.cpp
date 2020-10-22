@@ -107,6 +107,7 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
     QGraphicsView::mouseMoveEvent(event);
 
+    //TODO move this to scene implementation??
     if (event->modifiers() == Qt::SHIFT)
         scene()->setSnapCursorGuides(true);
     else if (event->buttons() == Qt::MidButton)
@@ -176,21 +177,6 @@ void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsView::drawForeground(painter, rect);
 
-    if (!scene()->showCursorGuides) return;
-
-    // Draw the cursor guides
-
-    QPointF pos = scene()->getCursorPos();
-
-    if (scene()->getSnapCursorGuides())
-        pos = scene()->snap(pos);
-
-    painter->setPen({QColor{64, 64, 64}, 0});
-
-    // Horizontal
-    painter->drawLine(rect.left(), pos.y(), rect.right(), pos.y());
-    // Vertical
-    painter->drawLine(pos.x(), rect.top(), pos.x(), rect.bottom());
 }
 
 void SheetView::init()
