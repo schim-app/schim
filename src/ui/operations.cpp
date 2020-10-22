@@ -9,11 +9,11 @@ Operation::Operation(SheetScene *scene)
 
 Operation::~Operation() { }
 
-void Operation::mousePressEvent(QGraphicsSceneMouseEvent *event) { }
+void Operation::mousePressEvent(QGraphicsSceneMouseEvent *) { }
 
-void Operation::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { }
+void Operation::mouseMoveEvent(QGraphicsSceneMouseEvent *) { }
 
-void Operation::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) { }
+void Operation::mouseReleaseEvent(QGraphicsSceneMouseEvent *) { }
 
 void Operation::keyPressEvent(QKeyEvent *) { }
 
@@ -98,7 +98,7 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void RectInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void RectInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *)
 {
     scene->setSnapCursorGuides(true);
     if (state == 1)
@@ -116,21 +116,28 @@ GRect *RectInsertOperation::object() const
 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-}
-
-void TextInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
-void TextInsertOperation::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (state == 1 && event->buttons() == Qt::LeftButton)
+    if (event->buttons() == Qt::LeftButton)
     {
+        auto pos = scene->getSnappedCursorPos();
+        obj = new GText;
+        obj->get()->setPos(pos);
+        obj->reload();
+        scene->addItem(obj);
+        object()->setEditable();
+        //TODO move this somewhere else. Make it so that when the text item is
+        // unfocused, detect if the text is empty and remove the item.
+        // This would require a signal in GText but right now I can't implement
+        // it because of multiple inheritance.
+        scene->command(new CmdInsertObject(obj, scene));
+        scene->operationFinished();
     }
+}
+
+void TextInsertOperation::textItemUnfocused()
+{
+    scene->operationFinished();
 }
 
 GText *TextInsertOperation::object() const

@@ -18,7 +18,7 @@ class QKeyEvent;
  *
  * Each operation is associated with a scene.
  */
-class Operation
+class Operation : public QObject
 {
 public:
     /**
@@ -69,16 +69,19 @@ private:
 
 class TextInsertOperation : public Operation
 {
+    Q_OBJECT
 public:
     using Operation::Operation;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     /// Convenience function to cast obj
     GText *object() const;
+
+//private slots:
+    void textItemUnfocused();
+
 
 private:
     int state = 0;

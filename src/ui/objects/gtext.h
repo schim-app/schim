@@ -15,6 +15,9 @@ public:
     Text *get();
     const Text *get() const;
 
+    // SETTERS
+    void setEditable(bool editable = true);
+
     // OVERRIDEN QGraphicsItem METHODS
 
     QPainterPath shape() const override;
@@ -55,14 +58,18 @@ public:
     /** In editing mode, update the model object based on the text input by calling apply. */
     void keyReleaseEvent(QKeyEvent *event) override;
 
+    /** Perform a dirty trick to show the text cursor upon receiving focus. */
+    void focusInEvent(QFocusEvent *event) override;
     /** Disable editing, reset mouse cursor to default, and clear text selection. */
     void focusOutEvent(QFocusEvent *event) override;
+
+    void timerEvent(QTimerEvent *event) override;
+
 
     // FOR EDITING THE OBJECT
 
     void reload() override;
     void apply() override;
-
 };
 
 #endif // GTEXT_H

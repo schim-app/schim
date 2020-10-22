@@ -53,7 +53,6 @@ public:
      */
     QPointF snap(const QPointF &pt) const;
     void showGuides(bool show);
-    void updateGuides();
 
     void operationFinished(bool success = true);
 
@@ -73,7 +72,6 @@ private:
 private:
 
     QGraphicsRectItem *pageBackgroundItem;
-    QGraphicsLineItem *hGuide, *vGuide;
 
     // The scene operation that is currently active
     Operation *operation{};

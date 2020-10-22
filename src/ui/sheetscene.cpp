@@ -23,9 +23,6 @@ SheetScene::SheetScene(Sheet *sheet)
 
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()}, {Qt::black, 0}, Qt::white);
 
-    // Init cursor guides, set their display properties
-    //initGuides(); //TODO remove completely
-
     // Add the sheet header, if it is defined
     if (sheet->getHeader())
         addItem(GObject::assign(sheet->getHeader()));
@@ -123,18 +120,6 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
-void SheetScene::initGuides()
-{
-    hGuide = addLine({});
-    vGuide = addLine({});
-    hGuide->setPos({});
-    vGuide->setPos({});
-
-    QPen pen(QColor{96, 96, 96}, 0);
-    hGuide->setPen(pen);
-    vGuide->setPen(pen);
-}
-
 QPointF SheetScene::snap(const QPointF &pt) const
 {
     if (!snapEnabled)
@@ -147,19 +132,6 @@ QPointF SheetScene::snap(const QPointF &pt) const
 void SheetScene::showGuides(bool show)
 {
     showCursorGuides = show;
-}
-
-void SheetScene::updateGuides()
-{
-    return; //TODO remove the whole functiou
-    QPointF pos = cursorPos;
-    if (snapGuides)
-        pos = snap(pos);
-
-    // The scene rect
-    QRectF rect = {0, 0, width(), height()};
-    hGuide->setLine(rect.left(), pos.y(), rect.right(), pos.y());
-    vGuide->setLine(pos.x(), rect.top(), pos.x(), rect.bottom());
 }
 
 /*****************

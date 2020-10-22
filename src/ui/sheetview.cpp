@@ -48,7 +48,6 @@ void SheetView::setZoom(float zoom)
     scale(zoom * baselineZoom, zoom * baselineZoom);
 
     updateBackground();
-    scene()->updateGuides();
 }
 
 void SheetView::resetZoom()
@@ -167,10 +166,7 @@ void SheetView::wheelEvent(QWheelEvent *event)
         zoomIn(1 + delta);
     }
     else
-    {
         QGraphicsView::wheelEvent(event);
-        scene()->updateGuides();
-    }
 }
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)

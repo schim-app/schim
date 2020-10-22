@@ -3,6 +3,7 @@
 #include <QGraphicsSceneEvent>
 #include <QTextCursor>
 #include <QKeyEvent>
+#include <QTimer>
 
 GText::GText(Text *obj)
     : GObject(obj), QGraphicsTextItem(obj->getText())
@@ -10,6 +11,46 @@ GText::GText(Text *obj)
     reload();
     GObject::setAcceptHoverEvents(true);
 }
+
+// GETTERS
+
+Text *GText::get()
+{
+    return (Text*) obj;
+}
+
+const Text *GText::get() const
+{
+    return (Text*) obj;
+}
+
+void GText::setEditable(bool editable)
+{
+    static int timerId;
+    if (editable)
+    {
+        setTextInteractionFlags(Qt::TextEditorInteraction);
+        GObject::setFlag(GObject::ItemIsFocusable);
+        GObject::setFocus();
+
+        GObject::setCursor(QCursor(Qt::IBeamCursor));
+        timerId = startTimer(250);
+    }
+    else
+    {
+        setTextInteractionFlags(Qt::NoTextInteraction);
+
+        GObject::unsetCursor();
+
+        auto tc = textCursor();
+        tc.clearSelection();
+        setTextCursor(tc);
+
+        killTimer(timerId);
+    }
+}
+
+// OVERRIDEN QGraphicsItem METHODS
 
 QPainterPath GText::shape() const
 {
@@ -27,6 +68,13 @@ QRectF GText::boundingRect() const
     return QGraphicsTextItem::boundingRect();
 }
 
+SheetScene *GText::scene()
+{
+    return GObject::scene();
+}
+
+// EVENTS
+
 QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     return GObject::itemChange(change, value);
@@ -35,7 +83,11 @@ QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (textInteractionFlags() == Qt::TextEditorInteraction) // We are in editing mode
+    {
+        // Update the cursor
+        scene()->update();
         QGraphicsTextItem::mousePressEvent(event);
+    }
     else
         GObject::mousePressEvent(event);
 }
@@ -65,12 +117,7 @@ void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton && textInteractionFlags() == Qt::NoTextInteraction)
     {
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        GObject::setFlag(GObject::ItemIsFocusable);
-        GObject::setFocus();
-
-        GObject::setCursor(QCursor(Qt::IBeamCursor));
-
+        setEditable();
         GObject::scene()->showGuides(false);
     }
     else
@@ -115,23 +162,26 @@ void GText::keyReleaseEvent(QKeyEvent *event)
         GObject::keyReleaseEvent(event);
 }
 
+void GText::focusInEvent(QFocusEvent *event)
+{
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_A, 0));
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Backspace, 0));
+    QGraphicsTextItem::focusInEvent(event);
+}
+
 void GText::focusOutEvent(QFocusEvent *event)
 {
-    setTextInteractionFlags(Qt::NoTextInteraction);
-
-    GObject::unsetCursor();
-
-    auto tc = textCursor();
-    tc.clearSelection();
-    setTextCursor(tc);
-
+    setEditable(false);
     QGraphicsTextItem::focusOutEvent(event);
 }
 
-SheetScene *GText::scene()
+void GText::timerEvent(QTimerEvent *event)
 {
-    return GObject::scene();
+    GObject::update();
+    QGraphicsTextItem::timerEvent(event);
 }
+
+// FOR EDITING THE OBJECT
 
 void GText::reload()
 {
@@ -148,14 +198,4 @@ void GText::apply()
     auto pt = GObject::pos();
     get()->setPos(GObject::pos());
     get()->setText(toPlainText());
-}
-
-Text *GText::get()
-{
-    return (Text*) obj;
-}
-
-const Text *GText::get() const
-{
-    return (Text*) obj;
 }
