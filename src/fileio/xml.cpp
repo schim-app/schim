@@ -158,10 +158,11 @@ Object *xmlParseObject(QXmlStreamReader &stream)
 void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
 {
     // This is chiefly a product of my laziness
-    #define if_cast_parse(obj, TYPE) if (dynamic_cast<TYPE*>(obj)) xmlWrite##TYPE((TYPE*) obj, stream)
+    #define if_cast_write(obj, TYPE) if (dynamic_cast<TYPE*>(obj)) xmlWrite##TYPE((TYPE*) obj, stream)
 
-    if_cast_parse(obj, Line);
-    if_cast_parse(obj, Rect);
+    if_cast_write(obj, Line);
+    if_cast_write(obj, Rect);
+    if_cast_write(obj, Text);
 }
 
 Line *xmlParseLine(QXmlStreamReader &stream)
@@ -193,13 +194,15 @@ Line *xmlParseLine(QXmlStreamReader &stream)
 
 void xmlWriteLine(Line *line, QXmlStreamWriter &stream)
 {
+    Line def; // Object with default values
     stream.writeStartElement("line");
 
     stream.writeAttribute("x1", QString::number(line->p1().x()));
     stream.writeAttribute("y1", QString::number(line->p1().y()));
     stream.writeAttribute("x2", QString::number(line->p2().x()));
     stream.writeAttribute("y2", QString::number(line->p2().y()));
-    stream.writeAttribute("width", QString::number(line->getLinewidth()));
+    if (line->getLinewidth() != def.getLinewidth())
+        stream.writeAttribute("width", QString::number(line->getLinewidth()));
 
     stream.writeEndElement();
 }
@@ -229,6 +232,7 @@ Rect *xmlParseRect(QXmlStreamReader &stream)
 
 void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
 {
+    Rect def; // Object with default values
     stream.writeStartElement("rect");
 
     stream.writeAttribute("x", QString::number(rect->left()));
@@ -245,12 +249,21 @@ Text *xmlParseText(QXmlStreamReader &stream)
 
     try
     {
+        float x = text->getPos().x(), y = text->getPos().y();
         for (const auto &attr : stream.attributes())
         {
+            bool conversion_ok = true;
             if (attr.name() == "text")
                 text->setText(attr.value().toString());
+            else if (attr.name() == "x")
+                x = attr.value().toString().toFloat(&conversion_ok);
+            else if (attr.name() == "y")
+                y = attr.value().toString().toFloat(&conversion_ok);
             else
                 throw std::logic_error("Unknown attributes for text object");
+            if (!conversion_ok)
+                throw std::logic_error("Text object attributes are of invalid format");
+            text->setPos({x, y});
         }
     }
     catch (...)
@@ -259,6 +272,19 @@ Text *xmlParseText(QXmlStreamReader &stream)
     }
 
     return text;
+}
+
+void xmlWriteText(Text *text, QXmlStreamWriter &stream)
+{
+    Text def; // Object with default values
+    stream.writeStartElement("text");
+
+    if (text->getText() != def.getText())
+        stream.writeAttribute("text", text->getText());
+    stream.writeAttribute("x", QString::number(text->getPos().x()));
+    stream.writeAttribute("y", QString::number(text->getPos().y()));
+
+    stream.writeEndElement();
 }
 
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)

@@ -13,7 +13,7 @@
 #include <QtMath>
 
 // Static variables in SheetScene
-float SheetScene::gridX = 2.5, SheetScene::gridY = 2.5; //TODO change back to 5
+float SheetScene::gridX = 5, SheetScene::gridY = 5;
 bool SheetScene::gridEnabled = 5, SheetScene::snapEnabled = 5;
 
 SheetScene::SheetScene(Sheet *sheet)
@@ -168,7 +168,6 @@ void SheetScene::updateGuides()
 
 void SheetScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
-
     QPen pen(Qt::black, dpiInvariant(1));
     pen.setCosmetic(true);
     painter->setPen(pen);
@@ -199,7 +198,8 @@ void SheetScene::drawForeground(QPainter *painter, const QRectF &rect)
         if (getSnapCursorGuides())
             pos = snap(pos);
 
-        painter->setPen({QColor{64, 64, 64}, 0});
+        pen.setColor({64, 64, 64});
+        painter->setPen(pen);
 
         // Horizontal
         painter->drawLine(QLineF{rect.left(), pos.y(), rect.right(), pos.y()});

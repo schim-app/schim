@@ -35,6 +35,7 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream);
 
 /** Parse a text object */
 Text *xmlParseText(QXmlStreamReader &stream);
+void xmlWriteText(Text *text, QXmlStreamWriter &stream);
 //TODO write
 
 /** Parse a custom object */

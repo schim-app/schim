@@ -62,17 +62,6 @@ QRectF GLine::boundingRect() const
     return shape().boundingRect();
 }
 
-QVariant GLine::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    if (change == ItemPositionHasChanged)
-    {
-        QPointF delta = get()->p2() - get()->p1();
-        get()->setP1(value.toPointF());
-        get()->setP2(value.toPointF() + delta);
-    }
-    return GObject::itemChange(change, value);
-}
-
 void GLine::reload()
 {
     setPos(get()->p1());
@@ -85,8 +74,8 @@ void GLine::reload()
 
 void GLine::apply()
 {
-    get()->setP1((*handles)[0]->pos());
-    get()->setP2((*handles)[1]->pos());
+    get()->setP1((*handles)[0]->scenePos());
+    get()->setP2((*handles)[1]->scenePos());
 }
 
 void GLine::handleChanged(GObjectHandle *handle)

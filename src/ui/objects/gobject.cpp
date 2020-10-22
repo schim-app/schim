@@ -149,6 +149,8 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
     }
     else if (change == ItemPositionChange && scene() && SheetScene::isSnapEnabled())
         return scene()->snap(value.toPointF());
+    else if (change == ItemPositionHasChanged)
+        apply();
 
     return QGraphicsItem::itemChange(change, value);
 }

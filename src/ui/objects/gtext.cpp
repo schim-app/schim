@@ -57,6 +57,8 @@ void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     {
         QGraphicsTextItem::mouseReleaseEvent(event);
         GObject::scene()->update();
+        // Override default behavior of the view which shows the guides when left button is released.
+        scene()->showGuides(false);
     }
     else
         GObject::mouseReleaseEvent(event);
@@ -97,6 +99,7 @@ void GText::keyReleaseEvent(QKeyEvent *event)
     {
         QGraphicsTextItem::keyPressEvent(event);
         GObject::scene()->update();
+        apply();
     }
     else
         GObject::keyReleaseEvent(event);
@@ -128,6 +131,11 @@ void GText::focusOutEvent(QFocusEvent *event)
     QGraphicsTextItem::focusOutEvent(event);
 }
 
+SheetScene *GText::scene()
+{
+    return GObject::scene();
+}
+
 void GText::reload()
 {
     GObject::setPos(get()->getPos());
@@ -136,6 +144,13 @@ void GText::reload()
         font.setFamily(get()->getFont());
     font.setPixelSize(get()->getTextHeight());
     setFont(font);
+}
+
+void GText::apply()
+{
+    auto pt = GObject::pos();
+    get()->setPos(GObject::pos());
+    get()->setText(toPlainText());
 }
 
 Text *GText::get()

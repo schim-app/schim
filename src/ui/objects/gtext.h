@@ -23,10 +23,12 @@ public:
     void keyReleaseEvent(QKeyEvent *event) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
-
     void focusOutEvent(QFocusEvent *event) override;
 
+    SheetScene *scene();
+
     void reload() override;
+    void apply() override;
 
     Text *get();
     const Text *get() const;

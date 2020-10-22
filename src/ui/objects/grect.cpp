@@ -43,13 +43,6 @@ QPainterPath GRect::shape() const
     return path;
 }
 
-QVariant GRect::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    if (change == ItemPositionHasChanged)
-        get()->setPos(value.toPointF());
-    return GObject::itemChange(change, value);
-}
-
 void GRect::reload()
 {
     setPos(get()->getPos());
@@ -64,7 +57,7 @@ void GRect::reload()
 
 void GRect::apply()
 {
-    //TODO implement
+    get()->setPos(pos());
 }
 
 void GRect::showHandles(bool show)
