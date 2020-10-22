@@ -15,7 +15,7 @@ void Operation::mouseMoveEvent(QGraphicsSceneMouseEvent *event) { }
 
 void Operation::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) { }
 
-void Operation::keyPressEvent(QKeyEvent *event) { }
+void Operation::keyPressEvent(QKeyEvent *) { }
 
 void Operation::cancel()
 {
@@ -55,7 +55,7 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void LineInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void LineInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *)
 {
     scene->setSnapCursorGuides(true);
     if (state == 1)

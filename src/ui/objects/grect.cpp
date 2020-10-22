@@ -7,9 +7,23 @@
 GRect::GRect(Rect *obj)
     : GObject(obj) { }
 
+// GETTERS
+
+Rect *GRect::get()
+{
+    return (Rect*) obj;
+}
+
+const Rect *GRect::get() const
+{
+    return (Rect*) obj;
+}
+
+// OVERRIDEN QGraphicsItem METHODS
+
 QRectF GRect::boundingRect() const
 {
-    float infl = get()->linewidth;
+    float infl = get()->linewidth; // Inflation
     return get()->marginsAdded({infl, infl, infl, infl}).translated(-get()->getPos());
 }
 
@@ -43,6 +57,8 @@ QPainterPath GRect::shape() const
     return path;
 }
 
+// FOR EDITING THE OBJECT
+
 void GRect::reload()
 {
     setPos(get()->getPos());
@@ -64,12 +80,14 @@ void GRect::showHandles(bool show)
 {
     if (show && handles == nullptr)
     {
+        // There are 4 handles - in the corners of the rectangle
         handles = new QList<GObjectHandle*> {
                 new GObjectHandle(this),
                 new GObjectHandle(this),
                 new GObjectHandle(this),
                 new GObjectHandle(this)
         };
+        // Place the handles in their proper location
         reload();
     }
     else
@@ -96,14 +114,4 @@ void GRect::handleChanged(GObjectHandle *handle)
     reload();
     if (scene())
         scene()->update();
-}
-
-Rect *GRect::get()
-{
-    return (Rect*) obj;
-}
-
-const Rect *GRect::get() const
-{
-    return (Rect*) obj;
 }

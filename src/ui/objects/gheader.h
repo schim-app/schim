@@ -6,14 +6,20 @@
 
 #include <QVariant>
 
+/**
+ * @brief Graphical representation of a `Header` in a scene.
+ */
 class GHeader : public GCompositeObject
 {
 public:
     GHeader(Header *obj);
 
+    // GETTERS
+
     Header *get();
     const Header *get() const;
-    QRectF getContentArea() const;
+
+    // EVENTS
 
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 };

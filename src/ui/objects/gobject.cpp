@@ -42,12 +42,14 @@ GObject::~GObject()
     }
 }
 
-const Object *GObject::get() const
+// GETTERS
+
+Object *GObject::get()
 {
     return obj;
 }
 
-Object *GObject::get()
+const Object *GObject::get() const
 {
     return obj;
 }
@@ -67,15 +69,7 @@ SheetScene *GObject::scene()
     return (SheetScene*) QGraphicsItem::scene();
 }
 
-GObject *GObject::assign(Object *obj)
-{
-    if_cast_return(Line, obj);
-    if_cast_return(Rect, obj);
-    if_cast_return(Header, obj);
-    if_cast_return(CompositeObject, obj);
-    if_cast_return(Text, obj);
-    return nullptr;
-}
+// OVERRIDEN METHODS
 
 QRectF GObject::boundingRect() const
 {
@@ -96,6 +90,8 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     painter->setPen(pen);
 }
 
+// FOR EDITING THE OBJECT
+
 void GObject::reload() { }
 
 void GObject::apply() { }
@@ -114,6 +110,20 @@ void GObject::showHandles(bool show)
 }
 
 void GObject::handleChanged(GObjectHandle *) { }
+
+// STATIC
+
+GObject *GObject::assign(Object *obj)
+{
+    if_cast_return(Line, obj);
+    if_cast_return(Rect, obj);
+    if_cast_return(Header, obj);
+    if_cast_return(CompositeObject, obj);
+    if_cast_return(Text, obj);
+    return nullptr;
+}
+
+// EVENTS
 
 void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -143,17 +153,19 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
     else if (change == ItemSelectedHasChanged)
         showHandles(value.toBool());
     else if (change == ItemSceneHasChanged && value.isNull())
-    {
+    { //TODO figure out why I am doing this
         setSelected(false);
         hovered = false;
     }
-    else if (change == ItemPositionChange && scene() && SheetScene::isSnapEnabled())
+    else if (change == ItemPositionChange && scene())
         return scene()->snap(value.toPointF());
     else if (change == ItemPositionHasChanged)
         apply();
 
     return QGraphicsItem::itemChange(change, value);
 }
+
+// HELPER METHODS
 
 void GObject::moveHandlesAbove()
 {
@@ -187,6 +199,8 @@ SheetScene *GObjectHandle::scene()
 {
     return (SheetScene*) QGraphicsItem::scene();
 }
+
+// EVENTS
 
 QVariant GObjectHandle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {

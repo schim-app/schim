@@ -1,0 +1,7 @@
+=====
+GRect
+=====
+
+.. toctree::
+
+.. doxygenclass:: GRect

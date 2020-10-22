@@ -20,7 +20,10 @@ touch $files
 
 cd "$tmpdir"
 
-tree | head -n -2 | tail -n +2 | sed 's/....//' > "$source_dir"/docs/_build/tree.txt
+# This is where the meat of the script is 
+tree | head -n -2 | tail -n +2 | grep -v '[^(main)]\.cpp' |
+	sed 's/....//' \
+	> "$source_dir"/docs/_build/tree.txt
 
 rm -rf "$tmpdir"
 

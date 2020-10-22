@@ -7,24 +7,37 @@
 #include <QGraphicsRectItem>
 
 
+/**
+ * @brief Graphical representation of a rectangle.
+ */
 class GRect : public GObject
 {
 public:
     GRect(Rect *obj = new Rect);
 
 public:
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QPainterPath shape() const;
-
-    void reload() override;
-    void apply() override;
-
-    void showHandles(bool show = true) override;
-    void handleChanged(GObjectHandle *handle) override;
+    // GETTERS
 
     Rect *get();
     const Rect *get() const;
+
+    // OVERRIDEN QGraphicsItem METHODS
+
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QPainterPath shape() const override;
+
+    // FOR EDITING THE OBJECT
+
+    /** @copybrief GObject::reload */
+    void reload() override;
+    /** @copybrief GObject::apply */
+    void apply() override;
+    /** @copybrief GObject::showHandles */
+    void showHandles(bool show = true) override;
+    /** @copybrief GObject::handleChanged */
+    void handleChanged(GObjectHandle *handle) override;
+
 };
 
 #endif // GRECT_H

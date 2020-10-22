@@ -1,0 +1,7 @@
+================
+GCompositeObject
+================
+
+.. toctree::
+
+.. doxygenclass:: GCompositeObject

@@ -16,7 +16,7 @@ Project
 =======
 
 A project is nothing more than a collection of sheets (of paper) and some
-configured parameters. It is modeled by a class of the same name.
+configured parameters.
 
 .. doxygenclass:: Project
 
@@ -59,7 +59,8 @@ lines, rectangles, etc. Such objects are called composite objects. They are all
 derived from the class :ref:`CompositeObject`, which in turn inherits
 :ref:`Object`.
 
-The core feature that composite objects have is that they contain a list (by
-inheriting QList as well) of objects they are composed of.
+The core differentiator between primitive and composite objects is that
+composite objects have is that they contain a list (by inheriting QList as well)
+of objects they are composed of.
 
 .. doxygenclass:: CompositeObject

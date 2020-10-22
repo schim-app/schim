@@ -15,6 +15,8 @@ GLine::GLine(Line *obj)
     reload();
 }
 
+// GETTERS
+
 Line *GLine::get()
 {
     return (Line*) obj;
@@ -24,6 +26,8 @@ const Line *GLine::get() const
 {
     return (Line*) obj;
 }
+
+// OVERRIDEN QGraphicsItem METHODS
 
 QPainterPath GLine::shape() const
 {
@@ -61,6 +65,8 @@ QRectF GLine::boundingRect() const
     // TODO maybe make this more efficient
     return shape().boundingRect();
 }
+
+// FOR EDITING THE OBJECT
 
 void GLine::reload()
 {

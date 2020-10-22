@@ -10,6 +10,14 @@
 class QGraphicsSceneMouseEvent;
 class QKeyEvent;
 
+/**
+ * @brief The base class of all scene operations.
+ *
+ * An operation is any multi-step process that relies on mouse/keyboard
+ * input. An example of an operation is inserting a line.
+ *
+ * Each operation is associated with a scene.
+ */
 class Operation
 {
 public:
@@ -38,6 +46,8 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
+private:
+    /// Convenience function to cast obj
     GLine *object() const;
 
 private:
@@ -66,7 +76,10 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
+private:
+    /// Convenience function to cast obj
     GText *object() const;
+
 private:
     int state = 0;
 };

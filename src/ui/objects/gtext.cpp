@@ -34,11 +34,8 @@ QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVari
 
 void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-    {
+    if (textInteractionFlags() == Qt::TextEditorInteraction) // We are in editing mode
         QGraphicsTextItem::mousePressEvent(event);
-        GObject::scene()->update();
-    }
     else
         GObject::mousePressEvent(event);
 }
@@ -80,6 +77,19 @@ void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         GObject::mouseDoubleClickEvent(event);
 }
 
+void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (textInteractionFlags() == Qt::TextEditorInteraction)
+        GObject::scene()->showGuides(false);
+    QGraphicsTextItem::hoverEnterEvent(event);
+}
+
+void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    GObject::scene()->showGuides(true);
+    QGraphicsTextItem::hoverEnterEvent(event);
+}
+
 void GText::keyPressEvent(QKeyEvent *event)
 {
     if (textInteractionFlags() == Qt::TextEditorInteraction)
@@ -103,19 +113,6 @@ void GText::keyReleaseEvent(QKeyEvent *event)
     }
     else
         GObject::keyReleaseEvent(event);
-}
-
-void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-        GObject::scene()->showGuides(false);
-    QGraphicsTextItem::hoverEnterEvent(event);
-}
-
-void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    GObject::scene()->showGuides(true);
-    QGraphicsTextItem::hoverEnterEvent(event);
 }
 
 void GText::focusOutEvent(QFocusEvent *event)

@@ -24,6 +24,7 @@ Documentation
 
 Directory Structure
 ===================
+For the sake of clarity, ``.cpp`` files with matching ``.h`` files have been omitted.
 
 .. include:: ../_build/tree.txt
    :literal:
