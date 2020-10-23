@@ -42,6 +42,7 @@ public:
     int getTabId() const;
 	/** Return the current tab as a SheetView* */
     SheetView *getTab();
+    SheetScene *scene();
     /** Return the Sheet* that is part of the currently active tab */
     Sheet *getSheet();
 
@@ -85,6 +86,8 @@ private slots:
     void insertText();
     void increaseGridSize();
     void decreaseGridSize();
+    void showAllTexts();
+    void showAllPrimitives();
 
     void on_todoButton_pressed();
 

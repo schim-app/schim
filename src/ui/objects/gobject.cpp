@@ -153,7 +153,7 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
     else if (change == ItemSelectedHasChanged)
         showHandles(value.toBool());
     else if (change == ItemSceneHasChanged && value.isNull())
-    { //TODO figure out why I am doing this
+    { // Unselect and unhover the item when it leaves the scene
         setSelected(false);
         hovered = false;
     }

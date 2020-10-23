@@ -73,15 +73,24 @@ void GLine::reload()
     setPos(get()->p1());
     if (handles != nullptr)
     {
+        for (auto *handle : *handles)
+            handle->setFlag(ItemSendsGeometryChanges, false);
+
         (*handles)[0]->setPos(QPointF{0, 0});
         (*handles)[1]->setPos({get()->dx(), get()->dy()});
+
+        for (auto *handle : *handles)
+            handle->setFlag(ItemSendsGeometryChanges, true);
     }
 }
 
 void GLine::apply()
 {
-    get()->setP1((*handles)[0]->scenePos());
-    get()->setP2((*handles)[1]->scenePos());
+    if (handles)
+    {
+        get()->setP1((*handles)[0]->scenePos());
+        get()->setP2((*handles)[1]->scenePos());
+    }
 }
 
 void GLine::handleChanged(GObjectHandle *handle)
@@ -90,6 +99,7 @@ void GLine::handleChanged(GObjectHandle *handle)
         get()->setP1(mapToScene(handle->pos()));
     else if (handle == (*handles)[1])
         get()->setP2(mapToScene(handle->pos()));
+    auto pt = get()->p1();
     reload();
     //TODO Is there any way I can do this without updating the whole scene?
     // Currently, if I don't do this there are graphical artifacts

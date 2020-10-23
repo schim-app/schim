@@ -64,10 +64,16 @@ void GRect::reload()
     setPos(get()->getPos());
     if (handles != nullptr)
     {
+        for (auto *handle : *handles)
+            handle->setFlag(ItemSendsGeometryChanges, false);
+
         (*handles)[0]->setPos(0, 0);
         (*handles)[1]->setPos(get()->width(), 0);
         (*handles)[2]->setPos(get()->width(), get()->height());
         (*handles)[3]->setPos(0, get()->height());
+
+        for (auto *handle : *handles)
+            handle->setFlag(ItemSendsGeometryChanges, true);
     }
 }
 

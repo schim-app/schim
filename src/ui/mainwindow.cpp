@@ -4,11 +4,13 @@
 #include "global.h"
 #include "fileio/xml.h"
 #include "ui/objects/gline.h"
+#include "ui/objects/gcompositeobject.h"
 #include "ui/operations.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QScrollBar>
+
 
 MainWindow* MainWindow::instance{};
 
@@ -50,6 +52,11 @@ int MainWindow::getTabId() const
 SheetView *MainWindow::getTab()
 {
     return (SheetView*) ui->tabView->currentWidget();
+}
+
+SheetScene *MainWindow::scene()
+{
+    return getTab() ? getTab()->scene() : nullptr;
 }
 
 Sheet *MainWindow::getSheet()
@@ -294,40 +301,40 @@ void MainWindow::scrollRight()
 
 void MainWindow::undoInSheet()
 {
-    if (getTab() != nullptr)
-        getTab()->scene()->undo();
+    if (getTab())
+        scene()->undo();
 }
 
 void MainWindow::redoInSheet()
 {
-    if (getTab() != nullptr)
-        getTab()->scene()->redo();
+    if (getTab())
+        scene()->redo();
 }
 
 void MainWindow::insertLine()
 {
     if (getTab())
-        getTab()->scene()->startOperation(new LineInsertOperation(getTab()->scene()));
+        scene()->startOperation(new LineInsertOperation(scene()));
 }
 
 void MainWindow::insertRect()
 {
     if (getTab())
-        getTab()->scene()->startOperation(new RectInsertOperation(getTab()->scene()));
+        scene()->startOperation(new RectInsertOperation(scene()));
 }
 
 void MainWindow::insertText()
 {
     if (getTab())
-        getTab()->scene()->startOperation(new TextInsertOperation(getTab()->scene()));
+        scene()->startOperation(new TextInsertOperation(scene()));
 }
 
 void MainWindow::increaseGridSize()
 {
     if (getTab())
     {
-        getTab()->scene()->setGridSize(getTab()->scene()->getGridSize() + QSizeF{1, 1});
-        getTab()->scene()->update();
+        scene()->setGridSize(scene()->getGridSize() + QSizeF{1, 1});
+        scene()->update();
     }
 }
 
@@ -335,8 +342,28 @@ void MainWindow::decreaseGridSize()
 {
     if (getTab())
     {
-        getTab()->scene()->setGridSize(getTab()->scene()->getGridSize() - QSizeF{1, 1});
-        getTab()->scene()->update();
+        scene()->setGridSize(scene()->getGridSize() - QSizeF{1, 1});
+        scene()->update();
+    }
+}
+
+void MainWindow::showAllTexts()
+{
+    if (getTab())
+    {
+        for (auto *obj : scene()->items())
+            if (dynamic_cast<GText*>(obj))
+                obj->setSelected(true);
+    }
+}
+
+void MainWindow::showAllPrimitives()
+{
+    if (getTab())
+    {
+        for (auto *obj : scene()->items())
+            if (!dynamic_cast<GCompositeObject*>(obj))
+                obj->setSelected(true);
     }
 }
 
@@ -404,6 +431,8 @@ void MainWindow::setupActions()
         { new QAction("Scroll right", this), {}, {Qt::CTRL + Qt::Key_L}, &MainWindow::scrollRight},
         { new QAction("Increase grid", this), {}, {Qt::Key_G, Qt::Key_Plus}, &MainWindow::increaseGridSize},
         { new QAction("Decrease grid", this), {}, {Qt::Key_G, Qt::Key_Minus}, &MainWindow::decreaseGridSize},
+        { new QAction("Show all texts", this), {}, {Qt::Key_S, Qt::Key_T}, &MainWindow::showAllTexts},
+        { new QAction("Show all primitives", this), {}, {Qt::Key_S, Qt::Key_P}, &MainWindow::showAllPrimitives},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionSave, {}, {}, &MainWindow::save},
