@@ -13,6 +13,7 @@
 #include <QMenu>
 #include <QString>
 #include <QCompleter>
+#include <QtMath>
 
 SheetView::SheetView(Sheet *sheet, QWidget *parent)
     : QGraphicsView(parent)
@@ -171,7 +172,44 @@ void SheetView::wheelEvent(QWheelEvent *event)
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    QGraphicsView::drawForeground(painter, rect);
+    QPen pen(Qt::black, dpiInvariant(1));
+    pen.setCosmetic(true);
+    painter->setPen(pen);
+
+    // Draw the grid
+    if (scene()->gridEnabled)
+    {
+        //TODO hide this implementation detail in a function in global.h
+        QRectF contentArea = scene()->sheet->getContentArea();
+        QPointF center = contentArea.center();
+        float Xmin = qMax(rect.left(), contentArea.left()),
+                Xmax = qMin(rect.right(), contentArea.right()),
+                Ymin = qMax(rect.top(), contentArea.top()),
+                Ymax = qMin(rect.bottom(), contentArea.bottom());
+        int Imax = (Xmax - center.x()) / scene()->gridX,
+                Jmax = (Ymax - center.y()) / scene()->gridY;
+
+        for (int i = qCeil((Xmin - center.x()) / scene()->gridX); i <= Imax; ++i)
+            for (int j = qCeil((Ymin - center.y()) / scene()->gridY); j <= Jmax; ++j)
+                painter->drawPoint(QPointF{center.x() + i * scene()->gridX, center.y() + j * scene()->gridY});
+    }
+
+    // Draw the cursor guides
+    if (scene()->showCursorGuides)
+    {
+        QPointF pos = scene()->getCursorPos();
+
+        if (scene()->getSnapCursorGuides())
+            pos = scene()->snap(pos);
+
+        pen.setColor({64, 64, 64});
+        painter->setPen(pen);
+
+        // Horizontal
+        painter->drawLine(QLineF{rect.left(), pos.y(), rect.right(), pos.y()});
+        // Vertical
+        painter->drawLine(QLineF{pos.x(), rect.top(), pos.x(), rect.bottom()});
+    }
 
 }
 
@@ -185,6 +223,7 @@ void SheetView::init()
     // Needed to update the cursor guides when the viewport is scrolled
     // TODO Don't know if this is the optimal setting, but Minimal mode doesn't work properly
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
+    setAcceptDrops(true);
 }
 
 void SheetView::recalculateBaselineZoom()

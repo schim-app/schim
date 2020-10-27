@@ -134,15 +134,33 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+Object *xmlParseObject(const QString &filename)
+{
+    read_xml_file(filename);
+
+    // Find the start element tag and stop there
+    while (!stream.atEnd())
+    {
+        stream.readNext();
+        if (stream.isStartElement())
+            break;
+    }
+
+    return xmlParseObject(stream);
+}
+
 Object *xmlParseObject(QXmlStreamReader &stream)
 {
     Object *object;
+    auto str = stream.name(); //TODO rem
     if (stream.name() == "line")
         object = xmlParseLine(stream);
     else if (stream.name() == "rect")
         object = xmlParseRect(stream);
     else if (stream.name() == "text")
         object = xmlParseText(stream);
+    else if (stream.name() == "header")
+        object = xmlParseHeader(stream);
     else
         throw std::logic_error("Unknown object type");
 
@@ -342,4 +360,22 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
+}
+
+QString xmlPeekName(const QString &filename)
+{
+    read_xml_file(filename);
+    while (!stream.atEnd())
+    {
+        stream.readNext();
+        if (stream.isStartElement())
+        {
+            for (const auto &attr : stream.attributes())
+                if (attr.name() == "name")
+                    return attr.value().toString();
+        }
+    }
+    return "";
+    // TODO temporarily disabled exception
+    throw std::logic_error(filename.toStdString() + ": No name is defined for this object");
 }

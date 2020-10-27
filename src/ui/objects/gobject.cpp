@@ -79,6 +79,8 @@ QRectF GObject::boundingRect() const
 void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     auto pen = painter->pen();
+    // The default color (unless overriden) is black
+    pen.setColor(Qt::black);
 
     // The order is important
     if (isHovered() || (parentItem() &&  parentItem()->isHovered()))

@@ -1,0 +1,10 @@
+<project title="Untitled Project">
+	<sheet title="New sheet">
+		<header from="headers/defaultheader.xsym">
+			<line x1="5" y1="180" x2="292" y2="180" />
+		</header>
+		<line x1="5" y1="20" x2="50" y2="80" linewidth="0.5"/>
+		<rect x="40" y="70" w="120" h="50" linewidth="0.7" />
+		<text text="Standalone text"/>
+	</sheet>
+</project>

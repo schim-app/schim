@@ -22,6 +22,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream);
 void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream);
 
 /** Parse an object whose type is as yet undetermined */
+Object *xmlParseObject(const QString &filename);
 Object *xmlParseObject(QXmlStreamReader &stream);
 void xmlWriteObject(Object *obj, QXmlStreamWriter &stream);
 
@@ -46,5 +47,12 @@ Header *xmlParseHeader(const QString &filename);
 /** Parse a sheet header */
 Header *xmlParseHeader(QXmlStreamReader &stream);
 void xmlWriteHeader(Header *header, QXmlStreamWriter &stream);
+
+/**
+ * @brief Get the index name of the element that is defined by the specified XML file.
+ *
+ * The name is used to create an index of all symbols that are defined.
+ */
+QString xmlPeekName(const QString &filename);
 
 #endif // XML_H

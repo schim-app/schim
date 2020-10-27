@@ -132,7 +132,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="symbolList"/>
+      <widget class="ComponentList" name="symbolList"/>
      </item>
     </layout>
    </widget>
@@ -230,6 +230,11 @@
    <extends>QWidget</extends>
    <header>ui/sheetview.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ComponentList</class>
+   <extends>QListWidget</extends>
+   <header>ui/componentlist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

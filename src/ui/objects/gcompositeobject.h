@@ -16,7 +16,6 @@ public:
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
     QPainterPath shape() const override;
-    QRectF boundingRect() const override;
 };
 
 #endif // GCOMPOSITEOBJECT_H

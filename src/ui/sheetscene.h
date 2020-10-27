@@ -60,8 +60,6 @@ private:
 
     void initGuides();
 
-    void drawForeground(QPainter *painter, const QRectF &rect) override;
-
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

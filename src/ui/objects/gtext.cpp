@@ -60,6 +60,7 @@ QPainterPath GText::shape() const
 void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     GObject::paint(painter, option, widget);
+    setDefaultTextColor(Qt::black);
     QGraphicsTextItem::paint(painter, option, widget);
 }
 

@@ -30,7 +30,6 @@ SheetScene::SheetScene(Sheet *sheet)
     // Populate the scene with the sheet contents
     for (auto *obj : *sheet)
         addItem(GObject::assign(obj));
-
 }
 
 SheetScene::SheetScene()
@@ -137,48 +136,6 @@ void SheetScene::showGuides(bool show)
 /*****************
  * Miscellaneous *
 ******************/
-
-void SheetScene::drawForeground(QPainter *painter, const QRectF &rect)
-{
-    QPen pen(Qt::black, dpiInvariant(1));
-    pen.setCosmetic(true);
-    painter->setPen(pen);
-
-    // Draw the grid
-    if (gridEnabled)
-    {
-        //TODO hide this implementation detail in a function in global.h
-        QRectF contentArea = sheet->getContentArea();
-        QPointF center = contentArea.center();
-        float Xmin = qMax(rect.left(), contentArea.left()),
-                Xmax = qMin(rect.right(), contentArea.right()),
-                Ymin = qMax(rect.top(), contentArea.top()),
-                Ymax = qMin(rect.bottom(), contentArea.bottom());
-        int Imax = (Xmax - center.x()) / gridX,
-                Jmax = (Ymax - center.y()) / gridY;
-
-        for (int i = qCeil((Xmin - center.x()) / gridX); i <= Imax; ++i)
-            for (int j = qCeil((Ymin - center.y()) / gridY); j <= Jmax; ++j)
-                painter->drawPoint(QPointF{center.x() + i * gridX, center.y() + j * gridY});
-    }
-
-    // Draw the cursor guides
-    if (showCursorGuides)
-    {
-        QPointF pos = getCursorPos();
-
-        if (getSnapCursorGuides())
-            pos = snap(pos);
-
-        pen.setColor({64, 64, 64});
-        painter->setPen(pen);
-
-        // Horizontal
-        painter->drawLine(QLineF{rect.left(), pos.y(), rect.right(), pos.y()});
-        // Vertical
-        painter->drawLine(QLineF{pos.x(), rect.top(), pos.x(), rect.bottom()});
-    }
-}
 
 void SheetScene::keyPressEvent(QKeyEvent *event)
 {

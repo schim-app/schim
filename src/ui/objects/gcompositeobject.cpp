@@ -39,8 +39,3 @@ QPainterPath GCompositeObject::shape() const
     path.addRect(boundingRect());
     return path;
 }
-
-QRectF GCompositeObject::boundingRect() const
-{
-    return childrenBoundingRect();
-}

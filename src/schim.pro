@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     fileio/dxf.cpp \
+    fileio/miscfiles.cpp \
     fileio/xml.cpp \
     global.cpp \
     main.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
     model/sheet.cpp \
     model/text.cpp \
     ui/commands.cpp \
+    ui/componentlist.cpp \
     ui/mainwindow.cpp \
     ui/objects/gcompositeobject.cpp \
     ui/objects/gheader.cpp \
@@ -37,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
     fileio/dxf.h \
+    fileio/miscfiles.h \
     fileio/xml.h \
     global.h \
     model/compositeobject.h \
@@ -48,6 +51,7 @@ HEADERS += \
     model/sheet.h \
     model/text.h \
     ui/commands.h \
+    ui/componentlist.h \
     ui/mainwindow.h \
     ui/objects/gcompositeobject.h \
     ui/objects/gheader.h \
