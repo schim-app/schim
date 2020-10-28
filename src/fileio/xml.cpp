@@ -16,6 +16,10 @@
 
 #define write_xml_file(filename)
 
+// PROTOTYPES
+CompositeObject *parseCompositeObject(const QString &);
+CompositeObject *dxfParseCompositeObject(const std::string &);
+
 void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 {
     while (!stream.atEnd())
@@ -29,6 +33,19 @@ void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
         }
     }
 }
+
+void xmlConsumeFirstElement(QXmlStreamReader &stream)
+{
+    // Find the start element tag and stop there
+    while (!stream.atEnd())
+    {
+        stream.readNext();
+        if (stream.isStartElement())
+            break;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
 
 Project *xmlParseProject(const QString &filename)
 {
@@ -62,8 +79,7 @@ Project *xmlParseProject(const QString &filename)
     }
     catch (...)
     {
-        delete project;
-        throw;
+        delete project; throw;
     }
 
     return project;
@@ -84,6 +100,8 @@ void xmlWriteProject(Project *project, const QString &filename)
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 Sheet *xmlParseSheet(QXmlStreamReader &stream)
 {
@@ -134,17 +152,13 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 Object *xmlParseObject(const QString &filename)
 {
     read_xml_file(filename);
 
-    // Find the start element tag and stop there
-    while (!stream.atEnd())
-    {
-        stream.readNext();
-        if (stream.isStartElement())
-            break;
-    }
+    xmlConsumeFirstElement(stream);
 
     return xmlParseObject(stream);
 }
@@ -161,6 +175,10 @@ Object *xmlParseObject(QXmlStreamReader &stream)
         object = xmlParseText(stream);
     else if (stream.name() == "header")
         object = xmlParseHeader(stream);
+    else if (stream.name() == "component") //TODO maybe generalize this name
+        object = xmlParseCompositeObject(stream);
+    else if (stream.name() == "dxf")
+        object = xmlParseFromDxf(stream);
     else
         throw std::logic_error("Unknown object type");
 
@@ -169,6 +187,7 @@ Object *xmlParseObject(QXmlStreamReader &stream)
     // Eat up all remaining tokens related to this object
     while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
         stream.readNext();
+    //TODO skipCurrentElement
 
     return object;
 }
@@ -182,6 +201,8 @@ void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
     if_cast_write(obj, Rect);
     if_cast_write(obj, Text);
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 Line *xmlParseLine(QXmlStreamReader &stream)
 {
@@ -225,6 +246,8 @@ void xmlWriteLine(Line *line, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+///////////////////////////////////////////////////////////////////////////
+
 Rect *xmlParseRect(QXmlStreamReader &stream)
 {
     float x = 0, y = 0, w = 50, h = 50;
@@ -260,6 +283,8 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
 
     stream.writeEndElement();
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 Text *xmlParseText(QXmlStreamReader &stream)
 {
@@ -305,10 +330,71 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+///////////////////////////////////////////////////////////////////////////
+
+CompositeObject *xmlParseCompositeObject(const QString &filename)
+{
+    read_xml_file(filename);
+
+    xmlConsumeFirstElement(stream);
+
+    return xmlParseCompositeObject(stream);
+}
+
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 {
-    //TODO implement
+    if (stream.name() == "dxf")
+        return xmlParseFromDxf(stream);
+
+    CompositeObject *obj = nullptr;
+
+    for (auto attr : stream.attributes())
+    {
+        if (attr.name() == "from")
+        { // The content is taken from another file
+            if (obj == nullptr)
+                obj = parseCompositeObject(resolvePath(attr.value().toString()));
+        }
+    }
+
+    if (obj == nullptr)
+        obj = new CompositeObject;
+
+    try
+    {
+        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "component"))
+        {
+            stream.readNext();
+            if (stream.isStartElement())
+                obj->append(xmlParseObject(stream));
+        }
+    }
+    catch (...)
+    {
+        delete obj; throw;
+    }
+
+    return obj;
 }
+
+CompositeObject *xmlParseFromDxf(const QString &filename)
+{
+    read_xml_file(filename);
+    xmlConsumeFirstElement(stream);
+
+    return xmlParseFromDxf(stream);
+}
+
+CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
+{
+    // Read the content of the "dxf" tag which is in base64 format
+    QString content = stream.readElementText();
+    //content = content.trimmed();
+    auto arr = QByteArray::fromBase64(content.toUtf8(), QByteArray::Base64Encoding);
+
+    return dxfParseCompositeObject(arr.toStdString());
+}
+///////////////////////////////////////////////////////////////////////////
 
 Header *xmlParseHeader(const QString &filename)
 {
@@ -327,7 +413,7 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
         if (attr.name() == "from")
         { // The header content is taken from another file
             if (header == nullptr)
-                header = xmlParseHeader(resolvePath(attr.value().toString()));
+                header = new Header(parseCompositeObject(resolvePath(attr.value().toString())));
         }
     }
 
@@ -361,6 +447,42 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 
     stream.writeEndElement();
 }
+
+///////////////////////////////////////////////////////////////////////////
+
+CompositeObject *xmlParseComponent(QXmlStreamReader &stream)
+{
+    //TODO change return type
+    CompositeObject *obj = nullptr;
+    for (auto attr : stream.attributes())
+    {
+        if (attr.name() == "from")
+        { // The content is taken from another file
+            if (obj == nullptr)
+                obj = parseCompositeObject(resolvePath(attr.value().toString()));
+        }
+    }
+
+    if (obj == nullptr) // The content was not taken from a file
+        obj = new CompositeObject;
+    try
+    {
+        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "obj"))
+        {
+            stream.readNext();
+            if (stream.isStartElement())
+                obj->append(xmlParseObject(stream));
+        }
+    }
+    catch (...)
+    {
+        delete obj; throw;
+    }
+
+    return obj;
+}
+
+///////////////////////////////////////////////////////////////////////////
 
 QString xmlPeekName(const QString &filename)
 {

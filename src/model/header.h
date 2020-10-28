@@ -21,6 +21,18 @@ class Header : public CompositeObject
 
 public:
     Header();
+    /**
+     * @brief Move constructor
+     *
+     * Take all children from `obj`. Consequently, `obj` is
+     * emptied and this object becomes responsible for the destruction
+     * of the children.
+     */
+    Header(CompositeObject &&obj);
+    /**
+     * @brief Steal everything from `obj` and delete it.
+     */
+    Header(CompositeObject *obj);
 
     /** Update the graphical model to match the configuration. */
     virtual void update();

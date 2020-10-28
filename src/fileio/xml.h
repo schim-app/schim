@@ -40,7 +40,10 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream);
 //TODO write
 
 /** Parse a custom object */
+CompositeObject *xmlParseCompositeObject(const QString &filename);
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream);
+CompositeObject *xmlParseFromDxf(const QString &filename);
+CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream);
 
 /** Parse a sheet header */
 Header *xmlParseHeader(const QString &filename);
@@ -48,6 +51,7 @@ Header *xmlParseHeader(const QString &filename);
 Header *xmlParseHeader(QXmlStreamReader &stream);
 void xmlWriteHeader(Header *header, QXmlStreamWriter &stream);
 
+CompositeObject *xmlParseComponent(QXmlStreamReader &stream);
 /**
  * @brief Get the index name of the element that is defined by the specified XML file.
  *

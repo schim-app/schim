@@ -4,6 +4,21 @@
 
 Header::Header() { }
 
+Header::Header(CompositeObject &&obj)
+    : Header()
+{
+    append(obj);
+    obj.clear();
+}
+
+Header::Header(CompositeObject *obj)
+    : Header()
+{
+    append(*obj);
+    obj->clear();
+    delete obj; //TODO maybe not do this here
+}
+
 void Header::update()
 {
     clear();

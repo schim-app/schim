@@ -21,4 +21,7 @@ public:
     virtual void addLine(const DL_LineData &d);
 };
 
+CompositeObject *dxfParseCompositeObject(const QString &filename);
+CompositeObject *dxfParseCompositeObject(const std::string &contents);
+
 #endif // DXFFILTER_H
