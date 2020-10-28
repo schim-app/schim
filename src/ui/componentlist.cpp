@@ -17,13 +17,14 @@
 #include "ui/objects/gobject.h"
 
 ComponentList::ComponentList(QWidget *parent)
-    : QTreeView(parent), model(new QStandardItemModel)
+    : QTreeView(parent), _model(new QStandardItemModel)
 {
     setDragEnabled(true);
     setDropIndicatorShown(true);
+    setDragDropMode(QAbstractItemView::DragDrop);
     header()->hide();
     synchronize();
-    setModel(model);
+    setModel(_model);
 }
 
 void ComponentList::iterate(const QString &dir, QStandardItem *parent)
@@ -48,7 +49,7 @@ void ComponentList::synchronize()
 {
     auto *rootItem = createDir();
     iterate(systemSymbolPath, rootItem);
-    model->appendRow(rootItem);
+    _model->appendRow(rootItem);
 }
 
 QStandardItem *ComponentList::createItem(const QString &path)

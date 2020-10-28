@@ -5,12 +5,18 @@
 #include "ui/commands.h"
 #include "ui/operations.h"
 #include "global.h"
+#include "componentlist.h"
 
 #include <QAction>
 #include <QColor>
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QtMath>
+
+//TODO remove
+#include <QDebug>
+#include <iostream>
+#include <QTreeView>
 
 // Static variables in SheetScene
 float SheetScene::gridX = 5, SheetScene::gridY = 5;
@@ -181,4 +187,27 @@ void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         operation->mouseReleaseEvent(event);
     else
         QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void SheetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+{
+    if (dynamic_cast<ComponentList*>(event->source()))
+        event->accept();
+}
+
+void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+    if (dynamic_cast<ComponentList*>(event->source()))
+        event->acceptProposedAction();
+}
+
+void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    if (dynamic_cast<ComponentList*>(event->source()))
+    {
+        auto *componentList = (ComponentList*) event->source();
+        //TODO unimplemented
+        auto test = componentList->model()->itemData(componentList->currentIndex());
+        qDebug() << "Drop event";
+    }
 }

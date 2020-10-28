@@ -20,7 +20,7 @@ public:
     QStandardItem *createDir(const QString &name = "");
 
 private:
-    QStandardItemModel *model;
+    QStandardItemModel *_model;
 };
 
 #endif // COMPONENTLIST_H
