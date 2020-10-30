@@ -268,18 +268,38 @@ void SheetView::updateBackground()
     setBackgroundBrush(brush);
 }
 
+//TODO remove
+#include <QDirIterator>
+#include "ui/widgets/componentcompleter.h"
+#include <iostream>
+#include "fileio/xml.h"
+
 void SheetView::insertTriggered()
 {
-    //TODO remove this
+    //Add objects from the system directory
     QStringList wordList;
-    wordList << "I" << "indigo" << "ind" << "india" << "am" << "boo boo";
-    QLineEdit *lineEdit = new QLineEdit(this);
+    QDirIterator iter(systemSymbolPath);
+    while (iter.hasNext())
+    {
+        iter.next();
+        auto info = iter.fileInfo();
+        if (info.isDir() || info.fileName() == "!meta") continue;
+        wordList.append(xmlPeekName(info.absoluteFilePath()));
+    }
 
+    // Add primitive objects
+    wordList << "Line" << "Rect" << "Text";
+
+    ComponentCompleter *lineEdit = new ComponentCompleter(this);
+
+    // Create and configure the completer
     QCompleter *completer = new QCompleter(wordList);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     lineEdit->setCompleter(completer);
 
-    lineEdit->move(QCursor::pos());
+    // Proper display of the lineEdit
+    lineEdit->move(mapFromGlobal(QCursor::pos()));
     lineEdit->setFocus();
     lineEdit->show();
+    //setCursor(Qt::BlankCursor);
 }

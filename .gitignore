@@ -3,3 +3,4 @@ _build/
 docs/_build
 .qmake.stash
 src/**/ui_*.h
+org/

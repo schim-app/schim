@@ -35,7 +35,8 @@ SOURCES += \
     ui/sheetscene.cpp \
     ui/sheetsettings.cpp \
     ui/sheetview.cpp \
-    ui/vimlike.cpp
+    ui/vimlike.cpp \
+    ui/widgets/componentcompleter.cpp
 
 HEADERS += \
     fileio/dxf.h \
@@ -63,7 +64,8 @@ HEADERS += \
     ui/sheetscene.h \
     ui/sheetsettings.h \
     ui/sheetview.h \
-    ui/vimlike.h
+    ui/vimlike.h \
+    ui/widgets/componentcompleter.h
 
 FORMS += \
     ui/mainwindow.ui \
