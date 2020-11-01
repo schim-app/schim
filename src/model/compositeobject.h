@@ -2,6 +2,7 @@
 #define COMPOSITEOBJECT_H
 
 #include "object.h"
+#include "model/variable.h"
 
 #include <QList>
 
@@ -22,7 +23,25 @@ public:
     CompositeObject();
     ~CompositeObject();
 
+    // GETTERS
+    /**
+     * @brief Return the value of the variable with the specified name.
+     *
+     * @param name The name of the variable.
+     * @param exists `true` is written to this variable if the variable is found,
+     * and `false` otherwise.
+     */
+    QString getValue(const QString &name, bool *exists) const;
+
+    // SETTERS
+    void setValue(const QString &name, const QString &value);
+    void addVariable(const Variable &variable);
+
     friend class GCompositeObject;
+
+private:
+    // TODO determine appropriate container
+    QList<Variable> variables;
 };
 
 #endif // COMPOSITEOBJECT_H

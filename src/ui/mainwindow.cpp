@@ -49,9 +49,12 @@ int MainWindow::getTabId() const
     return ui->tabView->currentIndex();
 }
 
-SheetView *MainWindow::getTab()
+SheetView *MainWindow::getTab(int index)
 {
-    return (SheetView*) ui->tabView->currentWidget();
+    if (index == -1)
+        return (SheetView*) ui->tabView->currentWidget();
+    else
+        return (SheetView*) ui->tabView->widget(index);
 }
 
 SheetScene *MainWindow::scene()
@@ -59,9 +62,9 @@ SheetScene *MainWindow::scene()
     return getTab() ? getTab()->scene() : nullptr;
 }
 
-Sheet *MainWindow::getSheet()
+Sheet *MainWindow::getSheet(int index)
 {
-    return ((SheetView*) ui->tabView->currentWidget())->scene()->getSheet();
+    return getTab(index)->scene()->getSheet();
 }
 
 /***********

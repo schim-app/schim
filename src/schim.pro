@@ -14,7 +14,9 @@ SOURCES += \
     fileio/xml.cpp \
     global.cpp \
     main.cpp \
+    model/component.cpp \
     model/compositeobject.cpp \
+    model/device.cpp \
     model/header.cpp \
     model/line.cpp \
     model/object.cpp \
@@ -22,9 +24,11 @@ SOURCES += \
     model/rect.cpp \
     model/sheet.cpp \
     model/text.cpp \
+    model/variable.cpp \
     ui/commands.cpp \
     ui/componentlist.cpp \
     ui/mainwindow.cpp \
+    ui/objects/gcomponent.cpp \
     ui/objects/gcompositeobject.cpp \
     ui/objects/gheader.cpp \
     ui/objects/gline.cpp \
@@ -33,17 +37,20 @@ SOURCES += \
     ui/objects/gtext.cpp \
     ui/operations.cpp \
     ui/sheetscene.cpp \
-    ui/sheetsettings.cpp \
     ui/sheetview.cpp \
     ui/vimlike.cpp \
-    ui/widgets/componentcompleter.cpp
+    ui/widgets/componentcompleter.cpp \
+    ui/windows/componenteditor.cpp \
+    ui/windows/sheetsettings.cpp
 
 HEADERS += \
     fileio/dxf.h \
     fileio/miscfiles.h \
     fileio/xml.h \
     global.h \
+    model/component.h \
     model/compositeobject.h \
+    model/device.h \
     model/header.h \
     model/line.h \
     model/object.h \
@@ -51,9 +58,11 @@ HEADERS += \
     model/rect.h \
     model/sheet.h \
     model/text.h \
+    model/variable.h \
     ui/commands.h \
     ui/componentlist.h \
     ui/mainwindow.h \
+    ui/objects/gcomponent.h \
     ui/objects/gcompositeobject.h \
     ui/objects/gheader.h \
     ui/objects/gline.h \
@@ -62,14 +71,16 @@ HEADERS += \
     ui/objects/gtext.h \
     ui/operations.h \
     ui/sheetscene.h \
-    ui/sheetsettings.h \
     ui/sheetview.h \
     ui/vimlike.h \
-    ui/widgets/componentcompleter.h
+    ui/widgets/componentcompleter.h \
+    ui/windows/componenteditor.h \
+    ui/windows/sheetsettings.h
 
 FORMS += \
     ui/mainwindow.ui \
-    ui/sheetsettings.ui
+    ui/windows/componenteditor.ui \
+    ui/windows/sheetsettings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

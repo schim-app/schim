@@ -34,7 +34,7 @@ void GText::setEditable(bool editable)
         GObject::setFocus();
 
         GObject::setCursor(QCursor(Qt::IBeamCursor));
-        timerId = startTimer(250);
+        timerId = GObject::startTimer(250);
     }
     else
     {
@@ -46,7 +46,7 @@ void GText::setEditable(bool editable)
         tc.clearSelection();
         setTextCursor(tc);
 
-        killTimer(timerId);
+        GObject::killTimer(timerId);
     }
 }
 

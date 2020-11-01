@@ -8,6 +8,8 @@
 #include <iostream>
 #include <QDebug>
 
+#include "model/component.h"
+
 #define read_xml_file(filename) \
     QFile file(filename); \
     if (!file.open(QIODevice::ReadOnly)) \
@@ -19,6 +21,10 @@
 // PROTOTYPES
 CompositeObject *parseCompositeObject(const QString &);
 CompositeObject *dxfParseCompositeObject(const std::string &);
+
+/********************
+ * Helper functions *
+ ********************/
 
 void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 {
@@ -43,6 +49,22 @@ void xmlConsumeFirstElement(QXmlStreamReader &stream)
         if (stream.isStartElement())
             break;
     }
+}
+
+Variable xmlParseVariable(QXmlStreamReader &stream)
+{
+    Variable var;
+    for (auto attr : stream.attributes())
+    {
+        if (attr.name() == "name")
+            var.name = attr.value().toString();
+        else if (attr.name() == "desc")
+            var.description = attr.value().toString();
+        else if (attr.name() == "value")
+            var.value = attr.value().toString();
+    }
+    stream.skipCurrentElement();
+    return var;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -116,6 +138,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
                 sheet->setTitle(attr.value().toString());
         }
 
+        // Parse children
         while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "sheet"))
         {
             stream.readNext();
@@ -176,7 +199,7 @@ Object *xmlParseObject(QXmlStreamReader &stream)
     else if (stream.name() == "header")
         object = xmlParseHeader(stream);
     else if (stream.name() == "component") //TODO maybe generalize this name
-        object = xmlParseCompositeObject(stream);
+        object = xmlParseComponent(stream);
     else if (stream.name() == "dxf")
         object = xmlParseFromDxf(stream);
     else
@@ -380,6 +403,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 CompositeObject *xmlParseFromDxf(const QString &filename)
 {
     read_xml_file(filename);
+
     xmlConsumeFirstElement(stream);
 
     return xmlParseFromDxf(stream);
@@ -394,6 +418,7 @@ CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
 
     return dxfParseCompositeObject(arr.toStdString());
 }
+
 ///////////////////////////////////////////////////////////////////////////
 
 Header *xmlParseHeader(const QString &filename)
@@ -453,25 +478,30 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 CompositeObject *xmlParseComponent(QXmlStreamReader &stream)
 {
     //TODO change return type
-    CompositeObject *obj = nullptr;
+    Component *obj = nullptr;
     for (auto attr : stream.attributes())
     {
         if (attr.name() == "from")
         { // The content is taken from another file
             if (obj == nullptr)
-                obj = parseCompositeObject(resolvePath(attr.value().toString()));
+                obj = new Component(parseCompositeObject(resolvePath(attr.value().toString())));
         }
     }
 
     if (obj == nullptr) // The content was not taken from a file
-        obj = new CompositeObject;
+        obj = new Component;
     try
     {
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "obj"))
+        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "component"))
         {
             stream.readNext();
             if (stream.isStartElement())
-                obj->append(xmlParseObject(stream));
+            {
+                if (stream.name() == "var")
+                    obj->addVariable(xmlParseVariable(stream));
+                else
+                    obj->append(xmlParseObject(stream));
+            }
         }
     }
     catch (...)

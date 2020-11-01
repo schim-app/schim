@@ -1,8 +1,7 @@
 #include "sheetsettings.h"
 #include "ui_sheetsettings.h"
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "ui/mainwindow.h"
 
 SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     : ui(new Ui::SheetSettings()), parent(parent), sheetId(sheetId)
@@ -31,6 +30,6 @@ void SheetSettings::show()
 void SheetSettings::accept()
 {
     parent->getSheet()->setTitle(ui->editSheetTitle->text());
-    parent->ui->tabView->setTabText(sheetId, ui->editSheetTitle->text());
+    parent->getTabView()->setTabText(sheetId, ui->editSheetTitle->text());
     QDialog::accept();
 }

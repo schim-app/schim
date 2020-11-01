@@ -2,6 +2,7 @@
 #define TEXT_H
 
 #include "object.h"
+#include "variable.h"
 
 #include <QRectF>
 #include <QString>
@@ -18,6 +19,7 @@ public:
 
     QPointF getPos() const override;
     QString getText() const;
+    QString getDisplayText(const QList<Variable> &variableList) const;
     float getTextHeight() const;
     QString getFont() const;
 

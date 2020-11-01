@@ -20,7 +20,7 @@ class GObjectHandle;
  * This class is conceptually an abstract one - it shouldn't be
  * used on its own.
  */
-class GObject : public QGraphicsItem
+class GObject : public QGraphicsObject
 {
 public:
     /**

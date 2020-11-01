@@ -7,9 +7,9 @@
 #include <QList>
 #include <QLineEdit>
 
-#include <model/project.h>
+#include "model/project.h"
 
-#include "sheetsettings.h"
+#include "ui/windows/sheetsettings.h"
 #include "sheetview.h"
 #include "vimlike.h"
 
@@ -40,11 +40,17 @@ public:
     QTabWidget *getTabView() const;
 	/** Return the current tab id*/
     int getTabId() const;
-	/** Return the current tab as a SheetView* */
-    SheetView *getTab();
+    /**
+     * @brief Return the tab of the specified index as a `SheetView*`.
+     * If no index is specified, return the current tab.
+     */
+    SheetView *getTab(int index = -1);
     SheetScene *scene();
-    /** Return the Sheet* that is part of the currently active tab */
-    Sheet *getSheet();
+    /**
+     * @brief Return the `Sheet*` that is part of the currently active tab
+     * If no index is specified, return the current sheet.
+     */
+    Sheet *getSheet(int index = -1);
 
     // Setters
 
