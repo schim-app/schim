@@ -1,0 +1,27 @@
+# Maintainer: Haris Gušić harisgusic.dev@gmail.com
+pkgname=schim
+pkgver=0.0.1
+pkgrel=1
+pkgdesc='An electrical schematic editor for the modern computer user'
+arch=('x86_64')
+url='https://github.com/harisgusic/schim'
+license=('TBD')
+# TODO figure out what to do with dxflib dependency
+depends=('qt5-base')
+makedepends=('git')
+# TODO test all dependencies in VM
+
+source=("$pkgname::git+https://github.com/harisgusic/$pkgname")
+sha256sums=('SKIP')
+
+build() {
+	cd "$srcdir/$pkgname"
+	make app
+}
+
+package() {
+	cd "$srcdir/$pkgname"/_build/release
+	umask 022
+	mkdir -p "$pkgdir"/usr/
+	cp -r dest/* "$pkgdir"/usr/
+}
