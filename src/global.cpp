@@ -40,15 +40,21 @@ QVariant getSetting(const QString &key, const QString &defaultValue)
     delete settings;
     return value;
 }
+//TODO remove
+#include <iostream>
 
 QString resolvePath(const QString &path)
 {
-    if (QFile(path).exists()) // The supplied path is either absolute or relative to the installation folder
+    QFileInfo dir(QCoreApplication::applicationDirPath() + systemSymbolPath + "/" + path);
+    std::cout << (dir.absoluteFilePath()).toStdString() << std::endl;
+    if (QFile(path).exists()) // The supplied path is absolute
         return path;
     else if (QFile(userSymbolPath + "/" + path).exists()) // The path is relative to the directory where user symbols are stored
         return userSymbolPath + "/" + path;
     else if (QFile(currentProjectPath + "/" + path).exists()) // The path is relative to the current project
         return currentProjectPath + "/" + path;
+    else if (QFile(QCoreApplication::applicationDirPath() + "/" + systemSymbolPath + "/" + path).exists()) // The path is relative to the installation folder
+        return QCoreApplication::applicationDirPath() + "/" + systemSymbolPath + "/" + path;
     else return path;
 }
 

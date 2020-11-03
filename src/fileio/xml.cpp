@@ -13,7 +13,7 @@
 #define read_xml_file(filename) \
     QFile file(filename); \
     if (!file.open(QIODevice::ReadOnly)) \
-        throw std::runtime_error("Unable to open XML file for reading"); \
+        throw std::runtime_error(filename.toStdString() + ": Unable to open XML file for reading"); \
     QXmlStreamReader stream(&file)
 
 #define write_xml_file(filename)

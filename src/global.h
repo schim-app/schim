@@ -7,9 +7,9 @@
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
 
 #ifdef QT_DEBUG
-static const char *systemSymbolPath = "../../symb", *systemMacroPath = "../../macros";
+static QString systemSymbolPath = "../../symb", systemMacroPath = "../../macros";
 #else
-static const char *systemSymbolPath = "symb", *systemMacroPath = "macros";
+static QString systemSymbolPath = "../share/schim/symb", systemMacroPath = "macros";
 #endif
 
 // TODO depends on OS
