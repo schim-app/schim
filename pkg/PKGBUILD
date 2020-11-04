@@ -14,14 +14,7 @@ makedepends=('git')
 source=("$pkgname::git+https://github.com/harisgusic/$pkgname")
 sha256sums=('SKIP')
 
-build() {
-	cd "$srcdir/$pkgname"
-	make app
-}
-
 package() {
-	cd "$srcdir/$pkgname"/_build/release
-	umask 022
-	mkdir -p "$pkgdir"/usr/
-	cp -r dest/* "$pkgdir"/usr/
+	cd "$srcdir/$pkgname"
+	make install INSTALL_DIR="$pkgdir"/usr
 }
