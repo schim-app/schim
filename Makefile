@@ -1,5 +1,5 @@
 
-INSTALL_DIR=/usr/local
+INSTALL_DIR ?= /usr/local
 
 ICON_DIR=share/icons/hicolor/scalable
 SHARE_DIR=share/schim
@@ -10,13 +10,13 @@ app:
 	mkdir -p _build/release
 	cd _build/release; qmake ../../src/schim.pro; make
 	@####
-	cd _build/release; \
+	cd _build/release; rm -rf dest/; \
 	mkdir -p dest/bin \
 		dest/${ICON_DIR}/apps \
-		dest/${SHARE_DIR}; \
+		dest/${SHARE_DIR}/symb; \
 	cp schim dest/bin/; \
 	cp ../../img/icon.svg dest/${ICON_DIR}/apps/schim.svg; \
-	cp -r ../../symb dest/${SHARE_DIR}/symb
+	cp -r ../../symb/* dest/${SHARE_DIR}/symb/
 
 docs:
 	cd docs; make html
@@ -25,7 +25,7 @@ all: app docs
 
 install: app
 	umask 022
-	mkdir -p test
+	mkdir -p ${INSTALL_DIR}
 	cp -r _build/release/dest/* ${INSTALL_DIR}
 
 uninstall:
