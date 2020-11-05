@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    fileio/database.cpp \
     fileio/dxf.cpp \
     fileio/miscfiles.cpp \
     fileio/xml.cpp \
@@ -44,6 +45,7 @@ SOURCES += \
     ui/windows/sheetsettings.cpp
 
 HEADERS += \
+    fileio/database.h \
     fileio/dxf.h \
     fileio/miscfiles.h \
     fileio/xml.h \

@@ -127,7 +127,7 @@ void SheetScene::operationFinished(bool success)
 
 QPointF SheetScene::snap(const QPointF &pt) const
 {
-    if (!snapEnabled)
+    if (!snapEnabled || sheet == nullptr)
         return pt;
 
     QPointF center = sheet->getContentArea().center();
