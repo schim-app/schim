@@ -19,6 +19,12 @@ Header::Header(CompositeObject *obj)
     delete obj; //TODO maybe not do this here
 }
 
+Header::Header(const Header &obj)
+    : CompositeObject(obj)
+{
+    contentArea = obj.contentArea;
+}
+
 void Header::update()
 {
     clear();

@@ -189,12 +189,6 @@ void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsScene::mouseReleaseEvent(event);
 }
 
-void SheetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    if (dynamic_cast<ComponentList*>(event->source()))
-        event->accept();
-}
-
 void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (dynamic_cast<ComponentList*>(event->source()))
@@ -203,11 +197,15 @@ void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+    cursorPos = event->scenePos();
     if (dynamic_cast<ComponentList*>(event->source()))
     {
         auto *componentList = (ComponentList*) event->source();
-        //TODO unimplemented
-        auto test = componentList->model()->itemData(componentList->currentIndex());
-        qDebug() << "Drop event";
+        auto indexes = componentList->selectionModel()->selectedIndexes();
+        if (indexes.size() > 0)
+        {
+            auto *item = static_cast<DatabaseItem*>(indexes[0].internalPointer());
+            startOperation(new ComponentInsertOperation(this, item->getObject()->clone()));
+        }
     }
 }

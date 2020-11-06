@@ -5,6 +5,14 @@
 Text::Text(const QString &text)
     : text(text) { }
 
+Text::Text(const Text &text)
+    : Object(), QPointF(text)
+{
+    this->text = text.text;
+    font = text.font;
+    textHeight = text.textHeight;
+}
+
 void Text::setPos(const QPointF &pos)
 {
     setX(pos.x());
@@ -24,6 +32,11 @@ void Text::setTextHeight(float height)
 void Text::setFont(const QString &name)
 {
     font = name;
+}
+
+Object *Text::clone() const
+{
+    return new Text(*this);
 }
 
 QPointF Text::getPos() const

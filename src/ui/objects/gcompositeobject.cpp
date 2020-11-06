@@ -39,3 +39,13 @@ QPainterPath GCompositeObject::shape() const
     path.addRect(boundingRect());
     return path;
 }
+
+void GCompositeObject::setCosmetic(bool cosmetic)
+{
+    GObject::setCosmetic(cosmetic);
+    for (auto *item : childItems())
+    {
+        auto *item_cast = static_cast<GObject*>(item);
+        item_cast->setCosmetic(cosmetic);
+    }
+}

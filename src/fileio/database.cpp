@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFile>
 #include <QGraphicsScene>
+#include <QImage>
 
 DatabaseItem::DatabaseItem(const QString &path, DatabaseItem *parentItem)
     : parent(parentItem)
@@ -28,7 +29,7 @@ void DatabaseItem::appendItem(DatabaseItem *child)
     child->parent = this;
 }
 
-QPixmap DatabaseItem::getIcon() const
+QImage DatabaseItem::getIcon() const
 {
     if (icon != nullptr) // An up-to-date icon has already been generated
         return *icon;
@@ -42,6 +43,7 @@ QPixmap DatabaseItem::getIcon() const
     QGraphicsScene *scene = new QGraphicsScene();
     GObject *gobject = GObject::assign(object);
     scene->addItem(gobject);
+    gobject->setCosmetic(true);
 
     auto rect = gobject->boundingRect();
     float maxDim = qMax(rect.width(), rect.height());
@@ -65,12 +67,26 @@ QPixmap DatabaseItem::getIcon() const
 
     // Create the icon and finalize
 
-    icon = new QPixmap(iconSize, iconSize);
+    icon = new QImage(iconSize, iconSize, QImage::Format_RGB32);
     icon->fill(Qt::white);
     QPainter painter(icon);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
     scene->render(&painter);
 
     return *icon;
+}
+
+Qt::ItemFlags DatabaseItem::getFlags() const
+{
+    Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    if (object != nullptr)
+        flags |= Qt::ItemIsDragEnabled;
+    return flags;
+}
+
+Object *DatabaseItem::getObject()
+{
+    return object;
 }
 
 void DatabaseItem::setPath(const QString &path)
@@ -165,7 +181,10 @@ Qt::ItemFlags Database::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
     else
-        return QAbstractItemModel::flags(index);
+    {
+        DatabaseItem *item = static_cast<DatabaseItem*>(index.internalPointer());
+        return item->getFlags();
+    }
 }
 
 QModelIndex Database::index(int row, int column, const QModelIndex &parent) const

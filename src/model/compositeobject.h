@@ -21,6 +21,9 @@ protected:
 
 public:
     CompositeObject();
+    /** @brief Copy constructor */
+    CompositeObject(const CompositeObject &obj);
+
     ~CompositeObject();
 
     // GETTERS
@@ -36,6 +39,8 @@ public:
     // SETTERS
     void setValue(const QString &name, const QString &value);
     void addVariable(const Variable &variable);
+
+    Object *clone() const override;
 
     friend class GCompositeObject;
 

@@ -101,6 +101,15 @@ public:
      */
     virtual void handleChanged(GObjectHandle *handle);
 
+    // SETTERS
+    /**
+     * @brief Make the object's pen independent of any transformations
+     *
+     * Make an object cosmetic when it is going to be rendered to
+     * an icon.
+     */
+    virtual void setCosmetic(bool cosmetic);
+
     // STATIC
 
     /**
@@ -124,6 +133,7 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     /** Disable the bool `hovered` so that it can be used by paint. */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     /**
      * Process item changes that should behave uniformly across different
      * object types. All derived objects should call this version in their implementation.
@@ -150,6 +160,9 @@ protected:
     Object *obj;
     /** Dynamically allocated list of handles */
     QList<GObjectHandle*> *handles{};
+
+    // PROTECTED ATTRIBUTES
+    bool cosmetic = false;
 
 private:
     // PRIVATE ATTRIBUTES

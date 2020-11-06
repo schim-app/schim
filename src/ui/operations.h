@@ -34,7 +34,7 @@ public:
     virtual void cancel();
 
 protected:
-    SheetScene *scene;
+    SheetScene *scene{};
     GObject *obj{};
 };
 
@@ -82,6 +82,19 @@ private:
 //private slots:
     void textItemUnfocused();
 
+private:
+    int state = 0;
+};
+
+class ComponentInsertOperation : public Operation
+{
+public:
+    ComponentInsertOperation(SheetScene *scene, Object *obj);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
+private:
 
 private:
     int state = 0;

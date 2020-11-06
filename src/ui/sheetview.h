@@ -40,6 +40,7 @@ private:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 private slots:
     void onRubberBandChanged(QRect rect, QPointF, QPointF);

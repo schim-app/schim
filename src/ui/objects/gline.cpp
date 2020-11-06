@@ -56,6 +56,9 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     auto pen = painter->pen();
     // We are dividing line width by 2 to compensate for antialiasing
     pen.setWidthF(get()->linewidth / 2);
+    pen.setCosmetic(cosmetic);
+    if (cosmetic)
+        pen.setWidth(1);
     painter->setPen(pen);
     painter->drawLine(0, 0, get()->dx(), get()->dy());
 }

@@ -1,9 +1,15 @@
 #include "compositeobject.h"
 
 CompositeObject::CompositeObject()
+    : Object() { }
+
+CompositeObject::CompositeObject(const CompositeObject &obj)
     : Object()
 {
-
+    variables = obj.variables;
+    this->reserve(obj.size());
+    for (Object *object : obj)
+        this->append(object->clone());
 }
 
 CompositeObject::~CompositeObject()
@@ -36,4 +42,9 @@ void CompositeObject::setValue(const QString &name, const QString &value)
 void CompositeObject::addVariable(const Variable &variable)
 {
     variables.append(variable);
+}
+
+Object *CompositeObject::clone() const
+{
+    return new CompositeObject(*this);
 }

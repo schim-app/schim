@@ -34,6 +34,9 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     auto pen = painter->pen();
     pen.setWidthF(get()->linewidth / 2);
     pen.setJoinStyle(Qt::MiterJoin);
+    pen.setCosmetic(cosmetic);
+    if (cosmetic)
+        pen.setWidth(1);
     painter->setPen(pen);
 
     painter->drawRect(get()->translated(-get()->getPos()));

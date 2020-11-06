@@ -133,6 +133,12 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
+void SheetView::dropEvent(QDropEvent *event)
+{
+    setFocus();
+    QGraphicsView::dropEvent(event);
+}
+
 void SheetView::onRubberBandChanged(QRect rect, QPointF, QPointF)
 {
     _rubberBandDragging = true;

@@ -33,6 +33,8 @@ public:
      * @brief Steal everything from `obj` and delete it.
      */
     Header(CompositeObject *obj);
+    /** @brief Copy constructor */
+    Header(const Header &obj);
 
     /** Update the graphical model to match the configuration. */
     virtual void update();

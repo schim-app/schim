@@ -20,10 +20,14 @@ class Rect : public Object, public QRectF
 public:
     Rect();
     Rect(qreal x, qreal y, qreal width, qreal height);
+    /** @brief Copy constructor */
+    Rect(const Rect &rect);
 
     QPointF getPos() const override;
 
     void setPos(const QPointF &pos) override;
+
+    Object *clone() const override;
 
     friend class GRect;
 };

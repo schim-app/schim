@@ -26,7 +26,9 @@ public:
     int getRow() const;
     QString getName() const;
     DatabaseItem *getParentItem();
-    QPixmap getIcon() const;
+    QImage getIcon() const;
+    Qt::ItemFlags getFlags() const;
+    Object *getObject();
 
 private:
     QString path, name;
@@ -34,8 +36,7 @@ private:
     DatabaseItem *parent;
     QVector<DatabaseItem*> childItems;
     // Dynamically allocated by generateIcon when needed
-    // The icon will be
-    mutable QPixmap *icon{};
+    mutable QImage *icon{};
 };
 
 class Database : public QAbstractItemModel
@@ -45,6 +46,7 @@ public:
     explicit Database(const QString &path);
     ~Database();
 
+    // OVERRIDDEN GETTERS
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
@@ -52,15 +54,11 @@ public:
     int rowCount(const QModelIndex &parent = {}) const override;
     int columnCount(const QModelIndex &parent = {}) const override;
 
-private:
-
     void update();
 
+private:
+
     void iterate(const QString &dir, DatabaseItem *parent);
-
-    DatabaseItem *createItem(const QString &name);
-    DatabaseItem *createDir(const QString &name = "");
-
     // ATTRIBUTES
 
     DatabaseItem *rootItem{};

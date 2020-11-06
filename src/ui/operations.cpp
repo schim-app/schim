@@ -147,3 +147,28 @@ GText *TextInsertOperation::object() const
 
 //////////////////////////////////////////////////////////////////////////////////
 
+ComponentInsertOperation::ComponentInsertOperation(SheetScene *scene, Object *obj)
+    : Operation(scene)
+{
+    this->obj = GObject::assign(obj);
+    scene->addItem(this->obj);
+    this->obj->setPos(scene->getSnappedCursorPos());
+}
+
+void ComponentInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton)
+    {
+        auto pos = scene->getSnappedCursorPos();
+        obj->setPos(pos);
+        obj->apply(); // TODO Implement this method
+        scene->command(new CmdInsertObject(obj, scene));
+        scene->operationFinished();
+    }
+}
+
+void ComponentInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    scene->setSnapCursorGuides(true);
+    obj->setPos(scene->getSnappedCursorPos());
+}

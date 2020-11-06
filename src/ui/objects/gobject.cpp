@@ -83,6 +83,7 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     auto pen = painter->pen();
     // The default color (unless overriden) is black
     pen.setColor(Qt::black);
+    pen.setCosmetic(cosmetic);
 
     // The order is important
     if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
@@ -114,6 +115,13 @@ void GObject::showHandles(bool show)
 }
 
 void GObject::handleChanged(GObjectHandle *) { }
+
+// SETTERS
+
+void GObject::setCosmetic(bool cosmetic)
+{
+    this->cosmetic = cosmetic;
+}
 
 // STATIC
 
@@ -149,6 +157,11 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsItem::hoverLeaveEvent(event);
     if (flags() & ItemIsSelectable)
         hovered = false;
+}
+
+void GObject::keyPressEvent(QKeyEvent *event)
+{
+
 }
 
 QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)

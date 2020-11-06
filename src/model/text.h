@@ -11,11 +11,15 @@ class Text : public Object, public QPointF
 {
 public:
     Text(const QString &text = "");
+    /** @brief Copy constructor */
+    Text(const Text &text);
 
     void setPos(const QPointF &pos) override;
     void setText(const QString &text);
     void setTextHeight(float height);
     void setFont(const QString &name);
+
+    Object *clone() const override;
 
     QPointF getPos() const override;
     QString getText() const;

@@ -4,7 +4,7 @@
 #include <QPointF>
 
 /**
- * @brief The base class for all objects in a sheet.
+ * @brief The **abstract** base class for all objects in a sheet.
  *
  * Everything that has a visual representation in a sheet is derived from this
  * class.
@@ -23,6 +23,10 @@ protected:
 
 public:
 
+    Object() = default;
+    /** @brief Copy constructor */
+    Object(const Object &object) = default;
+
     /**
      * @brief This destructor does nothing.
      *
@@ -40,6 +44,8 @@ public:
      * @brief Set the position of the object in the sheet.
      */
     virtual void setPos(const QPointF &pos);
+
+    virtual Object *clone() const = 0;
 
     friend class GObject;
 
