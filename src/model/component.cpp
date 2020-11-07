@@ -13,3 +13,14 @@ Component::Component(CompositeObject *obj)
     obj->clear();
     delete obj;
 }
+
+Component::Component(const Component &obj)
+    : CompositeObject(obj)
+{
+    //TODO what to do with device
+}
+
+Object *Component::clone() const
+{
+    return new Component(*this);
+}

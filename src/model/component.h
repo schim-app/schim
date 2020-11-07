@@ -16,6 +16,9 @@ public:
      * @brief Steal everything from `obj` and delete it.
      */
     Component(CompositeObject *obj);
+    Component(const Component &obj);
+
+    Object *clone() const override;
 
 private:
     QSharedPointer<Device> device;

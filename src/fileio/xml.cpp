@@ -189,7 +189,7 @@ Object *xmlParseObject(const QString &filename)
 Object *xmlParseObject(QXmlStreamReader &stream)
 {
     Object *object;
-    auto str = stream.name(); //TODO rem
+
     if (stream.name() == "line")
         object = xmlParseLine(stream);
     else if (stream.name() == "rect")
@@ -198,19 +198,18 @@ Object *xmlParseObject(QXmlStreamReader &stream)
         object = xmlParseText(stream);
     else if (stream.name() == "header")
         object = xmlParseHeader(stream);
-    else if (stream.name() == "component") //TODO maybe generalize this name
+    else if (stream.name() == "component")
         object = xmlParseComponent(stream);
-    else if (stream.name() == "dxf")
-        object = xmlParseFromDxf(stream);
     else
         throw std::logic_error("Unknown object type");
 
     auto objectName = stream.name();
 
     // Eat up all remaining tokens related to this object
-    while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
-        stream.readNext();
+    //while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
+        //stream.readNext();
     //TODO skipCurrentElement
+    stream.skipCurrentElement();
 
     return object;
 }
@@ -223,6 +222,7 @@ void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
     if_cast_write(obj, Line);
     if_cast_write(obj, Rect);
     if_cast_write(obj, Text);
+    if_cast_write(obj, Component);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -366,9 +366,6 @@ CompositeObject *xmlParseCompositeObject(const QString &filename)
 
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 {
-    if (stream.name() == "dxf")
-        return xmlParseFromDxf(stream);
-
     CompositeObject *obj = nullptr;
 
     for (auto attr : stream.attributes())
@@ -413,7 +410,6 @@ CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
 {
     // Read the content of the "dxf" tag which is in base64 format
     QString content = stream.readElementText();
-    //content = content.trimmed();
     auto arr = QByteArray::fromBase64(content.toUtf8(), QByteArray::Base64Encoding);
 
     return dxfParseCompositeObject(arr.toStdString());
@@ -475,7 +471,7 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 
 ///////////////////////////////////////////////////////////////////////////
 
-CompositeObject *xmlParseComponent(QXmlStreamReader &stream)
+Component *xmlParseComponent(QXmlStreamReader &stream)
 {
     //TODO change return type
     Component *obj = nullptr;
@@ -499,6 +495,13 @@ CompositeObject *xmlParseComponent(QXmlStreamReader &stream)
             {
                 if (stream.name() == "var")
                     obj->addVariable(xmlParseVariable(stream));
+                else if (stream.name() == "dxf")
+                {
+                    auto *container = xmlParseFromDxf(stream);
+                    obj->append(*container);
+                    container->clear();
+                    delete container;
+                }
                 else
                     obj->append(xmlParseObject(stream));
             }
@@ -512,6 +515,24 @@ CompositeObject *xmlParseComponent(QXmlStreamReader &stream)
     return obj;
 }
 
+void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("component");
+
+    for (auto var : component->getVariables())
+    {
+        stream.writeStartElement("var");
+        stream.writeAttribute("name", var.name);
+        stream.writeAttribute("value", var.value);
+        stream.writeAttribute("desc", var.description);
+        stream.writeEndElement();
+    }
+
+    for (auto obj : *component)
+        xmlWriteObject(obj, stream);
+
+    stream.writeEndElement();
+}
 ///////////////////////////////////////////////////////////////////////////
 
 QString xmlPeekName(const QString &filename)

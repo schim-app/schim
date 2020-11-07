@@ -25,6 +25,9 @@ public:
      */
     void setCosmetic(bool cosmetic) override;
 
+    void apply() override;
+    void reload() override;
+
 };
 
 #endif // GCOMPOSITEOBJECT_H

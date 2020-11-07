@@ -189,6 +189,12 @@ void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsScene::mouseReleaseEvent(event);
 }
 
+void SheetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+{
+    if (dynamic_cast<ComponentList*>(event->source()))
+        event->accept();
+}
+
 void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (dynamic_cast<ComponentList*>(event->source()))

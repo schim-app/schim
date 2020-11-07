@@ -3,12 +3,13 @@
 
 #include "model/project.h"
 #include "model/line.h"
+#include "model/text.h"
+#include "model/component.h"
+
 
 #include <QMap>
 #include <QFile>
 #include <exception>
-
-#include "model/text.h"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
@@ -51,7 +52,8 @@ Header *xmlParseHeader(const QString &filename);
 Header *xmlParseHeader(QXmlStreamReader &stream);
 void xmlWriteHeader(Header *header, QXmlStreamWriter &stream);
 
-CompositeObject *xmlParseComponent(QXmlStreamReader &stream);
+Component *xmlParseComponent(QXmlStreamReader &stream);
+void xmlWriteComponent(Component *component, QXmlStreamWriter &stream);
 /**
  * @brief Get the index name of the element that is defined by the specified XML file.
  *

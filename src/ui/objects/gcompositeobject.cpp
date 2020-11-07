@@ -49,3 +49,13 @@ void GCompositeObject::setCosmetic(bool cosmetic)
         item_cast->setCosmetic(cosmetic);
     }
 }
+
+void GCompositeObject::apply()
+{
+    get()->setPos(pos());
+}
+
+void GCompositeObject::reload()
+{
+    setPos(get()->getPos());
+}

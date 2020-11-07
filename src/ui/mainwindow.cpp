@@ -208,6 +208,12 @@ void MainWindow::save()
 {
     if (activeProject == nullptr) return;
 
+    if (filename == "")
+    {
+        saveAs();
+        return;
+    }
+
     try
     {
         xmlWriteProject(activeProject, filename);

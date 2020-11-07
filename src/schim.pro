@@ -12,6 +12,7 @@ SOURCES += \
     fileio/database.cpp \
     fileio/dxf.cpp \
     fileio/miscfiles.cpp \
+    fileio/pdf.cpp \
     fileio/xml.cpp \
     global.cpp \
     main.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     fileio/database.h \
     fileio/dxf.h \
     fileio/miscfiles.h \
+    fileio/pdf.h \
     fileio/xml.h \
     global.h \
     model/component.h \
