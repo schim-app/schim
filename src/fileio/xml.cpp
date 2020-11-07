@@ -67,6 +67,64 @@ Variable xmlParseVariable(QXmlStreamReader &stream)
     return var;
 }
 
+/*********************
+ * Parse by filename *
+ *********************/
+
+Object *xmlParseObject(const QString &filename)
+{
+    read_xml_file(filename);
+
+    xmlConsumeFirstElement(stream);
+
+    return xmlParseObject(stream);
+}
+
+CompositeObject *xmlParseCompositeObject(const QString &filename)
+{
+    read_xml_file(filename);
+
+    xmlConsumeFirstElement(stream);
+
+    return xmlParseCompositeObject(stream);
+}
+
+CompositeObject *xmlParseFromDxf(const QString &filename)
+{
+    read_xml_file(filename);
+
+    xmlConsumeFirstElement(stream);
+
+    return xmlParseFromDxf(stream);
+}
+
+Header *xmlParseHeader(const QString &filename)
+{
+    read_xml_file(filename);
+
+    xmlTestRootTag(stream, "header");
+
+    return xmlParseHeader(stream);
+}
+
+QString xmlPeekName(const QString &filename)
+{
+    read_xml_file(filename);
+    while (!stream.atEnd())
+    {
+        stream.readNext();
+        if (stream.isStartElement())
+        {
+            for (const auto &attr : stream.attributes())
+                if (attr.name() == "name")
+                    return attr.value().toString();
+        }
+    }
+    return "";
+    // TODO temporarily disabled exception
+    throw std::logic_error(filename.toStdString() + ": No name is defined for this object");
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 Project *xmlParseProject(const QString &filename)
@@ -177,15 +235,6 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
 
 ///////////////////////////////////////////////////////////////////////////
 
-Object *xmlParseObject(const QString &filename)
-{
-    read_xml_file(filename);
-
-    xmlConsumeFirstElement(stream);
-
-    return xmlParseObject(stream);
-}
-
 Object *xmlParseObject(QXmlStreamReader &stream)
 {
     Object *object;
@@ -206,10 +255,8 @@ Object *xmlParseObject(QXmlStreamReader &stream)
     auto objectName = stream.name();
 
     // Eat up all remaining tokens related to this object
-    //while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
-        //stream.readNext();
-    //TODO skipCurrentElement
-    stream.skipCurrentElement();
+    while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
+        stream.readNext();
 
     return object;
 }
@@ -355,15 +402,6 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream)
 
 ///////////////////////////////////////////////////////////////////////////
 
-CompositeObject *xmlParseCompositeObject(const QString &filename)
-{
-    read_xml_file(filename);
-
-    xmlConsumeFirstElement(stream);
-
-    return xmlParseCompositeObject(stream);
-}
-
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 {
     CompositeObject *obj = nullptr;
@@ -397,15 +435,6 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
     return obj;
 }
 
-CompositeObject *xmlParseFromDxf(const QString &filename)
-{
-    read_xml_file(filename);
-
-    xmlConsumeFirstElement(stream);
-
-    return xmlParseFromDxf(stream);
-}
-
 CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
 {
     // Read the content of the "dxf" tag which is in base64 format
@@ -416,15 +445,6 @@ CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-
-Header *xmlParseHeader(const QString &filename)
-{
-    read_xml_file(filename);
-
-    xmlTestRootTag(stream, "header");
-
-    return xmlParseHeader(stream);
-}
 
 Header *xmlParseHeader(QXmlStreamReader &stream)
 {
@@ -475,6 +495,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
 {
     //TODO change return type
     Component *obj = nullptr;
+    QPointF pos;
     for (auto attr : stream.attributes())
     {
         if (attr.name() == "from")
@@ -482,10 +503,17 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
             if (obj == nullptr)
                 obj = new Component(parseCompositeObject(resolvePath(attr.value().toString())));
         }
+        else if (attr.name() == "x")
+            pos.setX(attr.value().toFloat());
+        else if (attr.name() == "y")
+            pos.setY(attr.value().toFloat());
     }
 
     if (obj == nullptr) // The content was not taken from a file
         obj = new Component;
+
+    obj->setPos(pos);
+
     try
     {
         while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "component"))
@@ -519,6 +547,14 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
 {
     stream.writeStartElement("component");
 
+    Component def; // Default component
+    QPointF defPos = def.getPos(), pos = component->getPos();
+
+    if (pos.x() != defPos.x())
+        stream.writeAttribute("x", QString::number(pos.x()));
+    if (pos.y() != defPos.y())
+        stream.writeAttribute("y", QString::number(pos.y()));
+
     for (auto var : component->getVariables())
     {
         stream.writeStartElement("var");
@@ -534,21 +570,3 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 ///////////////////////////////////////////////////////////////////////////
-
-QString xmlPeekName(const QString &filename)
-{
-    read_xml_file(filename);
-    while (!stream.atEnd())
-    {
-        stream.readNext();
-        if (stream.isStartElement())
-        {
-            for (const auto &attr : stream.attributes())
-                if (attr.name() == "name")
-                    return attr.value().toString();
-        }
-    }
-    return "";
-    // TODO temporarily disabled exception
-    throw std::logic_error(filename.toStdString() + ": No name is defined for this object");
-}

@@ -21,7 +21,7 @@ public:
     Rect *get();
     const Rect *get() const;
 
-    // OVERRIDEN QGraphicsItem METHODS
+    // OVERRIDDEN QGraphicsItem METHODS
 
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

@@ -19,7 +19,7 @@ const Rect *GRect::get() const
     return (Rect*) obj;
 }
 
-// OVERRIDEN QGraphicsItem METHODS
+// OVERRIDDEN QGraphicsItem METHODS
 
 QRectF GRect::boundingRect() const
 {
@@ -36,7 +36,7 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setCosmetic(cosmetic);
     if (cosmetic)
-        pen.setWidth(1);
+        pen.setWidthF(1.5);
     painter->setPen(pen);
 
     painter->drawRect(get()->translated(-get()->getPos()));
@@ -103,6 +103,9 @@ void GRect::showHandles(bool show)
         return GObject::showHandles(show);
 }
 
+// TODO remove
+#include "ui/mainwindow.h"
+
 void GRect::handleChanged(GObjectHandle *handle)
 {
     switch (handles->indexOf(handle))
@@ -119,6 +122,29 @@ void GRect::handleChanged(GObjectHandle *handle)
     case 3:
         get()->setBottomLeft(mapToScene(handle->pos()));
         break;
+    }
+    // Fix negative width/height issue
+    if (get()->top() > get()->bottom())
+    {
+        // Swap top and bottom so that top < bottom
+        auto top = get()->top();
+        get()->setTop(get()->bottom());
+        get()->setBottom(top);
+
+        // Flip handles around horizontal axis
+        handles->swapItemsAt(0, 3);
+        handles->swapItemsAt(1, 2);
+    }
+    if (get()->left() > get()->right())
+    {
+        // Swap left and right so that left < right
+        auto left = get()->left();
+        get()->setLeft(get()->right());
+        get()->setRight(left);
+
+        // Flip handles around vertical axis
+        handles->swapItemsAt(0, 1);
+        handles->swapItemsAt(2, 3);
     }
     reload();
     if (scene())

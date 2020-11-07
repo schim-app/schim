@@ -24,3 +24,13 @@ Object *Component::clone() const
 {
     return new Component(*this);
 }
+
+void Component::setPos(const QPointF &pos)
+{
+    this->pos = pos;
+}
+
+QPointF Component::getPos() const
+{
+    return pos;
+}

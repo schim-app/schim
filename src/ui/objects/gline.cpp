@@ -31,6 +31,9 @@ const Line *GLine::get() const
 
 QPainterPath GLine::shape() const
 {
+    // TODO BUG why is the item sometimes selectable even when the mouse is inside
+    // shape (verified by drawing shape around the line)
+
     // TODO improve this later; Namely, the handle size
     // should be invariant to the scene transformations
     float radius = get()->linewidth;
@@ -58,9 +61,15 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     pen.setWidthF(get()->linewidth / 2);
     pen.setCosmetic(cosmetic);
     if (cosmetic)
-        pen.setWidth(1);
+        pen.setWidthF(1.5);
     painter->setPen(pen);
     painter->drawLine(0, 0, get()->dx(), get()->dy());
+
+    return;
+    //TODO temporary -- draw the shape for debugging
+    pen.setWidth(1);
+    painter->setPen(pen);
+    painter->drawPath(shape());
 }
 
 QRectF GLine::boundingRect() const
@@ -102,7 +111,6 @@ void GLine::handleChanged(GObjectHandle *handle)
         get()->setP1(mapToScene(handle->pos()));
     else if (handle == (*handles)[1])
         get()->setP2(mapToScene(handle->pos()));
-    auto pt = get()->p1();
     reload();
     //TODO Is there any way I can do this without updating the whole scene?
     // Currently, if I don't do this there are graphical artifacts

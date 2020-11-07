@@ -161,7 +161,7 @@ void ComponentInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         auto pos = scene->getSnappedCursorPos();
         obj->setPos(pos);
-        obj->apply(); // TODO Implement this method
+        obj->apply();
         scene->command(new CmdInsertObject(obj, scene));
         scene->operationFinished();
     }

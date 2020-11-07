@@ -20,8 +20,12 @@ public:
 
     Object *clone() const override;
 
+    void setPos(const QPointF &pos) override;
+    QPointF getPos() const override;
+
 private:
     QSharedPointer<Device> device;
+    QPointF pos{};
 };
 
 #endif // COMPONENT_H
