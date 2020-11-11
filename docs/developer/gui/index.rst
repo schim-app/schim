@@ -4,14 +4,29 @@ GUI
 
 .. toctree::
 
+The main window
+===============
+
+The main window form is defined in ``src/ui/mainwindow.ui``. The class holds a
+static instance of ``MainWindow`` called ``instance``, which allows other
+classes to access the main window.
+
+src/ui/mainwindow.h
+   ..
+
+.. doxygenclass:: MainWindow
+
+The schematic editor
+====================
+
 Qt provides `QGraphicsView`_ and `QGraphicsScene`_ to visually represent
 `QGraphicsItem`_-s. You should have at least a basic knowledge of these classes
 if you wish to develop the GUI. This project doesn't use these classes directly.
 Instead we use their subclasses: :ref:`SheetView`, :ref:`SheetScene` and
-:ref:`GObject` respectively.
+:ref:`GObject` respectively, which we have defined.
 
 GObject
-=======
+-------
 
 An object is visually represented as a :ref:`GObject`, which is a wrapper around
 an :ref:`Object`. Derived classes follow the same naming convention. Namely, the
@@ -29,7 +44,7 @@ The following classes are derived from :ref:`GObject`:
    gobjects/gcompositeobject.rst
    gobjects/gheader.rst
 
-.. image:: ../_build/doxygen/html/classGObject__inh.svg   
+.. image:: /_build/doxygen/html/classGObject__inh.svg
    :align: center
 
 .. doxygenclass:: GObject

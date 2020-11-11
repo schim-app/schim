@@ -8,9 +8,9 @@ Everything that exists in a project is represented by a model class, including
 the project itself. A model class contains those attributes that are consistent
 regardless of the format in which something is accessed. For example, the model
 class of an object does not contain information about whether the object is
-selected for editing, because that is only relevant in the context of editing.
-All model classes reside in files under the model/ directory or one of its
-subdirectories.
+selected for editing, because that is only relevant in the context of the
+graphical editor.  All model classes reside in files under the ``src/model/``
+directory or one of its subdirectories.
 
 Project
 =======
@@ -50,6 +50,7 @@ objects are defined:
 
    objects/line.rst
    objects/rect.rst
+   objects/text.rst
 
 Composite objects
 =================

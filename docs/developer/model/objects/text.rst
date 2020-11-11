@@ -1,0 +1,7 @@
+====
+Text
+====
+
+.. toctree::
+
+.. doxygenclass:: Text

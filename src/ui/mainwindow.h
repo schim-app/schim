@@ -115,9 +115,9 @@ private: // Private methods
     // Miscellaneous
 
     void setupActions();
-    /** Populate the window with a new active project */
+    /** Populate the window with a new active project. */
     void populateWithProject();
-    /** Remove all tabs and destroy corresponding widgets */
+    /** Remove all tabs and destroy corresponding widgets. */
     void clearTabs();
 
 private: // Private members
