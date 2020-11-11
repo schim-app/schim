@@ -28,6 +28,11 @@ QString CompositeObject::getValue(const QString &name, bool *exists) const
     return "";
 }
 
+QList<Variable> &CompositeObject::getVariables()
+{
+    return variables;
+}
+
 QList<Variable> CompositeObject::getVariables() const
 {
     return variables;

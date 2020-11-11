@@ -42,7 +42,7 @@ void GComponent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void GComponent::edit()
 {
-    ComponentEditor editor(MainWindow::instance);
+    ComponentEditor editor(get(), MainWindow::instance);
 
     editor.exec();
     //TODO how to delete it?

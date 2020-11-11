@@ -42,6 +42,7 @@ SOURCES += \
     ui/sheetview.cpp \
     ui/vimlike.cpp \
     ui/widgets/componentcompleter.cpp \
+    ui/widgets/variableeditor.cpp \
     ui/windows/componenteditor.cpp \
     ui/windows/sheetsettings.cpp
 
@@ -78,11 +79,13 @@ HEADERS += \
     ui/sheetview.h \
     ui/vimlike.h \
     ui/widgets/componentcompleter.h \
+    ui/widgets/variableeditor.h \
     ui/windows/componenteditor.h \
     ui/windows/sheetsettings.h
 
 FORMS += \
     ui/mainwindow.ui \
+    ui/widgets/variableeditor.ui \
     ui/windows/componenteditor.ui \
     ui/windows/sheetsettings.ui
 

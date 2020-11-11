@@ -35,6 +35,7 @@ public:
      * and `false` otherwise.
      */
     QString getValue(const QString &name, bool *exists) const;
+    QList<Variable> &getVariables();
     QList<Variable> getVariables() const;
 
     // SETTERS
