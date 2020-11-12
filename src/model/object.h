@@ -3,6 +3,9 @@
 
 #include <QPointF>
 
+class CompositeObject;
+class Sheet;
+
 /**
  * @brief The **abstract** base class for all objects in a sheet.
  *
@@ -47,6 +50,11 @@ public:
 
     virtual Object *clone() const = 0;
 
+protected:
+    CompositeObject *parent{};
+    Sheet *sheet{};
+
+    friend class Sheet;
     friend class GObject;
 
 };

@@ -15,8 +15,6 @@ class Project : public QList<Sheet*>
 {
     QString title{"Untitled Project"};
 
-    QString localSymbolPath = "symbols",
-        localMacroPath = "macros";
 public:
     /** @brief Construct an empty project with default properties. */
     Project();
@@ -24,13 +22,16 @@ public:
 
     ~Project();
 
-    // Getters
-
+    // GETTERS
     QString getTitle() const;
+    VariableSet &getVariables();
+    VariableSet getVariables() const;
 
-    // Setters
-
+    // SETTERS
     void setTitle(const QString &title);
+
+private:
+    VariableSet variables;
 };
 
 #endif // PROJECT_H

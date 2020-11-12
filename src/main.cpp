@@ -9,14 +9,9 @@
 #include <QDir>
 #include <iostream>
 
-
 int main(int argc, char *argv[])
 {
-
-    QDir dir("../../symb");
-    int lvl = 0;
-    //iterate("../../symb", lvl);
-
+    // DEBUGGING
     QApplication a(argc, argv);
     (new MainWindow)->show();
     return a.exec();

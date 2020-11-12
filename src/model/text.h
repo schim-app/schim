@@ -23,7 +23,8 @@ public:
 
     QPointF getPos() const override;
     QString getText() const;
-    QString getDisplayText(const QList<Variable> &variableList) const;
+    QString getDisplayText(const VariableSet &variableList) const;
+    QString getDisplayText() const;
     float getTextHeight() const;
     QString getFont() const;
 

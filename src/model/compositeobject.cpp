@@ -1,10 +1,12 @@
 #include "compositeobject.h"
 
+#include "model/sheet.h"
+
 CompositeObject::CompositeObject()
     : Object() { }
 
 CompositeObject::CompositeObject(const CompositeObject &obj)
-    : Object()
+    : Object(), QList<Object *>()
 {
     variables = obj.variables;
     this->reserve(obj.size());
@@ -28,12 +30,23 @@ QString CompositeObject::getValue(const QString &name, bool *exists) const
     return "";
 }
 
-QList<Variable> &CompositeObject::getVariables()
+VariableSet CompositeObject::getVariables() const
+{
+    VariableSet vars = variables;
+    if (parent)
+        vars.append(parent->getVariables());
+    else if (sheet)
+        vars.append(sheet->getVariables());
+
+    return vars;
+}
+
+VariableSet &CompositeObject::getLocalVariables()
 {
     return variables;
 }
 
-QList<Variable> CompositeObject::getVariables() const
+VariableSet CompositeObject::getLocalVariables() const
 {
     return variables;
 }

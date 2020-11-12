@@ -45,6 +45,23 @@ QRectF Sheet::getContentArea() const
         return Header().getContentArea();
 }
 
+VariableSet &Sheet::getLocalVariables()
+{
+    return variables;
+}
+
+VariableSet Sheet::getLocalVariables() const
+{
+    return variables;
+}
+
+VariableSet Sheet::getVariables() const
+{
+    VariableSet vars = variables;
+    if (project)
+        vars.append(project->getVariables());
+}
+
 void Sheet::setWidth(float width)
 {
     this->width = width;

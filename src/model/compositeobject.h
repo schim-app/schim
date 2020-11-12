@@ -4,8 +4,6 @@
 #include "object.h"
 #include "model/variable.h"
 
-#include <QList>
-
 /**
  * @brief An object that consists of other child objects.
  *
@@ -16,8 +14,6 @@
  */
 class CompositeObject : public Object, public QList<Object*>
 {
-
-protected:
 
 public:
     CompositeObject();
@@ -35,8 +31,9 @@ public:
      * and `false` otherwise.
      */
     QString getValue(const QString &name, bool *exists) const;
-    QList<Variable> &getVariables();
-    QList<Variable> getVariables() const;
+    VariableSet getVariables() const;
+    VariableSet &getLocalVariables();
+    VariableSet getLocalVariables() const;
 
     // SETTERS
     void setValue(const QString &name, const QString &value);
@@ -48,7 +45,7 @@ public:
 
 private:
     // TODO determine appropriate container
-    QList<Variable> variables;
+    VariableSet variables;
 };
 
 #endif // COMPOSITEOBJECT_H

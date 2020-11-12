@@ -1,10 +1,10 @@
 #ifndef SHEET_H
 #define SHEET_H
 
-#include <QList>
-
 #include "header.h"
 #include "object.h"
+
+class Project;
 
 /**
  * @brief This class models a sheet of paper.
@@ -30,6 +30,9 @@ public:
     QString getTitle() const;
     Header *getHeader();
     QRectF getContentArea() const;
+    VariableSet &getLocalVariables();
+    VariableSet getLocalVariables() const;
+    VariableSet getVariables() const;
 
     void setWidth(float width);
     void setHeight(float height);
@@ -43,6 +46,12 @@ public:
      * destructor is called.
      */
     void setHeader(Header *header);
+
+private:
+    VariableSet variables;
+    Project *project{};
+
+    friend class Project;
 };
 
 #endif // SHEET_H
