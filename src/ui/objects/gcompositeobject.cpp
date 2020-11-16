@@ -25,7 +25,7 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
             auto *assignee = GObject::assign(child);
             scene()->addItem(assignee);
             assignee->setParentItem(this);
-            assignee->setFlags(0);
+            assignee->setFlags({});
         }
     else
         return GObject::itemChange(change, value);

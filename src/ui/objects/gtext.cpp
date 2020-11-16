@@ -165,8 +165,8 @@ void GText::keyReleaseEvent(QKeyEvent *event)
 
 void GText::focusInEvent(QFocusEvent *event)
 {
-    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_A, 0));
-    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Backspace, 0));
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_A, {}));
+    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Backspace, {}));
     QGraphicsTextItem::focusInEvent(event);
 }
 
@@ -196,7 +196,6 @@ void GText::reload()
 
 void GText::apply()
 {
-    auto pt = GObject::pos();
     get()->setPos(GObject::pos());
     get()->setText(toPlainText());
 }

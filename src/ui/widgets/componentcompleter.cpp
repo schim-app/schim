@@ -7,5 +7,6 @@ ComponentCompleter::ComponentCompleter(QWidget *parent)
 
 void ComponentCompleter::focusOutEvent(QFocusEvent *event)
 {
+    Q_UNUSED(event)
     hide();
 }

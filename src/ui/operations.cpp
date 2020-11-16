@@ -169,6 +169,7 @@ void ComponentInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void ComponentInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    Q_UNUSED(event)
     scene->setSnapCursorGuides(true);
     obj->setPos(scene->getSnappedCursorPos());
 }

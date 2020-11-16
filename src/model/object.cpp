@@ -5,4 +5,4 @@ QPointF Object::getPos() const
     return {};
 }
 
-void Object::setPos(const QPointF &pos) { }
+void Object::setPos(const QPointF &pos) { Q_UNUSED(pos) }

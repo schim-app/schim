@@ -21,5 +21,4 @@ struct Variable
     static QString substitute(QString str, const VariableSet &variableSet);
 };
 
-
 #endif // VARIABLE_H

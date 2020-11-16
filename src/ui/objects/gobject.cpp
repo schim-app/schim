@@ -161,7 +161,7 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void GObject::keyPressEvent(QKeyEvent *event)
 {
-
+    Q_UNUSED(event)
 }
 
 QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)

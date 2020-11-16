@@ -60,6 +60,8 @@ VariableSet Sheet::getVariables() const
     VariableSet vars = variables;
     if (project)
         vars.append(project->getVariables());
+
+    return vars;
 }
 
 void Sheet::setWidth(float width)

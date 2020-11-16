@@ -139,7 +139,7 @@ void SheetView::dropEvent(QDropEvent *event)
     QGraphicsView::dropEvent(event);
 }
 
-void SheetView::onRubberBandChanged(QRect rect, QPointF, QPointF)
+void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
 {
     _rubberBandDragging = true;
 }

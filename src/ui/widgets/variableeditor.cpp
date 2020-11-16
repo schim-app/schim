@@ -41,12 +41,14 @@ void VariableEditor::updateVariableName()
 
 void VariableEditor::on_editName_textEdited(const QString &text)
 {
+    Q_UNUSED(text)
     updateVariableName();
     emit changed();
 }
 
 void VariableEditor::on_editAbbreviations_textEdited(const QString &text)
 {
+    Q_UNUSED(text)
     updateVariableName();
     emit changed();
 }

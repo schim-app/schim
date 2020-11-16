@@ -5,7 +5,7 @@
 GHeader::GHeader(Header *obj)
     : GCompositeObject(obj)
 {
-    setFlags(0);
+    setFlags({});
     setAcceptHoverEvents(false);
 }
 

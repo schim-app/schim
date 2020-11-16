@@ -121,6 +121,8 @@ void SheetScene::startOperation(Operation *op)
 
 void SheetScene::operationFinished(bool success)
 {
+    //TODO maybe eliminate parameter success in the future
+    Q_UNUSED(success)
     delete operation;
     operation = nullptr;
 }
