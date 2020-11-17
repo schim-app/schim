@@ -132,7 +132,7 @@
       </widget>
      </item>
      <item>
-      <widget class="ComponentList" name="symbolList"/>
+      <widget class="ComponentList" name="componentList"/>
      </item>
     </layout>
    </widget>
@@ -234,7 +234,7 @@
   <customwidget>
    <class>ComponentList</class>
    <extends>QListWidget</extends>
-   <header>ui/componentlist.h</header>
+   <header>ui/widgets/componentlist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

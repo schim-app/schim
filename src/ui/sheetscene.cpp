@@ -5,7 +5,7 @@
 #include "ui/commands.h"
 #include "ui/operations.h"
 #include "global.h"
-#include "componentlist.h"
+#include "ui/widgets/componentlist.h"
 
 #include <QAction>
 #include <QColor>

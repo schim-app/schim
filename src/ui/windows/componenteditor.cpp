@@ -12,12 +12,11 @@ ComponentEditor::ComponentEditor(Component *component, QWidget *parent)
     // Initialization
     auto variables = component->getVariables();
     for (auto var : variables)
-    {
-        auto *varEditor = new VariableEditor(var, this);
-        variableEditors.append(varEditor);
-        ui->layout->addWidget(varEditor);
-        connect(varEditor, &VariableEditor::changed, this, &ComponentEditor::onChanged);
-    }
+        addVariableEditor(var);
+
+    // TODO Why do I have to connect this here when I have clicked "Go to slot" in QtDesigner?
+    connect(ui->btnAddVariable, &QAbstractButton::clicked, this, &ComponentEditor::on_btnAddVariable_clicked);
+    connect(ui->btnRemoveVariable, &QAbstractButton::clicked, this, &ComponentEditor::on_btnRemoveVariable_clicked);
 }
 
 ComponentEditor::~ComponentEditor()
@@ -30,16 +29,33 @@ void ComponentEditor::reload()
     // TODO
 }
 
+void ComponentEditor::addVariableEditor(const Variable &var)
+{
+    auto *varEditor = new VariableEditor(var);
+    variableEditors.append(varEditor);
+    ui->variablesView->layout()->addWidget(varEditor);
+
+    connect(varEditor, &VariableEditor::changed, this, &ComponentEditor::onChanged);
+    connect(varEditor, &VariableEditor::focused, this, &ComponentEditor::onChildFocused);
+}
+
 void ComponentEditor::onChanged()
 {
     changed = true;
 }
 
+void ComponentEditor::onChildFocused()
+{
+    focusedEditor = (VariableEditor *) sender();
+}
+
 void ComponentEditor::accept()
 {
-    component->getVariables().clear();
+    VariableSet &vars = component->getLocalVariables();;
+    vars.clear();
     for (auto editor : variableEditors)
-        component->addVariable(editor->getVariable());
+        if (editor->getVariable().name != "" && Variable::find(vars, editor->getVariable().name).name == "")
+            vars.append(editor->getVariable());
 
     QDialog::accept();
 }
@@ -53,4 +69,23 @@ void ComponentEditor::reject()
     {
         QDialog::reject();
     }
+}
+
+void ComponentEditor::on_btnAddVariable_clicked()
+{
+    addVariableEditor({});
+    changed = true;
+}
+
+void ComponentEditor::on_btnRemoveVariable_clicked()
+{
+    if (focusedEditor)
+    {
+        variableEditors.removeOne(focusedEditor);
+        ui->variablesView->layout()->removeWidget(focusedEditor);
+        delete focusedEditor;
+    }
+
+    focusedEditor = nullptr;
+    changed = true;
 }

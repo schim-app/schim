@@ -77,3 +77,14 @@ QString Text::getFont() const
 {
     return font;
 }
+
+VariableSet Text::getVariables() const
+{
+    VariableSet vars;
+    if (parent)
+        vars.append(parent->getVariables());
+    else if (sheet)
+        vars.append(sheet->getVariables());
+
+    return vars;
+}

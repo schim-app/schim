@@ -28,6 +28,12 @@
    </property>
    <item>
     <widget class="QLineEdit" name="editName">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>2</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Name</string>
      </property>
@@ -35,6 +41,12 @@
    </item>
    <item>
     <widget class="QLineEdit" name="editAbbreviations">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Abbreviations (space-separated)</string>
      </property>
@@ -42,6 +54,12 @@
    </item>
    <item>
     <widget class="QLineEdit" name="editValue">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>2</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Value</string>
      </property>
@@ -49,6 +67,12 @@
    </item>
    <item>
     <widget class="QLineEdit" name="editDescription">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>2</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Description</string>
      </property>

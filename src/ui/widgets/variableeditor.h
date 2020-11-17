@@ -21,9 +21,12 @@ public:
 
     Variable getVariable() const;
 
+    bool eventFilter(QObject* obj, QEvent *event) override;
+
 signals:
 
     void changed();
+    void focused();
 
 private:
 

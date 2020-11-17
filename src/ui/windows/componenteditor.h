@@ -19,20 +19,25 @@ private:
     /** @brief Reload the widget with data from the component */
     void reload();
 
+    void addVariableEditor(const Variable &var);
+
 private slots:
 
     void onChanged();
+    void onChildFocused();
 
     void accept() override;
     void reject() override;
 
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
+    void on_btnAddVariable_clicked();
+
+    void on_btnRemoveVariable_clicked();
 
 private:
     Ui::ComponentEditor *ui;
     Component *component;
     QList<VariableEditor*> variableEditors;
+    VariableEditor *focusedEditor{};
     bool changed = false;
 };
 

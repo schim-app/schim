@@ -28,7 +28,6 @@ SOURCES += \
     model/text.cpp \
     model/variable.cpp \
     ui/commands.cpp \
-    ui/componentlist.cpp \
     ui/mainwindow.cpp \
     ui/objects/gcomponent.cpp \
     ui/objects/gcompositeobject.cpp \
@@ -41,6 +40,7 @@ SOURCES += \
     ui/sheetscene.cpp \
     ui/sheetview.cpp \
     ui/vimlike.cpp \
+    ui/widgets/componentlist.cpp \
     ui/widgets/componentcompleter.cpp \
     ui/widgets/variableeditor.cpp \
     ui/windows/componenteditor.cpp \
@@ -78,6 +78,7 @@ HEADERS += \
     ui/sheetscene.h \
     ui/sheetview.h \
     ui/vimlike.h \
+    ui/widgets/componentlist.h \
     ui/widgets/componentcompleter.h \
     ui/widgets/variableeditor.h \
     ui/windows/componenteditor.h \

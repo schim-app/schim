@@ -6,6 +6,10 @@ VariableEditor::VariableEditor(const Variable &variable, QWidget *parent)
     : QWidget(parent), ui(new Ui::VariableEditor), variable(variable)
 {
     ui->setupUi(this);
+
+    for (auto *child : children())
+        child->installEventFilter(this);
+
     reload();
 }
 
@@ -30,6 +34,13 @@ void VariableEditor::reload()
 Variable VariableEditor::getVariable() const
 {
     return variable;
+}
+
+bool VariableEditor::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::FocusIn)
+        emit focused();
+    return QWidget::eventFilter(obj, event);
 }
 
 void VariableEditor::updateVariableName()
