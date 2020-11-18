@@ -14,7 +14,7 @@ struct Variable
 
     Variable();
     Variable(const QString &name, const QString &value = "");
-    Variable(const QString &name, const QString &description, const QString &value);
+    Variable(const QString &name, const QString &value, const QString &description);
 
     static QRegExp allowedPatterns();
     static Variable find(const VariableSet &list, QString name);

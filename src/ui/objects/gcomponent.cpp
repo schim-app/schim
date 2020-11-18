@@ -32,17 +32,24 @@ void GComponent::showContextMenu()
 
 void GComponent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    GObject::mousePressEvent(event);
+    GCompositeObject::mousePressEvent(event);
 
     if (event->buttons() == Qt::RightButton)
         showContextMenu();
+}
+
+void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    GCompositeObject::mouseDoubleClickEvent(event);
+    if (event->buttons() == Qt::LeftButton)
+        edit();
 }
 
 // SLOTS
 
 void GComponent::edit()
 {
-    ComponentEditor editor(get(), MainWindow::instance);
+    ComponentEditor editor(this, MainWindow::instance);
 
     editor.exec();
     //TODO how to delete it?

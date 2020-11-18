@@ -19,6 +19,7 @@ public:
 
     // EVENTS
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private slots:
     void edit();

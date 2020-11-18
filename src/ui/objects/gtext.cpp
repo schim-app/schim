@@ -24,9 +24,11 @@ const Text *GText::get() const
     return (Text*) obj;
 }
 
+// SETTERS
+
 void GText::setEditable(bool editable)
 {
-    static int timerId;
+    static int timerId = -1;
     if (editable)
     {
         setPlainText(get()->getText());
@@ -49,7 +51,11 @@ void GText::setEditable(bool editable)
         tc.clearSelection();
         setTextCursor(tc);
 
-        GObject::killTimer(timerId);
+        if (timerId != -1)
+        {
+            GObject::killTimer(timerId);
+            timerId = -1;
+        }
     }
 }
 
@@ -195,10 +201,12 @@ void GText::reload()
         font.setFamily(get()->getFont());
     font.setPixelSize(get()->getTextHeight());
     setFont(font);
+    setPlainText(get()->getDisplayText());
 }
 
 void GText::apply()
 {
     get()->setPos(GObject::pos());
-    get()->setText(toPlainText());
+    if (textInteractionFlags() & Qt::TextEditorInteraction)
+        get()->setText(toPlainText());
 }

@@ -19,6 +19,8 @@ public:
 
     void reload();
 
+    void setVariable(const Variable &var);
+
     Variable getVariable() const;
 
     bool eventFilter(QObject* obj, QEvent *event) override;

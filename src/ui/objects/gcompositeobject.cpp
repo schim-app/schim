@@ -61,4 +61,6 @@ void GCompositeObject::apply()
 void GCompositeObject::reload()
 {
     setPos(get()->getPos());
+    for (auto *child : childItems())
+        static_cast<GObject*>(child)->reload();
 }

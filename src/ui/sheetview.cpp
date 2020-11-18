@@ -86,6 +86,7 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         _panStartPos = event->pos();
 
         scene()->showGuides(false);
+        return;
     }
 
     QGraphicsView::mousePressEvent(event);

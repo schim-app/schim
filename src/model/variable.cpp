@@ -6,8 +6,8 @@ Variable::Variable(const QString &name, const QString &value)
     : name(name), value(value)
 { }
 
-Variable::Variable(const QString &name, const QString &description, const QString &value)
-    : name(name), description(description), value(value)
+Variable::Variable(const QString &name, const QString &value, const QString &description)
+    : name(name), value(value), description(description)
 { }
 
 QRegExp Variable::allowedPatterns()

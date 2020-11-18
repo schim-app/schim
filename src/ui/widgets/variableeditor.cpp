@@ -31,6 +31,12 @@ void VariableEditor::reload()
     ui->editDescription->setText(variable.description);
 }
 
+void VariableEditor::setVariable(const Variable &var)
+{
+    variable = var;
+    reload();
+}
+
 Variable VariableEditor::getVariable() const
 {
     return variable;
@@ -46,14 +52,23 @@ bool VariableEditor::eventFilter(QObject *obj, QEvent *event)
 void VariableEditor::updateVariableName()
 {
     variable.name = ui->editName->text();
-    for (auto str : ui->editAbbreviations->text().split(' '))
-        variable.name += QString(" ") + str;
+    if (!ui->editAbbreviations->text().isEmpty())
+        for (auto str : ui->editAbbreviations->text().split(' '))
+            variable.name += QString(" ") + str;
 }
 
 void VariableEditor::on_editName_textEdited(const QString &text)
 {
     Q_UNUSED(text)
-    updateVariableName();
+    // If the name has been typed in for the first time, create an abbreviation
+    // that consists of the first character of the name
+    if (text.size() == 1 && ui->editAbbreviations->text().isEmpty())
+    {
+        variable.name = text + " " + text[0];
+        reload();
+    }
+    else
+        updateVariableName();
     emit changed();
 }
 

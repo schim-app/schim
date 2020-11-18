@@ -243,7 +243,7 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if (operation)
         operation->mousePressEvent(event);
-    else
+    else if (event->buttons() != Qt::MidButton)
         QGraphicsScene::mousePressEvent(event);
 }
 
