@@ -27,7 +27,6 @@ public:
     QString getDisplayText() const;
     float getTextHeight() const;
     QString getFont() const;
-    VariableSet getVariables() const;
 
 private:
     QString text, font;

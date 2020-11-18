@@ -2,6 +2,8 @@
 
 #include "ui/sheetscene.h"
 
+#include "model/text.h"
+
 GCompositeObject::GCompositeObject(CompositeObject *obj)
     : GObject(obj) { }
 
@@ -25,7 +27,8 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
             auto *assignee = GObject::assign(child);
             scene()->addItem(assignee);
             assignee->setParentItem(this);
-            assignee->setFlags({});
+            if (!dynamic_cast<Text*>(child))
+                assignee->setFlags({});
         }
     else
         return GObject::itemChange(change, value);

@@ -71,3 +71,20 @@ Object *CompositeObject::clone() const
 {
     return new CompositeObject(*this);
 }
+
+void CompositeObject::append(Object *object)
+{
+    QList::append(object);
+    object->parent = this;
+    object->sheet = sheet;
+}
+
+void CompositeObject::append(const QList<Object *> &list)
+{
+    for (auto *obj : list)
+    {
+        obj->parent = this;
+        obj->sheet = sheet;
+    }
+    QList::append(list);
+}

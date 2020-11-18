@@ -6,7 +6,7 @@
 #include <QTimer>
 
 GText::GText(Text *obj)
-    : GObject(obj), QGraphicsTextItem(obj->getText())
+    : GObject(obj), QGraphicsTextItem(obj->getDisplayText())
 {
     reload();
     GObject::setAcceptHoverEvents(true);
@@ -29,6 +29,8 @@ void GText::setEditable(bool editable)
     static int timerId;
     if (editable)
     {
+        setPlainText(get()->getText());
+
         setTextInteractionFlags(Qt::TextEditorInteraction);
         GObject::setFlag(GObject::ItemIsFocusable);
         GObject::setFocus();
@@ -38,6 +40,7 @@ void GText::setEditable(bool editable)
     }
     else
     {
+        setPlainText(get()->getDisplayText());
         setTextInteractionFlags(Qt::NoTextInteraction);
 
         GObject::unsetCursor();

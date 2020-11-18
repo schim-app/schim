@@ -41,6 +41,9 @@ public:
 
     Object *clone() const override;
 
+    void append(Object *object);
+    void append(const QList<Object*> &list);
+
     friend class GCompositeObject;
 
 private:

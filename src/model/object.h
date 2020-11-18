@@ -22,8 +22,6 @@ class Object
 private:
     // The position in the sheet of the upper-left corner of the object
 
-protected:
-
 public:
 
     Object() = default;
@@ -56,6 +54,7 @@ protected:
 
     friend class Sheet;
     friend class GObject;
+    friend class CompositeObject;
 
 };
 
