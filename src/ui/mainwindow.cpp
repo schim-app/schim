@@ -376,6 +376,34 @@ void MainWindow::showAllPrimitives()
     }
 }
 
+void MainWindow::cursorLeft()
+{
+    vimNumberConstrain(1000);
+    if (getTab())
+        vimdo scene()->cursorLeft();
+}
+
+void MainWindow::cursorDown()
+{
+    vimNumberConstrain(1000);
+    if (getTab())
+        vimdo scene()->cursorDown();
+}
+
+void MainWindow::cursorUp()
+{
+    vimNumberConstrain(1000);
+    if (getTab())
+        vimdo scene()->cursorUp();
+}
+
+void MainWindow::cursorRight()
+{
+    vimNumberConstrain(1000);
+    if (getTab())
+        vimdo scene()->cursorRight();
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -442,6 +470,10 @@ void MainWindow::setupActions()
         { new QAction("Decrease grid", this), {}, {Qt::Key_G, Qt::Key_Minus}, &MainWindow::decreaseGridSize},
         { new QAction("Show all texts", this), {}, {Qt::Key_S, Qt::Key_T}, &MainWindow::showAllTexts},
         { new QAction("Show all primitives", this), {}, {Qt::Key_S, Qt::Key_P}, &MainWindow::showAllPrimitives},
+        { new QAction("Move cursor left", this), {}, {Qt::Key_H}, &MainWindow::cursorLeft},
+        { new QAction("Move cursor down", this), {}, {Qt::Key_J}, &MainWindow::cursorDown},
+        { new QAction("Move cursor up", this), {}, {Qt::Key_K}, &MainWindow::cursorUp},
+        { new QAction("Move cursor right", this), {}, {Qt::Key_L}, &MainWindow::cursorRight},
         { ui->actionNew, {},  {}, &MainWindow::newProject},
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionSave, {}, {}, &MainWindow::save},

@@ -46,6 +46,11 @@ Sheet *SheetScene::getSheet()
     return sheet;
 }
 
+const Sheet *SheetScene::getSheet() const
+{
+    return sheet;
+}
+
 QPointF SheetScene::getCursorPos() const
 {
     return cursorPos;
@@ -112,6 +117,54 @@ void SheetScene::command(QUndoCommand *command)
     undoStack.push(command);
 }
 
+void SheetScene::cursorLeft()
+{
+    QPointF newPos = constrainToContentArea(
+                forcedSnap(cursorPos - QPointF{gridX, 0})
+                );
+
+    QGraphicsSceneMouseEvent event;
+    event.setScenePos(newPos);
+    mouseMoveEvent(&event);
+    update();
+}
+
+void SheetScene::cursorDown()
+{
+    QPointF newPos = constrainToContentArea(
+                forcedSnap(cursorPos + QPointF{0, gridY})
+                );
+
+    QGraphicsSceneMouseEvent event;
+    event.setScenePos(newPos);
+    mouseMoveEvent(&event);
+    update();
+}
+
+void SheetScene::cursorUp()
+{
+    QPointF newPos = constrainToContentArea(
+                forcedSnap(cursorPos - QPointF{0, gridY})
+                );
+
+    QGraphicsSceneMouseEvent event;
+    event.setScenePos(newPos);
+    mouseMoveEvent(&event);
+    update();
+}
+
+void SheetScene::cursorRight()
+{
+    QPointF newPos = constrainToContentArea(
+                forcedSnap(cursorPos + QPointF{gridX, 0})
+                );
+
+    QGraphicsSceneMouseEvent event;
+    event.setScenePos(newPos);
+    mouseMoveEvent(&event);
+    update();
+}
+
 void SheetScene::startOperation(Operation *op)
 {
     if (operation)
@@ -127,11 +180,33 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
+QPointF SheetScene::constrainToContentArea(QPointF pt) const
+{
+    //TODO maybe move this function to Sheet
+    auto content = getSheet()->getContentArea();
+    if (pt.x() > content.right())
+        pt.setX(content.right());
+    else if (pt.x() < content.left())
+        pt.setX(content.left());
+
+    if (pt.y() > content.bottom())
+        pt.setY(content.bottom());
+    else if (pt.y() < content.top())
+        pt.setY(content.top());
+
+    return pt;
+}
+
 QPointF SheetScene::snap(const QPointF &pt) const
 {
     if (!snapEnabled || sheet == nullptr)
         return pt;
+    else
+        return forcedSnap(pt);
+}
 
+QPointF SheetScene::forcedSnap(const QPointF &pt) const
+{
     QPointF center = sheet->getContentArea().center();
     return center + QPointF{round((pt.x() - center.x()) / gridX) * gridX, round((pt.y() - center.y()) / gridY) * gridY};
 }

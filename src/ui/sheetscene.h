@@ -28,6 +28,7 @@ public:
     SheetScene();
 
     Sheet *getSheet();
+    const Sheet *getSheet() const;
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
@@ -45,13 +46,27 @@ public:
     void redo();
     void command(QUndoCommand *command);
 
+    void cursorLeft();
+    void cursorDown();
+    void cursorUp();
+    void cursorRight();
+
     void startOperation(Operation *op);
     /**
      * @brief Return the point on the grid that is closest to `pt`.
      *
      * Both the argument and return value are in scene coordinates.
+     * @note If snap is disabled, the parameter is returned unchanged.
      */
     QPointF snap(const QPointF &pt) const;
+    /**
+     * @brief Return the point on the grid that is closest to `pt`.
+     *
+     * Both the argument and return value are in scene coordinates.
+     * @note In contrast to `snap`, this method returns the snapped position
+     * regardless of the enabled state of the snap feature.
+     */
+    QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
 
     void operationFinished(bool success = true);
@@ -59,6 +74,7 @@ public:
 private:
 
     void initGuides();
+    QPointF constrainToContentArea(QPointF pt) const;
 
     // OVERRIDDEN METHODS
 

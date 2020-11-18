@@ -94,6 +94,10 @@ private slots:
     void decreaseGridSize();
     void showAllTexts();
     void showAllPrimitives();
+    void cursorLeft();
+    void cursorDown();
+    void cursorUp();
+    void cursorRight();
 
     void on_todoButton_pressed();
 
