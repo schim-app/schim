@@ -27,6 +27,7 @@ public:
     SheetScene(Sheet *sheet);
     SheetScene();
 
+    // GETTERS
     Sheet *getSheet();
     const Sheet *getSheet() const;
     QPointF getCursorPos() const;
@@ -37,20 +38,20 @@ public:
     static bool isSnapEnabled();
     static QSizeF getGridSize();
 
+    // SETTERS
     void setSheet(Sheet *sheet);
     void setSnapCursorGuides(bool snap);
     static void setGridSize(float x, float y = -1);
     static void setGridSize(QSizeF size);
 
+    // USER ACTIONS
     void undo();
     void redo();
     void command(QUndoCommand *command);
-
     void cursorLeft();
     void cursorDown();
     void cursorUp();
     void cursorRight();
-
     void startOperation(Operation *op);
     /**
      * @brief Return the point on the grid that is closest to `pt`.
@@ -68,13 +69,17 @@ public:
      */
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
-
     void operationFinished(bool success = true);
+
+    // OVERRIDEN METHODS
+    GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);
 
 private:
 
+    // HELPER FUNCTIONS
     void initGuides();
     QPointF constrainToContentArea(QPointF pt) const;
+    void applyCursorMovement(const QPointF &pt);
 
     // OVERRIDDEN METHODS
 
@@ -91,6 +96,7 @@ private:
 private:
     // ATTRIBUTES
 
+    // A white sheet of paper
     QGraphicsRectItem *pageBackgroundItem;
 
     // The scene operation that is currently active
@@ -99,10 +105,14 @@ private:
     QPointF cursorPos;
     // This attribute has no effect if snap is not enabled
     bool snapGuides = false, showCursorGuides = true;
+    GObject *hoveredItem{};
 
     // In millimeters
     static float gridX, gridY;
     static bool gridEnabled, snapEnabled; // only for test
+
+    // FRIENDS
+    friend class GObject;
 };
 
 #endif // SHEETSCENE_H

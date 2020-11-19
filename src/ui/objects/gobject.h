@@ -46,6 +46,7 @@ public:
     const Object *get() const;
     /** @brief Return whether the mouse is over this object. */
     bool isHovered() const;
+    GObject *getOldestParent();
 
     // OVERRIDEN METHODS
 
@@ -65,7 +66,6 @@ public:
     SheetScene *scene();
 
     // FOR EDITING THE OBJECT
-
     /**
      * @brief Update the graphical representation to match the object from the model.
      *
@@ -121,9 +121,7 @@ public:
      */
     static GObject *assign(Object *obj);
 
-protected:
     // EVENTS
-
     /**
      * If the item is being dragged (left button is down),
      * snap the cursor guides to the grid.
@@ -149,13 +147,11 @@ protected:
 
 private:
     // HELPER METHODS
-
     /** Assign a z-value to the handles that is higher than that of the object. */
     void moveHandlesAbove();
 
 protected:
     // PROTECTED ATTRIBUTES
-
     /** The object that is being wrapped */
     Object *obj;
     /** Dynamically allocated list of handles */
@@ -166,11 +162,9 @@ protected:
 
 private:
     // PRIVATE ATTRIBUTES
-
     bool hovered = false;
 
     // FRIENDS
-
     friend class GObjectHandle;
 };
 

@@ -119,50 +119,30 @@ void SheetScene::command(QUndoCommand *command)
 
 void SheetScene::cursorLeft()
 {
-    QPointF newPos = constrainToContentArea(
-                forcedSnap(cursorPos - QPointF{gridX, 0})
+    applyCursorMovement(
+                constrainToContentArea(forcedSnap(cursorPos - QPointF{gridX, 0}))
                 );
-
-    QGraphicsSceneMouseEvent event;
-    event.setScenePos(newPos);
-    mouseMoveEvent(&event);
-    update();
 }
 
 void SheetScene::cursorDown()
 {
-    QPointF newPos = constrainToContentArea(
-                forcedSnap(cursorPos + QPointF{0, gridY})
+    applyCursorMovement(
+                constrainToContentArea(forcedSnap(cursorPos + QPointF{0, gridY}))
                 );
-
-    QGraphicsSceneMouseEvent event;
-    event.setScenePos(newPos);
-    mouseMoveEvent(&event);
-    update();
 }
 
 void SheetScene::cursorUp()
 {
-    QPointF newPos = constrainToContentArea(
-                forcedSnap(cursorPos - QPointF{0, gridY})
+    applyCursorMovement(
+                constrainToContentArea(forcedSnap(cursorPos - QPointF{0, gridY}))
                 );
-
-    QGraphicsSceneMouseEvent event;
-    event.setScenePos(newPos);
-    mouseMoveEvent(&event);
-    update();
 }
 
 void SheetScene::cursorRight()
 {
-    QPointF newPos = constrainToContentArea(
-                forcedSnap(cursorPos + QPointF{gridX, 0})
+    applyCursorMovement(
+                constrainToContentArea(forcedSnap(cursorPos + QPointF{gridX, 0}))
                 );
-
-    QGraphicsSceneMouseEvent event;
-    event.setScenePos(newPos);
-    mouseMoveEvent(&event);
-    update();
 }
 
 void SheetScene::startOperation(Operation *op)
@@ -180,6 +160,11 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
+GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
+{
+    return static_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
+}
+
 QPointF SheetScene::constrainToContentArea(QPointF pt) const
 {
     //TODO maybe move this function to Sheet
@@ -195,6 +180,23 @@ QPointF SheetScene::constrainToContentArea(QPointF pt) const
         pt.setY(content.top());
 
     return pt;
+}
+
+void SheetScene::applyCursorMovement(const QPointF &pt)
+{
+    // Send mouse move event to item
+    QGraphicsSceneMouseEvent mouseEvent;
+    mouseEvent.setScenePos(pt);
+    mouseMoveEvent(&mouseEvent);
+
+    // Send hover event to item and each of its parents
+    QGraphicsSceneHoverEvent hoverEvent;
+    hoverEvent.setScenePos(pt);
+    for (auto *item = itemAt(pt,{}); item != nullptr; item = item->parentItem())
+        item->hoverEnterEvent(&hoverEvent);
+
+    // Update the cursor guides
+    update();
 }
 
 QPointF SheetScene::snap(const QPointF &pt) const
@@ -250,6 +252,16 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     cursorPos = event->scenePos();
+
+    QGraphicsSceneHoverEvent hoverEvent;
+    hoverEvent.setScenePos(cursorPos);
+    if (hoveredItem && hoveredItem != itemAt(cursorPos, {})->getOldestParent())
+    {
+        auto *obj = itemAt(cursorPos, {});
+        auto *par = obj->getOldestParent();
+        hoveredItem->hoverLeaveEvent(&hoverEvent);
+        hoveredItem = nullptr;
+    }
 
     if (operation)
         operation->mouseMoveEvent(event);

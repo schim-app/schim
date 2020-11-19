@@ -61,6 +61,14 @@ bool GObject::isHovered() const
     return hovered;
 }
 
+GObject *GObject::getOldestParent()
+{
+    if (parentItem() != nullptr)
+        return parentItem()->getOldestParent();
+    else
+        return this;
+}
+
 GObject *GObject::parentItem()
 {
     return (GObject *) QGraphicsItem::parentItem();
@@ -149,7 +157,10 @@ void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     QGraphicsItem::hoverEnterEvent(event);
     if (flags() & ItemIsSelectable)
+    {
         hovered = true;
+        scene()->hoveredItem = getOldestParent();
+    }
 }
 
 void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
