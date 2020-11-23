@@ -43,6 +43,8 @@ public:
 
     QRectF getContentArea() const;
 
+    Header *clone() const;
+
 protected:
     /**
      * Clear all objects that are configurable (display rows, columns, etc.) from the list of children.

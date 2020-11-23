@@ -18,6 +18,7 @@ SOURCES += \
     main.cpp \
     model/component.cpp \
     model/compositeobject.cpp \
+    model/corner.cpp \
     model/device.cpp \
     model/header.cpp \
     model/line.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     global.h \
     model/component.h \
     model/compositeobject.h \
+    model/corner.h \
     model/device.h \
     model/header.h \
     model/line.h \

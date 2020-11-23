@@ -40,6 +40,11 @@ QRectF Header::getContentArea() const
     return contentArea;
 }
 
+Header *Header::clone() const
+{
+    return new Header(*this);
+}
+
 void Header::clear()
 {
 

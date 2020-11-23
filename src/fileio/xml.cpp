@@ -1,14 +1,14 @@
 #include "xml.h"
 
 #include "global.h"
+#include "model/component.h"
 
 #include <QFile>
 #include <QMap>
 #include <QXmlStreamReader>
 #include <iostream>
 #include <QDebug>
-
-#include "model/component.h"
+#include <QFileSystemWatcher>
 
 #define read_xml_file(filename) \
     QFile file(filename); \
@@ -73,11 +73,22 @@ Variable xmlParseVariable(QXmlStreamReader &stream)
 
 Object *xmlParseObject(const QString &filename)
 {
-    read_xml_file(filename);
+    // TODO What happens when the file is changed? Currently, this creates an
+    // object using the last loaded file version as the template. In the future,
+    // make it so that when a file is changed, the cache is automatically updated.
+    static QMap<QString, Object *> cache;
 
+    auto iter = cache.find(filename);
+    if (iter != cache.end())
+        return (*iter)->clone();
+
+    read_xml_file(filename);
     xmlConsumeFirstElement(stream);
 
-    return xmlParseObject(stream);
+    Object *obj = xmlParseObject(stream);
+    cache[filename] = obj->clone();
+
+    return obj;
 }
 
 CompositeObject *xmlParseCompositeObject(const QString &filename)
@@ -100,11 +111,19 @@ CompositeObject *xmlParseFromDxf(const QString &filename)
 
 Header *xmlParseHeader(const QString &filename)
 {
-    read_xml_file(filename);
+    static QMap<QString, Header *> cache;
 
+    auto iter = cache.find(filename);
+    if (iter != cache.end())
+        return (*iter)->clone();
+
+    read_xml_file(filename);
     xmlTestRootTag(stream, "header");
 
-    return xmlParseHeader(stream);
+    Header *header = xmlParseHeader(stream);
+    cache[filename] = header->clone();
+
+    return header;
 }
 
 QString xmlPeekName(const QString &filename)
