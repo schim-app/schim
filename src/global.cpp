@@ -13,7 +13,10 @@
  */
 QSettings *getSettings(const QString &key)
 {
-    if (key == "default_path")
+    if (
+            key == "default_path" ||
+            key == "print_path"
+            )
         return new QSettings("schim", "volatile");
     else
         return new QSettings("schim", "schim");

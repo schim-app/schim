@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "fileio/xml.h"
+#include "fileio/pdf.h"
 #include "ui/objects/gline.h"
 #include "ui/objects/gcompositeobject.h"
 #include "ui/operations.h"
@@ -65,6 +66,16 @@ SheetScene *MainWindow::scene()
 Sheet *MainWindow::getSheet(int index)
 {
     return getTab(index)->scene()->getSheet();
+}
+
+QString MainWindow::getFileName() const
+{
+    return filename;
+}
+
+MainWindow *MainWindow::getInstance()
+{
+    return instance;
 }
 
 /***********
@@ -242,6 +253,26 @@ void MainWindow::saveAs()
         changeSetting("default_path", filename);
 
         setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
+    }
+    catch (...)
+    {
+        QMessageBox::critical(this, "Error", "Unable to write file");
+    }
+}
+
+void MainWindow::print()
+{
+    if (activeProject == nullptr) return;
+
+    QString filename = QFileDialog::getSaveFileName(this, "Print to file...",
+                            getSetting("print_path", QFileInfo(this->filename).absolutePath()).toString());
+
+    if (filename == "") return; // No file chosen
+
+    try
+    {
+        pdfWriteProject(activeProject, filename);
+        changeSetting("print_path", filename);
     }
     catch (...)
     {
@@ -478,6 +509,7 @@ void MainWindow::setupActions()
         { ui->actionOpen, {},  {}, &MainWindow::openProject},
         { ui->actionSave, {}, {}, &MainWindow::save},
         { ui->actionSaveAs, {}, {}, &MainWindow::saveAs},
+        { ui->actionPrint, {}, {}, &MainWindow::print},
         { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
         { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
         { ui->actionInsertRect, {}, {}, &MainWindow::insertRect},

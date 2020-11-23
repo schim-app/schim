@@ -51,6 +51,9 @@ public:
      * If no index is specified, return the current sheet.
      */
     Sheet *getSheet(int index = -1);
+    QString getFileName() const;
+
+    static MainWindow *getInstance();
 
     // Setters
 
@@ -78,6 +81,7 @@ private slots:
     void openProject();
     void save();
     void saveAs();
+    void print();
     void zoomIn();
     void zoomOut();
     void setZoom();
@@ -137,7 +141,6 @@ private: // Private members
     // Added so SheetSettings can use ui->tabView
     friend class SheetSettings;
 
-public:
     static MainWindow *instance;
 };
 #endif // MAINWINDOW_H

@@ -23,7 +23,7 @@ const Component *GComponent::get() const
 
 void GComponent::showContextMenu()
 {
-    QMenu contextMenu(MainWindow::instance);
+    QMenu contextMenu(MainWindow::getInstance());
     QAction edit("Edit element");
     QObject::connect(&edit, &QAction::triggered, this, &GComponent::edit);
     contextMenu.addAction(&edit);
@@ -49,8 +49,7 @@ void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void GComponent::edit()
 {
-    ComponentEditor editor(this, MainWindow::instance);
+    ComponentEditor editor(this, MainWindow::getInstance());
 
     editor.exec();
-    //TODO how to delete it?
 }
