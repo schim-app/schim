@@ -255,12 +255,17 @@ void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QGraphicsSceneHoverEvent hoverEvent;
     hoverEvent.setScenePos(cursorPos);
-    if (hoveredItem && hoveredItem != itemAt(cursorPos, {})->getOldestParent())
+    if (hoveredItem != nullptr)
     {
-        auto *obj = itemAt(cursorPos, {});
-        auto *par = obj->getOldestParent();
-        hoveredItem->hoverLeaveEvent(&hoverEvent);
-        hoveredItem = nullptr;
+        auto *item = itemAt(cursorPos, {});
+        // The item can be null when the event is triggered by zooming
+        if (item != nullptr && hoveredItem != item->getOldestParent())
+        {
+            auto *obj = item;
+            auto *par = obj->getOldestParent();
+            hoveredItem->hoverLeaveEvent(&hoverEvent);
+            hoveredItem = nullptr;
+        }
     }
 
     if (operation)
