@@ -1,15 +1,34 @@
 #include "gtext.h"
 
+#include "ui/windows/textsettings.h"
+#include "ui/mainwindow.h"
+#include "global.h"
+
 #include <QGraphicsSceneEvent>
 #include <QTextCursor>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QApplication>
+#include <QFont>
+#include <QMenu>
+#include <QTextDocument>
 
 GText::GText(Text *obj)
-    : GObject(obj), QGraphicsTextItem(obj->getDisplayText())
+    : GObject(obj)
 {
-    reload();
     GObject::setAcceptHoverEvents(true);
+    displayItem = new GDisplayText;
+    displayItem->setDefaultTextColor(Qt::black);
+    displayItem->setDocument(new QTextDocument);
+    displayItem->document()->setDocumentMargin(1);
+    reload();
+    connect(displayItem, SIGNAL(focusOut()), this, SLOT(onFocusOut()));
+}
+
+GText::~GText()
+{
+    delete displayItem->document();
+    delete displayItem;
 }
 
 // GETTERS
@@ -24,189 +43,230 @@ const Text *GText::get() const
     return (Text*) obj;
 }
 
-// SETTERS
-
-void GText::setEditable(bool editable)
+SheetScene *GText::scene()
 {
-    static int timerId = -1;
-    if (editable)
-    {
-        setPlainText(get()->getText());
-
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        GObject::setFlag(GObject::ItemIsFocusable);
-        GObject::setFocus();
-
-        GObject::setCursor(QCursor(Qt::IBeamCursor));
-        timerId = GObject::startTimer(250);
-    }
-    else
-    {
-        setPlainText(get()->getDisplayText());
-        setTextInteractionFlags(Qt::NoTextInteraction);
-
-        GObject::unsetCursor();
-
-        auto tc = textCursor();
-        tc.clearSelection();
-        setTextCursor(tc);
-
-        if (timerId != -1)
-        {
-            GObject::killTimer(timerId);
-            timerId = -1;
-        }
-    }
+    return GObject::scene();
 }
 
 // OVERRIDEN QGraphicsItem METHODS
 
 QPainterPath GText::shape() const
 {
-    return QGraphicsTextItem::shape();
-}
-
-void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    GObject::paint(painter, option, widget);
-    setDefaultTextColor(Qt::black);
-    QGraphicsTextItem::paint(painter, option, widget);
+    return displayItem->shape();
 }
 
 QRectF GText::boundingRect() const
 {
-    return QGraphicsTextItem::boundingRect();
+    return displayItem->boundingRect();
 }
 
-SheetScene *GText::scene()
+void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    return GObject::scene();
+    QPen pen(Qt::black, dpiInvariant(1), Qt::DashLine);
+
+    if (isSelected() || isHovered() || editMode)
+    {
+        pen.setCosmetic(true);
+        painter->setPen(pen);
+        painter->drawPath(shape());
+    }
 }
 
 // EVENTS
 
 QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
+    if (change == ItemSceneHasChanged && scene() != nullptr)
+    {
+        scene()->addItem(displayItem);
+        displayItem->setParentItem(this);
+        displayItem->setZValue(zValue() - 0.1);
+        displayItem->setFlags({});
+    }
     return GObject::itemChange(change, value);
 }
 
 void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (textInteractionFlags() == Qt::TextEditorInteraction) // We are in editing mode
-    {
-        // Update the cursor
-        scene()->update();
-        QGraphicsTextItem::mousePressEvent(event);
-    }
+    if (event->buttons() == Qt::RightButton)
+        showContextMenu();
     else
         GObject::mousePressEvent(event);
 }
 
-void GText::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-        QGraphicsTextItem::mouseMoveEvent(event);
-    else
-        GObject::mouseMoveEvent(event);
-}
-
 void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-    {
-        QGraphicsTextItem::mouseReleaseEvent(event);
-        GObject::scene()->update();
-        // Override default behavior of the view which shows the guides when left button is released.
-        scene()->showGuides(false);
-    }
-    else
-        GObject::mouseReleaseEvent(event);
+    GObject::mouseReleaseEvent(event);
 }
 
 void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton && textInteractionFlags() == Qt::NoTextInteraction)
+    if (!editMode && event->buttons() == Qt::LeftButton)
     {
-        setEditable();
-        GObject::scene()->showGuides(false);
+        scene()->showGuides(false);
+        setEditMode(true);
     }
-    else
-        GObject::mouseDoubleClickEvent(event);
+    GObject::mouseDoubleClickEvent(event);
 }
 
 void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-        GObject::scene()->showGuides(false);
-    QGraphicsTextItem::hoverEnterEvent(event);
+    if (editMode)
+        scene()->showGuides(false);
+    GObject::hoverEnterEvent(event);
 }
 
 void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    GObject::scene()->showGuides(true);
-    QGraphicsTextItem::hoverEnterEvent(event);
-}
-
-void GText::keyPressEvent(QKeyEvent *event)
-{
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-    {
-        QGraphicsTextItem::keyPressEvent(event);
-        // Prevent pressing delete from deleting the object, and disable action keybindings
-        event->accept();
-        GObject::scene()->update();
-    }
-    else
-        GObject::keyPressEvent(event);
-}
-
-void GText::keyReleaseEvent(QKeyEvent *event)
-{
-    if (textInteractionFlags() == Qt::TextEditorInteraction)
-    {
-        QGraphicsTextItem::keyPressEvent(event);
-        GObject::scene()->update();
-        apply();
-    }
-    else
-        GObject::keyReleaseEvent(event);
-}
-
-void GText::focusInEvent(QFocusEvent *event)
-{
-    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_A, {}));
-    keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Backspace, {}));
-    QGraphicsTextItem::focusInEvent(event);
-}
-
-void GText::focusOutEvent(QFocusEvent *event)
-{
-    setEditable(false);
-    QGraphicsTextItem::focusOutEvent(event);
+    if (editMode)
+        scene()->showGuides(true);
+    GObject::hoverLeaveEvent(event);
 }
 
 void GText::timerEvent(QTimerEvent *event)
 {
-    GObject::update();
-    QGraphicsTextItem::timerEvent(event);
+    update();
+    GObject::timerEvent(event);
 }
 
 // FOR EDITING THE OBJECT
 
 void GText::reload()
 {
-    GObject::setPos(get()->getPos());
     QFont font;
     if (get()->getFont() != "")
-        font.setFamily(get()->getFont());
-    font.setPixelSize(get()->getTextHeight());
-    setFont(font);
-    setPlainText(get()->getDisplayText());
+        font.fromString(get()->getFont());
+    else
+        font = QApplication::font();
+
+    if (get()->getTextHeight() != -1)
+        font.setPixelSize(get()->getTextHeight());
+
+    displayItem->setFont(font);
+    displayItem->setPlainText(get()->getDisplayText());
+    setPos(get()->getPos());
 }
 
 void GText::apply()
 {
     get()->setPos(GObject::pos());
-    if (textInteractionFlags() & Qt::TextEditorInteraction)
-        get()->setText(toPlainText());
+    if (editMode)
+        get()->setText(displayItem->toPlainText());
+}
+
+void GText::showContextMenu()
+{
+    QMenu contextMenu(MainWindow::getInstance());
+    QAction edit("Edit text");
+    QObject::connect(&edit, &QAction::triggered, this, &GText::edit);
+    contextMenu.addAction(&edit);
+    contextMenu.exec(QCursor::pos());
+}
+
+void GText::setEditMode(bool edit)
+{
+    static int timerId = -1;
+    editMode = displayItem->editMode = edit;
+    if (edit)
+    {
+        displayItem->setPlainText(get()->getText());
+
+        displayItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+        displayItem->setFlag(ItemIsFocusable);
+        displayItem->setFocus();
+
+        displayItem->setCursor(QCursor(Qt::IBeamCursor));
+        timerId = startTimer(250);
+    }
+    else
+    {
+        displayItem->setPlainText(get()->getDisplayText());
+
+        displayItem->setTextInteractionFlags(Qt::NoTextInteraction);
+        displayItem->unsetCursor();
+
+        auto tc = displayItem->textCursor();
+        tc.clearSelection();
+        displayItem->setTextCursor(tc);
+
+        if (timerId != -1)
+        {
+            killTimer(timerId);
+            timerId = -1;
+        }
+    }
+}
+
+// SLOTS
+
+void GText::edit()
+{
+    TextSettings editor(this, MainWindow::getInstance());
+    editor.exec();
+}
+
+void GText::onFocusOut()
+{
+    scene()->showGuides(true);
+    apply(); // Has to be before setEditMode
+    setEditMode(false);
+}
+
+/****************
+ * GDisplayText *
+ ****************/
+
+// EVENTS
+
+void GDisplayText::focusOutEvent(QFocusEvent *event)
+{
+    editMode = false;
+    emit focusOut();
+    QGraphicsTextItem::focusOutEvent(event);
+}
+
+void GDisplayText::keyPressEvent(QKeyEvent *event)
+{
+    // Enter finalizes the edit, while SHIFT+Enter inserts a new line
+    if (editMode && event->key() == Qt::Key_Return)
+    {
+        if (event->modifiers() == 0)
+        {
+            parentItem()->apply();
+            parentItem()->setEditMode(false);
+            return;
+        }
+        else if (event->modifiers() == Qt::SHIFT)
+        {
+            event->setModifiers({});
+            QGraphicsTextItem::keyPressEvent(event);
+            return;
+        }
+    }
+    QGraphicsTextItem::keyPressEvent(event);
+}
+
+void GDisplayText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QStyleOptionGraphicsItem tweak(*option);
+    // Remove the border so we can draw a custom one in GText
+    tweak.state &= ~QStyle::State_HasFocus;
+    QGraphicsTextItem::paint(painter, &tweak, widget);
+}
+
+// CUSTOM METHODS
+
+SheetScene *GDisplayText::scene()
+{
+    return static_cast<SheetScene*>(QGraphicsTextItem::scene());
+}
+
+void GDisplayText::setParentItem(GText *parent)
+{
+    QGraphicsTextItem::setParentItem(parent);
+}
+
+GText *GDisplayText::parentItem()
+{
+    return (GText *) QGraphicsTextItem::parentItem();
 }

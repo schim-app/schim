@@ -377,7 +377,7 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
 
 Text *xmlParseText(QXmlStreamReader &stream)
 {
-    Text *text = new Text();
+    Text *text = new Text;
 
     try
     {
@@ -391,10 +391,15 @@ Text *xmlParseText(QXmlStreamReader &stream)
                 x = attr.value().toString().toFloat(&conversion_ok);
             else if (attr.name() == "y")
                 y = attr.value().toString().toFloat(&conversion_ok);
+            else if (attr.name() == "height")
+                text->setTextHeight(attr.value().toString().toFloat(&conversion_ok));
+            else if (attr.name() == "font")
+                text->setFont(attr.value().toString());
             else
                 throw std::logic_error("Unknown attributes for text object");
             if (!conversion_ok)
                 throw std::logic_error("Text object attributes are of invalid format");
+
             text->setPos({x, y});
         }
     }
@@ -415,6 +420,9 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream)
         stream.writeAttribute("text", text->getText());
     stream.writeAttribute("x", QString::number(text->getPos().x()));
     stream.writeAttribute("y", QString::number(text->getPos().y()));
+    stream.writeAttribute("height", QString::number(text->getTextHeight()));
+    if (text->getFont() != def.getFont())
+        stream.writeAttribute("font", text->getFont());
 
     stream.writeEndElement();
 }

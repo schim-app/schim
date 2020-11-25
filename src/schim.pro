@@ -18,7 +18,7 @@ SOURCES += \
     main.cpp \
     model/component.cpp \
     model/compositeobject.cpp \
-    model/corner.cpp \
+    model/special/corner.cpp \
     model/device.cpp \
     model/header.cpp \
     model/line.cpp \
@@ -45,7 +45,8 @@ SOURCES += \
     ui/widgets/componentcompleter.cpp \
     ui/widgets/variableeditor.cpp \
     ui/windows/componenteditor.cpp \
-    ui/windows/sheetsettings.cpp
+    ui/windows/sheetsettings.cpp \
+    ui/windows/textsettings.cpp
 
 HEADERS += \
     fileio/database.h \
@@ -56,7 +57,7 @@ HEADERS += \
     global.h \
     model/component.h \
     model/compositeobject.h \
-    model/corner.h \
+    model/special/corner.h \
     model/device.h \
     model/header.h \
     model/line.h \
@@ -84,13 +85,15 @@ HEADERS += \
     ui/widgets/componentcompleter.h \
     ui/widgets/variableeditor.h \
     ui/windows/componenteditor.h \
-    ui/windows/sheetsettings.h
+    ui/windows/sheetsettings.h \
+    ui/windows/textsettings.h
 
 FORMS += \
     ui/mainwindow.ui \
     ui/widgets/variableeditor.ui \
     ui/windows/componenteditor.ui \
-    ui/windows/sheetsettings.ui
+    ui/windows/sheetsettings.ui \
+    ui/windows/textsettings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

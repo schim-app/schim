@@ -13,6 +13,7 @@
 #include <QStyleOptionGraphicsItem>
 
 class GObjectHandle;
+class GCompositeObject;
 
 /**
  * @brief The base class of all objects represented in a graphical scene.
@@ -61,7 +62,7 @@ public:
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     /** Return the parent item cast to a `GObject*`. */
-    GObject *parentItem();
+    GCompositeObject *parentItem();
     /** Return the scene cast to a `SheetScene*`. */
     SheetScene *scene();
 

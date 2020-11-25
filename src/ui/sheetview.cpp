@@ -85,7 +85,6 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         setDragMode(DragMode::ScrollHandDrag);
         _panStartPos = event->pos();
 
-        scene()->showGuides(false);
         return;
     }
 
@@ -127,8 +126,6 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
         setDragMode(DragMode::NoDrag);
         _rubberBandDragging = false;
         viewport()->setCursor(Qt::BlankCursor);
-
-        scene()->showGuides(true);
     }
 
     QGraphicsView::mouseReleaseEvent(event);

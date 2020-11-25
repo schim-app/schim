@@ -4,8 +4,10 @@
 #include <model/sheet.h>
 #include "sheetscene.h"
 #include "ui/objects/gobject.h"
+#include "ui/objects/gcompositeobject.h"
 
 #include <QUndoCommand>
+
 
 class CmdInsertObject : public QUndoCommand
 {
@@ -30,6 +32,7 @@ public:
 
 private:
     QList<QGraphicsItem *> list;
+    QList<GCompositeObject *> parentList;
     SheetScene *scene;
 };
 

@@ -125,7 +125,7 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         obj->get()->setPos(pos);
         obj->reload();
         scene->addItem(obj);
-        object()->setEditable();
+        object()->setEditMode(true);
         //TODO move this somewhere else. Make it so that when the text item is
         // unfocused, detect if the text is empty and remove the item.
         // This would require a signal in GText but right now I can't implement

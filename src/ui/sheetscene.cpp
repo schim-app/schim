@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <iostream>
 #include <QTreeView>
+#include <QApplication>
 
 // Static variables in SheetScene
 float SheetScene::gridX = 5, SheetScene::gridY = 5;
@@ -244,7 +245,10 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     cursorPos = event->scenePos();
 
     if (operation)
+    {
+        clearSelection();
         operation->mousePressEvent(event);
+    }
     else if (event->buttons() != Qt::MidButton)
         QGraphicsScene::mousePressEvent(event);
 }

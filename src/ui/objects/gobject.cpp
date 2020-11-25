@@ -69,9 +69,9 @@ GObject *GObject::getOldestParent()
         return this;
 }
 
-GObject *GObject::parentItem()
+GCompositeObject *GObject::parentItem()
 {
-    return (GObject *) QGraphicsItem::parentItem();
+    return (GCompositeObject *) QGraphicsItem::parentItem();
 }
 
 SheetScene *GObject::scene()
@@ -94,11 +94,10 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     pen.setCosmetic(cosmetic);
 
     // The order is important
-    if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
-        pen.setColor(colorHover);
-
     if (isSelected() || (parentItem() && parentItem()->isSelected()))
         pen.setColor(colorSelected);
+    else if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
+        pen.setColor(colorHover);
 
     painter->setPen(pen);
 }
