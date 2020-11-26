@@ -30,19 +30,23 @@ public:
     // GETTERS
     Sheet *getSheet();
     const Sheet *getSheet() const;
+
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
 
-    static bool isGridEnabled();
-    static bool isSnapEnabled();
-    static QSizeF getGridSize();
+    bool isGridEnabled();
+    bool isSnapEnabled();
+    QSizeF getGridSize();
 
     // SETTERS
     void setSheet(Sheet *sheet);
     void setSnapCursorGuides(bool snap);
-    static void setGridSize(float x, float y = -1);
-    static void setGridSize(QSizeF size);
+
+    void setGridSize(float x, float y = -1);
+    void setGridSize(QSizeF size);
+    void setGridEnabled(bool enabled);
+    void setSnapToGrid(bool snap);
 
     // USER ACTIONS
     void undo();
@@ -77,12 +81,10 @@ public:
 private:
 
     // HELPER FUNCTIONS
-    void initGuides();
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
 
     // OVERRIDDEN METHODS
-
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
@@ -108,8 +110,8 @@ private:
     GObject *hoveredItem{};
 
     // In millimeters
-    static float gridX, gridY;
-    static bool gridEnabled, snapEnabled; // only for test
+    float gridX = 5, gridY = 5;
+    bool gridEnabled = true, snapEnabled = true;
 
     // FRIENDS
     friend class GObject;

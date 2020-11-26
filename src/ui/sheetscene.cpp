@@ -19,10 +19,6 @@
 #include <QTreeView>
 #include <QApplication>
 
-// Static variables in SheetScene
-float SheetScene::gridX = 5, SheetScene::gridY = 5;
-bool SheetScene::gridEnabled = 5, SheetScene::snapEnabled = 5;
-
 SheetScene::SheetScene(Sheet *sheet)
     : sheet(sheet)
 {
@@ -41,6 +37,8 @@ SheetScene::SheetScene(Sheet *sheet)
 
 SheetScene::SheetScene()
     : SheetScene(nullptr) { }
+
+// GETTERS
 
 Sheet *SheetScene::getSheet()
 {
@@ -82,6 +80,8 @@ QSizeF SheetScene::getGridSize()
     return {gridX, gridY};
 }
 
+// SETTERS
+
 void SheetScene::setSheet(Sheet *sheet)
 {
     this->sheet = sheet;
@@ -102,6 +102,18 @@ void SheetScene::setGridSize(QSizeF size)
 {
     setGridSize(size.width(), size.height());
 }
+
+void SheetScene::setGridEnabled(bool enabled)
+{
+    gridEnabled = enabled;
+}
+
+void SheetScene::setSnapToGrid(bool snap)
+{
+    snapEnabled = snap;
+}
+
+// USER ACTIONS
 
 void SheetScene::undo()
 {
@@ -153,6 +165,25 @@ void SheetScene::startOperation(Operation *op)
     operation = op;
 }
 
+QPointF SheetScene::snap(const QPointF &pt) const
+{
+    if (!snapEnabled || sheet == nullptr)
+        return pt;
+    else
+        return forcedSnap(pt);
+}
+
+QPointF SheetScene::forcedSnap(const QPointF &pt) const
+{
+    QPointF center = sheet->getContentArea().center();
+    return center + QPointF{round((pt.x() - center.x()) / gridX) * gridX, round((pt.y() - center.y()) / gridY) * gridY};
+}
+
+void SheetScene::showGuides(bool show)
+{
+    showCursorGuides = show;
+}
+
 void SheetScene::operationFinished(bool success)
 {
     //TODO maybe eliminate parameter success in the future
@@ -161,10 +192,7 @@ void SheetScene::operationFinished(bool success)
     operation = nullptr;
 }
 
-GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
-{
-    return static_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
-}
+// HELPER FUNCTIONS
 
 QPointF SheetScene::constrainToContentArea(QPointF pt) const
 {
@@ -200,28 +228,14 @@ void SheetScene::applyCursorMovement(const QPointF &pt)
     update();
 }
 
-QPointF SheetScene::snap(const QPointF &pt) const
+// OVERRIDEN METHODS
+
+GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
 {
-    if (!snapEnabled || sheet == nullptr)
-        return pt;
-    else
-        return forcedSnap(pt);
+    return static_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
 }
 
-QPointF SheetScene::forcedSnap(const QPointF &pt) const
-{
-    QPointF center = sheet->getContentArea().center();
-    return center + QPointF{round((pt.x() - center.x()) / gridX) * gridX, round((pt.y() - center.y()) / gridY) * gridY};
-}
-
-void SheetScene::showGuides(bool show)
-{
-    showCursorGuides = show;
-}
-
-/*****************
- * Miscellaneous *
-******************/
+// EVENTS
 
 void SheetScene::keyPressEvent(QKeyEvent *event)
 {

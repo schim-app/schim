@@ -178,8 +178,8 @@ void MainWindow::openSheetSettings()
 
     if (vimNumber() > ui->tabView->count())
         return;
-    sheetSettings.setSheetId(vimNumber() - 1);
-    sheetSettings.show();
+    SheetSettings settings(this, vimNumber() - 1);
+    settings.exec();
 }
 
 void MainWindow::newProject()

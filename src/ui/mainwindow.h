@@ -134,12 +134,8 @@ private: // Private members
     bool vimEnabled = true; //TODO temporarily enabled
     // Actions that cannot be found in the menu + vim-ification of the ones that can
     QList<std::tuple<QAction*, QKeySequence, QKeySequence, void (MainWindow::*)()>> additionalActions;
-    SheetSettings sheetSettings{this};
     Project *activeProject = nullptr;
     QString filename;
-
-    // Added so SheetSettings can use ui->tabView
-    friend class SheetSettings;
 
     static MainWindow *instance;
 };
