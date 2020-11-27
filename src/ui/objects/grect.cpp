@@ -103,9 +103,6 @@ void GRect::showHandles(bool show)
         return GObject::showHandles(show);
 }
 
-// TODO remove
-#include "ui/mainwindow.h"
-
 void GRect::handleChanged(GObjectHandle *handle)
 {
     switch (handles->indexOf(handle))

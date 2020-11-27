@@ -79,13 +79,13 @@
    </property>
    <widget class="QMenu" name="menuSheet">
     <property name="title">
-     <string>Sheet</string>
+     <string>&amp;Sheet</string>
     </property>
     <addaction name="actionNewSheet"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -95,7 +95,7 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>&amp;Edit</string>
     </property>
     <addaction name="actionUndoInSheet"/>
     <addaction name="actionRedoInSheet"/>
@@ -148,7 +148,7 @@
   </action>
   <action name="actionNew">
    <property name="text">
-    <string>New...</string>
+    <string>&amp;New...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -156,7 +156,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open...</string>
+    <string>&amp;Open...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -172,7 +172,7 @@
   </action>
   <action name="actionUndoInSheet">
    <property name="text">
-    <string>Undo in sheet</string>
+    <string>&amp;Undo in &amp;sheet</string>
    </property>
    <property name="toolTip">
     <string>Undo the last action in the current sheet</string>
@@ -183,7 +183,7 @@
   </action>
   <action name="actionRedoInSheet">
    <property name="text">
-    <string>Redo in sheet</string>
+    <string>&amp;Redo in &amp;sheet</string>
    </property>
    <property name="toolTip">
     <string>Redo in the current sheet</string>
@@ -194,7 +194,7 @@
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -202,7 +202,7 @@
   </action>
   <action name="actionSaveAs">
    <property name="text">
-    <string>Save as...</string>
+    <string>&amp;Save &amp;As...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -226,7 +226,7 @@
   </action>
   <action name="actionPrint">
    <property name="text">
-    <string>Print</string>
+    <string>&amp;Print</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>

@@ -520,7 +520,6 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 
 Component *xmlParseComponent(QXmlStreamReader &stream)
 {
-    //TODO change return type
     Component *obj = nullptr;
     QPointF pos;
     for (auto attr : stream.attributes())

@@ -73,7 +73,7 @@ public:
      */
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
-    void operationFinished(bool success = true);
+    void operationFinished(bool destroy = true);
 
     // OVERRIDEN METHODS
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);

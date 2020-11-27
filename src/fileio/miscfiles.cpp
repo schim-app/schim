@@ -23,7 +23,7 @@ CompositeObject *parseCompositeObject(const QString &filename)
     if (extension == "dxf")
         return dxfParseCompositeObject(filename);
     else if (extension == "xsym" || extension == "xml")
-        return xmlParseCompositeObject(filename); //TODO implement
+        return xmlParseCompositeObject(filename);
     else
         throw std::logic_error(QString(("Unrecognized file format: ") + extension).toStdString());
 }

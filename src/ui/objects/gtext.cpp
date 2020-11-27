@@ -210,6 +210,7 @@ void GText::onFocusOut()
     scene()->showGuides(true);
     apply(); // Has to be before setEditMode
     setEditMode(false);
+    emit focusOut();
 }
 
 /****************

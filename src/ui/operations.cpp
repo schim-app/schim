@@ -5,7 +5,9 @@
 #include <QLineEdit>
 
 Operation::Operation(SheetScene *scene)
-    : scene(scene) { }
+    : scene(scene) {
+    connect(this, &Operation::testSig, this, [this](){});
+}
 
 Operation::~Operation() { }
 
@@ -25,7 +27,7 @@ void Operation::cancel()
         delete obj->get();
         delete obj;
     }
-    scene->operationFinished(false);
+    scene->operationFinished();
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -116,9 +118,14 @@ GRect *RectInsertOperation::object() const
 
 //////////////////////////////////////////////////////////////////////////////////
 
+TextInsertOperation::TextInsertOperation(SheetScene *scene)
+    : Operation(scene)
+{
+}
+
 void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton)
+    if (event->buttons() == Qt::LeftButton && state == 0)
     {
         auto pos = scene->getSnappedCursorPos();
         obj = new GText;
@@ -126,18 +133,27 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         obj->reload();
         scene->addItem(obj);
         object()->setEditMode(true);
-        //TODO move this somewhere else. Make it so that when the text item is
-        // unfocused, detect if the text is empty and remove the item.
-        // This would require a signal in GText but right now I can't implement
-        // it because of multiple inheritance.
-        scene->command(new CmdInsertObject(obj, scene));
-        scene->operationFinished();
-    }
-}
 
-void TextInsertOperation::textItemUnfocused()
-{
-    scene->operationFinished();
+        // We declare these as local variables so we can capture them inside the lambda
+        GText *obj = object();
+        auto *scene = this->scene;
+
+        // On unfocus, either:
+        // - remove the item from the scene if it is left empty
+        // - insert the item into the model if it has text in it
+        connect(object(), &GText::focusOut, [scene, obj]() {
+            if (obj->get()->getText().isEmpty())
+            {
+                scene->removeItem(obj);
+                delete obj->get();
+                obj->deleteLater();
+            }
+            else
+                scene->command(new CmdInsertObject(obj, scene));
+        });
+        scene->operationFinished();
+        state = 1;
+    }
 }
 
 GText *TextInsertOperation::object() const

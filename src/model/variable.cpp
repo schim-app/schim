@@ -36,7 +36,6 @@ Variable Variable::find(const VariableSet &list, QString name)
 
 QString Variable::substitute(QString str, const VariableSet &variableSet)
 {
-    //TODO %% are not escaped
     QRegExp pattern(allowedPatterns());
 
     str.replace("%%", QString() + char(1));

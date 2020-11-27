@@ -4,10 +4,6 @@
 
 #include <QtMath>
 #include <QPainter>
-//TODO temp
-#include <QGraphicsSceneMouseEvent>
-#include <iostream>
-#include "ui/mainwindow.h"
 
 GLine::GLine(Line *obj)
     : GObject(obj)
@@ -32,7 +28,7 @@ const Line *GLine::get() const
 QPainterPath GLine::shape() const
 {
     // TODO BUG why is the item sometimes selectable even when the mouse is inside
-    // shape (verified by drawing shape around the line)
+    // shape (can be visualised by drawing shape around the line)
 
     // TODO improve this later; Namely, the handle size
     // should be invariant to the scene transformations

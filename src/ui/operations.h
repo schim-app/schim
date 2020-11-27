@@ -20,6 +20,7 @@ class QKeyEvent;
  */
 class Operation : public QObject
 {
+    Q_OBJECT
 public:
     /**
      * @brief Create a scene operation in the specified scene.
@@ -33,9 +34,13 @@ public:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void cancel();
 
+signals:
+    void testSig();
+
 protected:
     SheetScene *scene{};
     GObject *obj{};
+    int state = 0;
 };
 
 class LineInsertOperation : public Operation
@@ -49,9 +54,6 @@ public:
 private:
     /// Convenience function to cast obj
     GLine *object() const;
-
-private:
-    int state = 0;
 };
 
 class RectInsertOperation : public Operation
@@ -63,27 +65,19 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     GRect *object() const;
-private:
-    int state = 0;
 };
 
 class TextInsertOperation : public Operation
 {
     Q_OBJECT
 public:
-    using Operation::Operation;
+    TextInsertOperation(SheetScene *scene);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     /// Convenience function to cast obj
     GText *object() const;
-
-//private slots:
-    void textItemUnfocused();
-
-private:
-    int state = 0;
 };
 
 class ComponentInsertOperation : public Operation
@@ -93,11 +87,6 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-
-private:
-
-private:
-    int state = 0;
 };
 
 #endif // OPERATION_H

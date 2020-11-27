@@ -140,7 +140,7 @@ public:
      * The following changes are processed:
      * - `ItemZValueHasChanged`: display the handles above this object.
      * - `ItemSelectedHasChanged`: show the handles.
-     * - `ItemSceneHasChanged`: TODO
+     * - `ItemSceneHasChanged`: unselect and unhover.
      * - `ItemPositionChange`: apply snap-to-grid before the position actually changes.
      * - `ItemPositionHasChanged`: apply position change to the underlying model object.
      */

@@ -5,9 +5,6 @@
 
 #include "model/text.h"
 
-//TODO remove
-#include "ui/mainwindow.h"
-
 class GDisplayText;
 
 class GText : public GObject
@@ -48,11 +45,13 @@ public:
     void timerEvent(QTimerEvent *event) override;
 
     // FOR EDITING THE OBJECT
-
     void reload() override;
     void apply() override;
     void showContextMenu();
     void setEditMode(bool edit);
+
+signals:
+    void focusOut();
 
 private slots:
     void edit();

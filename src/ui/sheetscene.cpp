@@ -184,11 +184,10 @@ void SheetScene::showGuides(bool show)
     showCursorGuides = show;
 }
 
-void SheetScene::operationFinished(bool success)
+void SheetScene::operationFinished(bool destroy)
 {
-    //TODO maybe eliminate parameter success in the future
-    Q_UNUSED(success)
-    delete operation;
+    if (destroy)
+        delete operation;
     operation = nullptr;
 }
 
