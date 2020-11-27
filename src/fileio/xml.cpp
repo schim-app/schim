@@ -455,7 +455,12 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
         {
             stream.readNext();
             if (stream.isStartElement())
-                obj->append(xmlParseObject(stream));
+            {
+                if (stream.name() == "var")
+                    obj->addVariable(xmlParseVariable(stream));
+                else
+                    obj->append(xmlParseObject(stream));
+            }
         }
     }
     catch (...)
@@ -494,6 +499,8 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
             throw std::logic_error("Linear object array attributes are of invalid format");
     }
     CompositeObject *baseObj = xmlParseCompositeObject(stream);
+    if (baseObj->size() == 1 && dynamic_cast<CompositeObject*>((*baseObj)[0]))
+        baseObj = static_cast<CompositeObject*>((*baseObj)[0]);
 
     return new LinearObjectArray(baseObj, dx, dy, count);
 }

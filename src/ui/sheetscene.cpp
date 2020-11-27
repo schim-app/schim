@@ -249,7 +249,7 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
         if (operation)
             operation->cancel();
     }
-    else if (event->key() == Qt::Key_Delete) //TODO create an action
+    else if (event->key() == Qt::Key_Delete && !selectedItems().isEmpty()) //TODO create an action
         command(new CmdDeleteSelection(selectedItems(), this));
 }
 

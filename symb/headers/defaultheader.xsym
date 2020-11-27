@@ -1,9 +1,16 @@
 <header name="Default header">
 	<rect x="5" y="5" w="287" h="195"/>
 	<line x1="5" y1="180" x2="292" y2="180"/>
-	<linear-array dx="28.7" dy="0" count="10">
-		<text text="0" x="17.5" y="5" height="3"/>
-		<line x1="33.7" y1="5" x2="33.7" y2="11"/>
+	<linear-array dx="28.2" dy="0" count="10">
+		<var name="d" value="0"/>
+		<text text="%d" x="22" y="5.25" height="2"/>
+		<line x1="38.2" y1="5" x2="38.2" y2="10"/>
 	</linear-array>
-	<line x1="5" y1="11" x2="292" y2="11"/>
+	<line x1="5" y1="10" x2="292" y2="10"/>
+	<linear-array dx="0" dy="28.333" count="6">
+		<var name="d" value="A"/>
+		<text text="%d" x="6" y="22.5" height="2"/>
+		<line x1="5" y1="38.333" x2="10" y2="38.333"/>
+	</linear-array>
+	<line x1="10" y1="5" x2="10" y2="180"/>
 </header>
