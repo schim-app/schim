@@ -1,4 +1,9 @@
 <header name="Default header">
 	<rect x="5" y="5" w="287" h="195"/>
 	<line x1="5" y1="180" x2="292" y2="180"/>
+	<linear-array dx="28.7" dy="0" count="10">
+		<text text="0" x="17.5" y="5" height="3"/>
+		<line x1="33.7" y1="5" x2="33.7" y2="11"/>
+	</linear-array>
+	<line x1="5" y1="11" x2="292" y2="11"/>
 </header>

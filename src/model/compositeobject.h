@@ -23,6 +23,7 @@ public:
     ~CompositeObject();
 
     // GETTERS
+    QPointF getPos() const override;
     /**
      * @brief Return the value of the variable with the specified name.
      *
@@ -36,6 +37,7 @@ public:
     VariableSet getLocalVariables() const;
 
     // SETTERS
+    void setPos(const QPointF &pos) override;
     void setValue(const QString &name, const QString &value);
     void addVariable(const Variable &variable);
 
@@ -49,6 +51,7 @@ public:
 private:
     // TODO determine appropriate container
     VariableSet variables;
+    QPointF pos{};
 };
 
 #endif // COMPOSITEOBJECT_H

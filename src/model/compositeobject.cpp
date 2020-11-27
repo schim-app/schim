@@ -20,6 +20,11 @@ CompositeObject::~CompositeObject()
         delete child;
 }
 
+QPointF CompositeObject::getPos() const
+{
+    return pos;
+}
+
 QString CompositeObject::getValue(const QString &name, bool *exists) const
 {
     *exists = true;
@@ -49,6 +54,11 @@ VariableSet &CompositeObject::getLocalVariables()
 VariableSet CompositeObject::getLocalVariables() const
 {
     return variables;
+}
+
+void CompositeObject::setPos(const QPointF &pos)
+{
+    this->pos = pos;
 }
 
 void CompositeObject::setValue(const QString &name, const QString &value)

@@ -18,6 +18,7 @@ SOURCES += \
     main.cpp \
     model/component.cpp \
     model/compositeobject.cpp \
+    model/objectarray.cpp \
     model/special/corner.cpp \
     model/device.cpp \
     model/header.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     model/project.cpp \
     model/rect.cpp \
     model/sheet.cpp \
+    model/special/linearobjectarray.cpp \
     model/text.cpp \
     model/variable.cpp \
     ui/commands.cpp \
@@ -37,6 +39,7 @@ SOURCES += \
     ui/objects/gobject.cpp \
     ui/objects/grect.cpp \
     ui/objects/gtext.cpp \
+    ui/objects/special/glinearobjectarray.cpp \
     ui/operations.cpp \
     ui/sheetscene.cpp \
     ui/sheetview.cpp \
@@ -57,6 +60,7 @@ HEADERS += \
     global.h \
     model/component.h \
     model/compositeobject.h \
+    model/objectarray.h \
     model/special/corner.h \
     model/device.h \
     model/header.h \
@@ -65,6 +69,7 @@ HEADERS += \
     model/project.h \
     model/rect.h \
     model/sheet.h \
+    model/special/linearobjectarray.h \
     model/text.h \
     model/variable.h \
     ui/commands.h \
@@ -77,6 +82,7 @@ HEADERS += \
     ui/objects/gobject.h \
     ui/objects/grect.h \
     ui/objects/gtext.h \
+    ui/objects/special/glinearobjectarray.h \
     ui/operations.h \
     ui/sheetscene.h \
     ui/sheetview.h \

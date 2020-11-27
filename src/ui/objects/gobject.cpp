@@ -5,6 +5,7 @@
 #include "gline.h"
 #include "grect.h"
 #include "gtext.h"
+#include "special/glinearobjectarray.h"
 
 #include "global.h"
 
@@ -12,10 +13,9 @@
 #include "model/component.h"
 #include "model/rect.h"
 #include "model/text.h"
+#include "model/special/linearobjectarray.h"
 
 #include <QGraphicsSceneMouseEvent>
-
-#define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
 
 /***********
  * GObject *
@@ -134,12 +134,15 @@ void GObject::setCosmetic(bool cosmetic)
 
 GObject *GObject::assign(Object *obj)
 {
+#define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
     if_cast_return(Line, obj);
     if_cast_return(Rect, obj);
+    if_cast_return(Text, obj);
     if_cast_return(Header, obj);
     if_cast_return(Component, obj);
+    if_cast_return(LinearObjectArray, obj);
     if_cast_return(CompositeObject, obj);
-    if_cast_return(Text, obj);
+#undef if_cast_return
     return nullptr;
 }
 
@@ -180,10 +183,15 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
         moveHandlesAbove();
     else if (change == ItemSelectedHasChanged)
         showHandles(value.toBool());
-    else if (change == ItemSceneHasChanged && value.isNull())
-    { // Unselect and unhover the item when it leaves the scene
-        setSelected(false);
-        hovered = false;
+    else if (change == ItemSceneHasChanged)
+    {
+        if (value.isNull())
+        { // Unselect and unhover the item when it leaves the scene
+            setSelected(false);
+            hovered = false;
+        }
+        else
+            reload();
     }
     else if (change == ItemPositionChange && scene())
         return scene()->snap(value.toPointF());

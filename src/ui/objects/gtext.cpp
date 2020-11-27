@@ -21,7 +21,6 @@ GText::GText(Text *obj)
     displayItem->setDefaultTextColor(Qt::black);
     displayItem->setDocument(new QTextDocument);
     displayItem->document()->setDocumentMargin(1);
-    reload();
     connect(displayItem, SIGNAL(focusOut()), this, SLOT(onFocusOut()));
 }
 

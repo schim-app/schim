@@ -30,7 +30,7 @@ public:
 
 private:
     QString text, font;
-    float textHeight = 5;
+    float textHeight = 4;
 
     friend class GText;
 };

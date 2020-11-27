@@ -7,6 +7,8 @@
 #include <QMenu>
 #include <QGraphicsSceneMouseEvent>
 
+#include "model/text.h"
+
 GComponent::GComponent(Component *obj)
     : GCompositeObject(obj)
 { }
@@ -43,6 +45,24 @@ void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     GCompositeObject::mouseDoubleClickEvent(event);
     if (event->buttons() == Qt::LeftButton)
         edit();
+}
+
+QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemSceneHasChanged && scene() != nullptr)
+    {
+        for (auto *child : *get())
+        {
+            auto *assignee = GObject::assign(child);
+            scene()->addItem(assignee);
+            assignee->setParentItem(this);
+            if (!dynamic_cast<Text*>(child))
+                assignee->setFlags({});
+        }
+        return value;
+    }
+
+    return GCompositeObject::itemChange(change, value);
 }
 
 // SLOTS

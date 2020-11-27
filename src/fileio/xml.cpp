@@ -268,6 +268,8 @@ Object *xmlParseObject(QXmlStreamReader &stream)
         object = xmlParseHeader(stream);
     else if (stream.name() == "component")
         object = xmlParseComponent(stream);
+    else if (stream.name() == "linear-array")
+        object = xmlParseLinearObjectArray(stream);
     else
         throw std::logic_error("Unknown object type");
 
@@ -433,6 +435,8 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 {
     CompositeObject *obj = nullptr;
 
+    QString objectName = stream.name().toString();
+
     for (auto attr : stream.attributes())
     {
         if (attr.name() == "from")
@@ -447,7 +451,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 
     try
     {
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "component"))
+        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
         {
             stream.readNext();
             if (stream.isStartElement())
@@ -469,6 +473,29 @@ CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream)
     auto arr = QByteArray::fromBase64(content.toUtf8(), QByteArray::Base64Encoding);
 
     return dxfParseCompositeObject(arr.toStdString());
+}
+
+LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
+{
+    float dx = 1, dy = 0;
+    int count = 1;
+    bool conversion_ok = true;
+    for (auto attr : stream.attributes())
+    {
+        if (attr.name() == "dx")
+            dx = attr.value().toFloat(&conversion_ok);
+        else if (attr.name() == "dy")
+            dy = attr.value().toFloat(&conversion_ok);
+        else if (attr.name() == "count")
+            count = attr.value().toUInt(&conversion_ok);
+        else
+            throw std::logic_error("Unknown attribute for linear object array");
+        if (!conversion_ok)
+            throw std::logic_error("Linear object array attributes are of invalid format");
+    }
+    CompositeObject *baseObj = xmlParseCompositeObject(stream);
+
+    return new LinearObjectArray(baseObj, dx, dy, count);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -522,6 +549,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
 {
     Component *obj = nullptr;
     QPointF pos;
+    bool conversion_ok = true;
     for (auto attr : stream.attributes())
     {
         if (attr.name() == "from")
@@ -533,6 +561,10 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
             pos.setX(attr.value().toFloat());
         else if (attr.name() == "y")
             pos.setY(attr.value().toFloat());
+        //TODO enable this else
+            //throw std::logic_error("Unknown component attribute");
+        if (!conversion_ok)
+            throw std::logic_error("Component attributes are of invalid format");
     }
 
     if (obj == nullptr) // The content was not taken from a file

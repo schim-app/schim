@@ -21,6 +21,8 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
 private slots:
     void edit();
 };

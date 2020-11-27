@@ -5,7 +5,8 @@
 #include "model/line.h"
 #include "model/text.h"
 #include "model/component.h"
-
+#include "model/objectarray.h"
+#include "model/special/linearobjectarray.h"
 
 #include <QMap>
 #include <QFile>
@@ -54,6 +55,8 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream);
 /** Parse a custom object */
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream);
 CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream);
+
+LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream);
 
 /** Parse a sheet header */
 Header *xmlParseHeader(QXmlStreamReader &stream);

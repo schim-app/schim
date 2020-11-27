@@ -6,10 +6,7 @@
 #include <QPainter>
 
 GLine::GLine(Line *obj)
-    : GObject(obj)
-{
-    reload();
-}
+    : GObject(obj) { }
 
 // GETTERS
 
