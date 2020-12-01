@@ -46,7 +46,6 @@ QVariant getSetting(const QString &key, const QString &defaultValue)
 
 QString resolvePath(const QString &path)
 {
-    QFileInfo dir(QCoreApplication::applicationDirPath() + systemSymbolPath + "/" + path);
     if (QFile(path).exists()) // The supplied path is absolute
         return path;
     else if (QFile(userSymbolPath + "/" + path).exists()) // The path is relative to the directory where user symbols are stored

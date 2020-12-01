@@ -23,10 +23,10 @@ Variable Variable::find(const VariableSet &list, QString name)
         return {}; // Invalid name format
 
     name.replace("%", "");
-    for (auto var : list)
+    foreach (auto var, list)
     {
         // Match the name against all aliases of var
-        for (auto alias : var.name.split(" "))
+        foreach (auto alias, var.name.split(" "))
             if (name == alias)
                 return var;
     }

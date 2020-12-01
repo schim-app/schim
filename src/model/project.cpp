@@ -12,8 +12,7 @@ Project::Project(const QList<Sheet *> &sheets)
 
 Project::~Project()
 {
-    for (auto *sheet : *this)
-        delete sheet;
+    qDeleteAll(*this);
 }
 
 QString Project::getTitle() const

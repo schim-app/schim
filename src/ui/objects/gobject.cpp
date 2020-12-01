@@ -38,8 +38,7 @@ GObject::~GObject()
 {
     if (handles != nullptr)
     {
-        for (auto *handle : *handles)
-            delete handle;
+        qDeleteAll(*handles);
         delete handles;
     }
 }
@@ -114,8 +113,7 @@ void GObject::showHandles(bool show)
         moveHandlesAbove();
     if (!show && handles != nullptr)
     {
-        for (auto *handle : *handles)
-            delete handle;
+        qDeleteAll(*handles);
         delete handles;
         handles = nullptr;
     }

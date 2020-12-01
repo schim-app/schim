@@ -12,8 +12,7 @@ Sheet::Sheet(bool defaultHeader)
 
 Sheet::~Sheet()
 {
-    for (auto *obj : *this)
-        delete obj;
+    qDeleteAll(*this);
     delete header;
 }
 

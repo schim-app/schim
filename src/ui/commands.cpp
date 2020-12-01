@@ -29,14 +29,14 @@ CmdDeleteSelection::CmdDeleteSelection(QList<QGraphicsItem *> list, SheetScene *
     : list(list), scene(scene)
 {
     parentList.reserve(list.size());
-    for (auto *item : list)
+    foreach (auto *item, list)
         parentList.append(static_cast<GObject*>(item)->parentItem());
 }
 
 CmdDeleteSelection::~CmdDeleteSelection()
 {
     if (isObsolete())
-        for (auto *item : list)
+        foreach (auto *item, list)
             delete item;
 }
 
@@ -57,7 +57,7 @@ void CmdDeleteSelection::undo()
 
 void CmdDeleteSelection::redo()
 {
-    for (auto *item : list)
+    foreach (auto *item, list)
     {
         auto *modelObject = static_cast<GObject*>(item)->get();
         if (item->parentItem())

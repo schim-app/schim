@@ -31,7 +31,7 @@ ComponentEditor::~ComponentEditor()
 void ComponentEditor::reload()
 {
     auto variables = component->get()->getVariables();
-    for (auto var : variables)
+    foreach (auto var, variables)
         addVariableEditor(var);
 
     updateDesignatorFields();
@@ -95,11 +95,11 @@ void ComponentEditor::updateDesignatorFields()
             QRegExp plus("\\+[^=+-]+"); // To parse the location
             QRegExp dash("-[^=+-]+"); // To parse the designation
             if (equal.indexIn(var.value) != -1)
-                ui->editFunction->setText(equal.capturedTexts()[0].mid(1));
+                ui->editFunction->setText(equal.capturedTexts().at(0).mid(1));
             if (plus.indexIn(var.value) != -1)
-                ui->editLocation->setText(plus.capturedTexts()[0].mid(1));
+                ui->editLocation->setText(plus.capturedTexts().at(0).mid(1));
             if (dash.indexIn(var.value) != -1)
-                ui->editDesignation->setText(dash.capturedTexts()[0].mid(1));
+                ui->editDesignation->setText(dash.capturedTexts().at(0).mid(1));
             if (QRegExp("[^=\\+-]+").exactMatch(var.value))
                 ui->editDesignation->setText(var.value);
             return;
@@ -134,7 +134,7 @@ void ComponentEditor::accept()
 {
     VariableSet &vars = component->get()->getLocalVariables();;
     vars.clear();
-    for (auto editor : variableEditors)
+    for (auto *editor : variableEditors)
         if (editor->getVariable().name != "" && Variable::find(vars, editor->getVariable().name).name == "")
             vars.append(editor->getVariable());
 
@@ -184,18 +184,21 @@ void ComponentEditor::on_btnRemoveVariable_clicked()
 
 void ComponentEditor::on_editFunction_textEdited(const QString &text)
 {
+    Q_UNUSED(text)
     updateDesignatorVariable();
     changed = true;
 }
 
 void ComponentEditor::on_editLocation_textEdited(const QString &text)
 {
+    Q_UNUSED(text)
     updateDesignatorVariable();
     changed = true;
 }
 
 void ComponentEditor::on_editDesignation_textEdited(const QString &text)
 {
+    Q_UNUSED(text)
     updateDesignatorVariable();
     changed = true;
 }

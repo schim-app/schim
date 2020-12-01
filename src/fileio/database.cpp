@@ -244,7 +244,7 @@ int Database::columnCount(const QModelIndex &parent) const
 void Database::iterate(const QString &dir, DatabaseItem *parent)
 {
     QDir _dir(dir, "", QDir::DirsLast | QDir::Name, QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
-    for (auto file : _dir.entryInfoList())
+    foreach (auto file, _dir.entryInfoList())
     {
         if (file.isDir())
         {

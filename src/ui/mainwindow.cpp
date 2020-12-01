@@ -391,7 +391,7 @@ void MainWindow::showAllTexts()
 {
     if (getTab())
     {
-        for (auto *obj : scene()->items())
+        foreach (auto *obj, scene()->items())
             if (dynamic_cast<GText*>(obj))
                 obj->setSelected(true);
     }
@@ -401,7 +401,7 @@ void MainWindow::showAllPrimitives()
 {
     if (getTab())
     {
-        for (auto *obj : scene()->items())
+        foreach (auto *obj, scene()->items())
             if (!dynamic_cast<GCompositeObject*>(obj))
                 obj->setSelected(true);
     }
@@ -518,7 +518,7 @@ void MainWindow::setupActions()
         { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet},
     };
     if (vimEnabled)
-        for (auto action : additionalActions)
+        foreach (auto action, additionalActions)
         {
             auto qaction = std::get<0>(action); // Alias
             addAction(qaction);
@@ -540,7 +540,7 @@ void MainWindow::setupActions()
 void MainWindow::populateWithProject()
 {
     ui->tabView->clear();
-    for (Sheet *sheet : *activeProject)
+    for (Sheet *sheet : *activeProject) //TODO changing for to foreach makes the program crash
         ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
 }
 

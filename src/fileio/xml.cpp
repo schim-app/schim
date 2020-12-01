@@ -54,7 +54,7 @@ void xmlConsumeFirstElement(QXmlStreamReader &stream)
 Variable xmlParseVariable(QXmlStreamReader &stream)
 {
     Variable var;
-    for (auto attr : stream.attributes())
+    foreach (auto attr, stream.attributes())
     {
         if (attr.name() == "name")
             var.name = attr.value().toString();
@@ -134,7 +134,7 @@ QString xmlPeekName(const QString &filename)
         stream.readNext();
         if (stream.isStartElement())
         {
-            for (const auto &attr : stream.attributes())
+            foreach (const auto &attr, stream.attributes())
                 if (attr.name() == "name")
                     return attr.value().toString();
         }
@@ -156,7 +156,7 @@ Project *xmlParseProject(const QString &filename)
     try
     {
         // Parse the root tag attributes
-        for (const auto &attr : stream.attributes())
+        foreach (const auto &attr, stream.attributes())
         {
             QString name = attr.name().toString();
             if (name == "title")
@@ -195,7 +195,7 @@ void xmlWriteProject(Project *project, const QString &filename)
 
     stream.writeStartElement("project");
     stream.writeAttribute("title", project->getTitle());
-    for (auto *sheet : *project)
+    foreach (auto *sheet, *project)
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
 }
@@ -208,7 +208,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
 
     try {
         // Parse the attributes
-        for (const auto &attr : stream.attributes())
+        foreach (const auto &attr, stream.attributes())
         {
             QString name = attr.name().toString();
             if (name == "title")
@@ -246,7 +246,7 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeAttribute("from", "headers/defaultheader.xsym");
     stream.writeEndElement();
 
-    for (auto *obj : *sheet)
+    foreach (auto *obj, *sheet)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
@@ -299,7 +299,7 @@ Line *xmlParseLine(QXmlStreamReader &stream)
 {
     float x1 = 0, x2 = 0, y1 = 0, y2 = 0, linewidth = 0.5;
 
-    for (const auto &attr : stream.attributes())
+    foreach (const auto &attr, stream.attributes())
     {
         bool conversion_ok;
         if (attr.name() == "x1")
@@ -343,7 +343,7 @@ Rect *xmlParseRect(QXmlStreamReader &stream)
 {
     float x = 0, y = 0, w = 50, h = 50;
 
-    for (const auto &attr : stream.attributes())
+    foreach (const auto &attr, stream.attributes())
     {
         bool conversion_ok;
         if (attr.name() == "x")
@@ -384,7 +384,7 @@ Text *xmlParseText(QXmlStreamReader &stream)
     try
     {
         float x = text->getPos().x(), y = text->getPos().y();
-        for (const auto &attr : stream.attributes())
+        foreach (const auto &attr, stream.attributes())
         {
             bool conversion_ok = true;
             if (attr.name() == "text")
@@ -437,7 +437,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 
     QString objectName = stream.name().toString();
 
-    for (auto attr : stream.attributes())
+    foreach (auto attr, stream.attributes())
     {
         if (attr.name() == "from")
         { // The content is taken from another file
@@ -485,7 +485,7 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
     float dx = 1, dy = 0;
     int count = 1;
     bool conversion_ok = true;
-    for (auto attr : stream.attributes())
+    foreach (auto attr, stream.attributes())
     {
         if (attr.name() == "dx")
             dx = attr.value().toFloat(&conversion_ok);
@@ -510,7 +510,7 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
 Header *xmlParseHeader(QXmlStreamReader &stream)
 {
     Header *header = nullptr;
-    for (auto attr : stream.attributes())
+    foreach (auto attr, stream.attributes())
     {
         if (attr.name() == "from")
         { // The header content is taken from another file
@@ -544,7 +544,7 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
     // single from="headers/defaultheader.xsym" attribute
     stream.writeStartElement("header");
 
-    for (auto obj : *header)
+    foreach (auto obj, *header)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
@@ -557,7 +557,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
     Component *obj = nullptr;
     QPointF pos;
     bool conversion_ok = true;
-    for (auto attr : stream.attributes())
+    foreach (auto attr, stream.attributes())
     {
         if (attr.name() == "from")
         { // The content is taken from another file
@@ -620,7 +620,7 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     if (pos.y() != defPos.y())
         stream.writeAttribute("y", QString::number(pos.y()));
 
-    for (auto var : component->getVariables())
+    foreach (auto var, component->getVariables())
     {
         stream.writeStartElement("var");
         stream.writeAttribute("name", var.name);
@@ -629,7 +629,7 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
         stream.writeEndElement();
     }
 
-    for (auto obj : *component)
+    foreach (auto obj, *component)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();

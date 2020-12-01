@@ -278,8 +278,6 @@ void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         // The item can be null when the event is triggered by zooming
         if (item != nullptr && hoveredItem != item->getOldestParent())
         {
-            auto *obj = item;
-            auto *par = obj->getOldestParent();
             hoveredItem->hoverLeaveEvent(&hoverEvent);
             hoveredItem = nullptr;
         }

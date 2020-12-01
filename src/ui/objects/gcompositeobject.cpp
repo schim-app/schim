@@ -46,10 +46,7 @@ void GCompositeObject::setCosmetic(bool cosmetic)
 {
     GObject::setCosmetic(cosmetic);
     for (auto *item : childItems())
-    {
-        auto *item_cast = static_cast<GObject*>(item);
-        item_cast->setCosmetic(cosmetic);
-    }
+        static_cast<GObject*>(item)->setCosmetic(cosmetic);
 }
 
 void GCompositeObject::apply()

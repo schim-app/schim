@@ -53,7 +53,7 @@ void VariableEditor::updateVariableName()
 {
     variable.name = ui->editName->text();
     if (!ui->editAbbreviations->text().isEmpty())
-        for (auto str : ui->editAbbreviations->text().split(' '))
+        foreach (auto str, ui->editAbbreviations->text().split(' '))
             variable.name += QString(" ") + str;
 }
 
