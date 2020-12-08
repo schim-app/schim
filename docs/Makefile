@@ -17,9 +17,23 @@ help:
 clean:
 	rm -rf _build/
 
+all: Makefile man html
+
+man: Makefile
+	mkdir -p _build/man
+	@for file in man/*.rst; do \
+		outname="$$(echo "$$file" | sed 's:\.rst::g')"; \
+		text="rst2man \"$$file\" > \"_build/$$outname.1.gz\""; \
+		echo $$text; \
+		eval $$text; \
+	done
+
+# TODO the catch-all catches 'all' target as well
+# TODO change back to catch-all once I figure it out
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile doxygen
+html: Makefile doxygen
 	@scripts/gen-tree
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
