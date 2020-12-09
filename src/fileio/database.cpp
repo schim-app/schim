@@ -89,21 +89,22 @@ Object *DatabaseItem::getObject()
     return object;
 }
 
-void DatabaseItem::setPath(const QString &path)
+void DatabaseItem::setPath(QString path)
 {
     if (path != this->path)
     {
+        this->path = path;
+        path = resolvePath(path);
         if (QFileInfo(path).isDir())
         {
             delete object;
             object = nullptr;
         }
         else
-            object = xmlParseObject(resolvePath(path));
+            object = xmlParseObject(path);
         // Invalidate the icon - it will have to be generated again when required
         icon = nullptr;
     }
-    this->path = path;
 }
 
 void DatabaseItem::setName(const QString &name)
@@ -264,5 +265,5 @@ void Database::update()
     if (rootItem)
         delete rootItem;
     rootItem = new DatabaseItem(path);
-    iterate(path, rootItem);
+    iterate(resolvePath(path), rootItem);
 }

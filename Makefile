@@ -9,7 +9,7 @@ MAN_DIR=share/man/man1
 # that can be moved to /usr/ or /usr/local using `make install`
 app:
 	mkdir -p _build/release
-	cd _build/release; qmake ../../src/schim.pro; make
+	cd _build/release; qmake CONFIG+=release ../../src/schim.pro; make
 	@####
 	cd _build/release; rm -rf dest/; \
 	mkdir -p dest/bin \
@@ -22,9 +22,10 @@ app:
 docs: Makefile
 	cd docs; make all
 
-all: app docs
+all: app
+	cd docs; ${MAKE} man
 
-install: app docs
+install: all
 	umask 022
 	mkdir -p ${INSTALL_DIR}
 	mkdir -p "${INSTALL_DIR}/${MAN_DIR}"

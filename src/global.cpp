@@ -46,15 +46,23 @@ QVariant getSetting(const QString &key, const QString &defaultValue)
 
 QString resolvePath(const QString &path)
 {
-    if (QFile(path).exists()) // The supplied path is absolute
-        return path;
-    else if (QFile(userSymbolPath + "/" + path).exists()) // The path is relative to the directory where user symbols are stored
-        return userSymbolPath + "/" + path;
-    else if (QFile(currentProjectPath + "/" + path).exists()) // The path is relative to the current project
-        return currentProjectPath + "/" + path;
-    else if (QFile(QCoreApplication::applicationDirPath() + "/" + systemSymbolPath + "/" + path).exists()) // The path is relative to the installation folder
-        return QCoreApplication::applicationDirPath() + "/" + systemSymbolPath + "/" + path;
-    else return path;
+    // TODO this function needs to be heavily tested
+#define if_exists_return(arg) if (QFile(arg).exists()) return arg
+
+    // The supplied path is absolute
+    if_exists_return(path);
+    // The path is relative to the current project
+    if_exists_return(currentProjectPath + "/" + path);
+    // The path is relative to the directory where user symbols are stored
+    if_exists_return(userSymbolPath + "/" + path);
+    // The path is relative to the system-wide symbol path
+    if_exists_return(QCoreApplication::applicationDirPath() + "/" + systemSymbolPath + "/" + path);
+    // The path is relative to the executable dir
+    if_exists_return(QCoreApplication::applicationDirPath() + "/" + path);
+    // Else
+    return path;
+
+#undef if_exists_return
 }
 
 float dpiInvariant(float pxInput)

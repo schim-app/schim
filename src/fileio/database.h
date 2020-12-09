@@ -15,7 +15,7 @@ public:
     void appendItem(DatabaseItem *child);
 
     // SETTERS
-    void setPath(const QString &path);
+    void setPath(QString path);
     void setName(const QString &name);
 
     // GETTERS

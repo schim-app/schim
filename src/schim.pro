@@ -73,7 +73,6 @@ HEADERS += \
     model/text.h \
     model/variable.h \
     ui/commands.h \
-    ui/componentlist.h \
     ui/mainwindow.h \
     ui/objects/gcomponent.h \
     ui/objects/gcompositeobject.h \
