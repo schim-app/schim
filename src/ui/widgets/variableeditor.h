@@ -1,29 +1,61 @@
 #ifndef VARIABLEEDITOR_H
 #define VARIABLEEDITOR_H
 
-#include <QWidget>
-
 #include "model/variable.h"
+
+#include <QStandardItem>
+#include <QTableView>
+#include <QWidget>
 
 namespace Ui {
 class VariableEditor;
 }
+
+typedef QStandardItem VariableItem;
+
+class VariableTableModel : public QAbstractTableModel
+{
+public:
+    VariableTableModel(QObject *parent = nullptr);
+
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
+    bool insertRows(int row, int count, const QModelIndex &parent);
+    void append();
+    void setVariables(const VariableSet &variables);
+    VariableSet getVariables() const;
+
+private:
+    VariableSet variables;
+};
+
+class VariableTableView : public QTableView
+{
+public:
+    VariableTableView(QWidget *parent = nullptr);
+};
 
 class VariableEditor : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit VariableEditor(const Variable &variable, QWidget *parent = nullptr);
+    explicit VariableEditor(QWidget *parent = nullptr);
     ~VariableEditor();
 
     void reload();
 
-    void setVariable(const Variable &var);
-
-    Variable getVariable() const;
+    void setVariables(const VariableSet &var);
+    VariableSet getVariables() const;
 
     bool eventFilter(QObject* obj, QEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
 
 signals:
 
@@ -36,14 +68,14 @@ private:
 
 private slots:
 
+    void on_btnAddVariable_clicked();
+    void on_btnRemoveVariable_clicked();
     void on_editName_textEdited(const QString &text);
     void on_editAbbreviations_textEdited(const QString &text);
-    void on_editValue_textEdited(const QString &text);
-    void on_editDescription_textEdited(const QString &text);
 
 private:
     Ui::VariableEditor *ui;
-    Variable variable;
+    VariableTableModel *model;
 };
 
 #endif // VARIABLEEDITOR_H

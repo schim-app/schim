@@ -7,13 +7,6 @@ Component::Component()
 Component::Component(QSharedPointer<Device> device)
     : CompositeObject(), device(device) { }
 
-Component::Component(CompositeObject *obj)
-{
-    append(*obj);
-    obj->clear();
-    delete obj;
-}
-
 Component::Component(const Component &obj)
     : CompositeObject(obj)
 {
@@ -23,4 +16,13 @@ Component::Component(const Component &obj)
 Object *Component::clone() const
 {
     return new Component(*this);
+}
+
+Component *Component::absorb(CompositeObject *obj)
+{
+    Component *retVal = new Component();
+    retVal->append(*obj);
+    obj->clear();
+    delete obj;
+    return retVal;
 }

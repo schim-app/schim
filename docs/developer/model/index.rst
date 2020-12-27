@@ -28,7 +28,7 @@ Sheet
 Object
 ======
 
-All objects are derived from the base class :ref:`Object`.
+All objects are derived from the base class Object.
 
 .. doxygenclass:: Object
    :protected-members:
@@ -69,6 +69,7 @@ of objects they are composed of.
 Variables
 =========
 
-For familiarity with the concept of variables, see :ref:`variables_manual`.
+For familiarity with the concept of variables, see :ref:`variables_manual` in
+the user manual.
 
 .. doxygenstruct:: Variable

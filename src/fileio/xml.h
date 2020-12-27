@@ -16,7 +16,6 @@ class QXmlStreamReader;
 class QXmlStreamWriter;
 
 // PARSE BY FILENAME
-
 Project *xmlParseProject(const QString &filename);
 Object *xmlParseObject(const QString &filename);
 CompositeObject *xmlParseCompositeObject(const QString &filename);

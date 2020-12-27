@@ -2,24 +2,33 @@
 
 Variable::Variable() { }
 
-Variable::Variable(const QString &name, const QString &value)
-    : name(name), value(value)
+Variable::Variable(const QStringList &names, const QString &value)
+    : names(names), value(value)
 { }
 
-Variable::Variable(const QString &name, const QString &value, const QString &description)
-    : name(name), value(value), description(description)
+Variable::Variable(const QStringList &names, const QString &value, const QString &description)
+    : names(names), value(value), description(description)
 { }
+
+QString Variable::getTrueName() const
+{
+    return names.empty() ? "" : names[0];
+}
+
+QStringList Variable::getAliases() const
+{
+    return names.mid(1);
+}
 
 QString Variable::allowedPatterns()
 {
-    //TODO document
-    return "[A-Za-z_]{1,}";
+    return "[A-Za-z_]+";
 }
 
 Variable Variable::find(const VariableSet &list, QString name)
 {
     QRegExp pattern("%" + allowedPatterns());
-    //TODO document
+    // Check if `name` is a valid variable identifier
     if (!(pattern.exactMatch("%" + name) || pattern.exactMatch(name)))
         return {}; // Invalid name format
 
@@ -27,7 +36,7 @@ Variable Variable::find(const VariableSet &list, QString name)
     foreach (auto var, list)
     {
         // Match the name against all aliases of var
-        foreach (auto alias, var.name.split(" "))
+        foreach (auto alias, var.names)
             if (name == alias)
                 return var;
     }

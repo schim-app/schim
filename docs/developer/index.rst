@@ -10,6 +10,5 @@ Developer Documentation
    gui/index.rst
    fileio/index.rst 
    cli/index.rst
-   class-doc.rst
    documentation.rst
 

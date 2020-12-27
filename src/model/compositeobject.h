@@ -31,7 +31,7 @@ public:
      * @param exists `true` is written to this variable if the variable is found,
      * and `false` otherwise.
      */
-    QString getValue(const QString &name, bool *exists) const;
+    QString getValue(const QString &name, bool *exists = nullptr) const;
     VariableSet getVariables() const;
     VariableSet &getLocalVariables();
     VariableSet getLocalVariables() const;

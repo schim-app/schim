@@ -12,13 +12,12 @@ class Component : public CompositeObject
 public:
     Component();
     Component(QSharedPointer<Device> device);
-    /**
-     * @brief Steal everything from `obj` and delete it.
-     */
-    Component(CompositeObject *obj);
     Component(const Component &obj);
 
     Object *clone() const override;
+
+    /** @brief Steal everything from `obj` and delete it. */
+    static Component *absorb(CompositeObject *obj);
 
 private:
     QSharedPointer<Device> device;

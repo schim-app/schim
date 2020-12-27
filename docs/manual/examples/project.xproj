@@ -7,7 +7,7 @@
 		<rect x="40" y="70" w="120" h="50" linewidth="0.7" />
 		<text text="Standalone text"/>
 		<component from="symbols/subdirectory/coil.xsym">
-			<var name="m|mf|manufacturer" desc="Manufacturer" value="Schneider"/>
+			<var names="m mf manufacturer" desc="Manufacturer" value="Schneider"/>
 		</component>
 	</sheet>
 </project>

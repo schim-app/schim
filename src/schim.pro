@@ -47,7 +47,7 @@ SOURCES += \
     ui/widgets/componentlist.cpp \
     ui/widgets/componentcompleter.cpp \
     ui/widgets/variableeditor.cpp \
-    ui/windows/componenteditor.cpp \
+    ui/windows/componentsettings.cpp \
     ui/windows/sheetsettings.cpp \
     ui/windows/textsettings.cpp
 
@@ -89,14 +89,14 @@ HEADERS += \
     ui/widgets/componentlist.h \
     ui/widgets/componentcompleter.h \
     ui/widgets/variableeditor.h \
-    ui/windows/componenteditor.h \
+    ui/windows/componentsettings.h \
     ui/windows/sheetsettings.h \
     ui/windows/textsettings.h
 
 FORMS += \
     ui/mainwindow.ui \
     ui/widgets/variableeditor.ui \
-    ui/windows/componenteditor.ui \
+    ui/windows/componentsettings.ui \
     ui/windows/sheetsettings.ui \
     ui/windows/textsettings.ui
 

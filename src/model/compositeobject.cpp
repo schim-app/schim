@@ -27,12 +27,10 @@ QPointF CompositeObject::getPos() const
 
 QString CompositeObject::getValue(const QString &name, bool *exists) const
 {
-    *exists = true;
-    for (auto &var : variables)
-        if (var.name == name)
-            return var.value;
-    *exists = false;
-    return "";
+    auto var = Variable::find(getVariables(), name);
+    if (exists != nullptr)
+        *exists = !var.names.empty();
+    return var.value;
 }
 
 VariableSet CompositeObject::getVariables() const
@@ -64,12 +62,12 @@ void CompositeObject::setPos(const QPointF &pos)
 void CompositeObject::setValue(const QString &name, const QString &value)
 {
     for (auto &var : variables)
-        if (var.name == name)
+        if (var.names.contains(name))
         {
             var.value = value;
             return;
         }
-    addVariable({name, "", value});
+    addVariable({{name}, "", value});
 }
 
 void CompositeObject::addVariable(const Variable &variable)

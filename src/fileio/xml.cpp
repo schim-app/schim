@@ -56,8 +56,8 @@ Variable xmlParseVariable(QXmlStreamReader &stream)
     Variable var;
     foreach (auto attr, stream.attributes())
     {
-        if (attr.name() == "name")
-            var.name = attr.value().toString();
+        if (attr.name() == "names")
+            var.names = attr.value().toString().split(' ');
         else if (attr.name() == "desc")
             var.description = attr.value().toString();
         else if (attr.name() == "value")
@@ -195,7 +195,7 @@ void xmlWriteProject(Project *project, const QString &filename)
 
     stream.writeStartElement("project");
     stream.writeAttribute("title", project->getTitle());
-    foreach (auto *sheet, *project)
+    for (auto *sheet : *project)
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
 }
@@ -246,7 +246,7 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeAttribute("from", "headers/defaultheader.xsym");
     stream.writeEndElement();
 
-    foreach (auto *obj, *sheet)
+    for (auto *obj : *sheet)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
@@ -562,7 +562,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
         if (attr.name() == "from")
         { // The content is taken from another file
             if (obj == nullptr)
-                obj = new Component(parseCompositeObject(resolvePath(attr.value().toString())));
+                obj = Component::absorb(parseCompositeObject(resolvePath(attr.value().toString())));
         }
         else if (attr.name() == "x")
             pos.setX(attr.value().toFloat());
@@ -586,6 +586,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
             stream.readNext();
             if (stream.isStartElement())
             {
+                QString str = stream.name().toString();
                 if (stream.name() == "var")
                     obj->addVariable(xmlParseVariable(stream));
                 else if (stream.name() == "dxf")
@@ -623,7 +624,7 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     foreach (auto var, component->getVariables())
     {
         stream.writeStartElement("var");
-        stream.writeAttribute("name", var.name);
+        stream.writeAttribute("names", var.names.join(' '));
         stream.writeAttribute("value", var.value);
         stream.writeAttribute("desc", var.description);
         stream.writeEndElement();

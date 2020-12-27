@@ -1,7 +1,7 @@
 #include "gcomponent.h"
 
 #include "ui/mainwindow.h"
-#include "ui/windows/componenteditor.h"
+#include "ui/windows/componentsettings.h"
 
 #include <QAction>
 #include <QMenu>
@@ -69,7 +69,7 @@ QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value
 
 void GComponent::edit()
 {
-    ComponentEditor editor(this, MainWindow::getInstance());
+    ComponentSettings editor(this, MainWindow::getInstance());
 
     editor.exec();
 }
