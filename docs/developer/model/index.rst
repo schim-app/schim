@@ -65,3 +65,10 @@ composite objects have is that they contain a list (by inheriting QList as well)
 of objects they are composed of.
 
 .. doxygenclass:: CompositeObject
+
+Variables
+=========
+
+For familiarity with the concept of variables, see :ref:`variables_manual`.
+
+.. doxygenstruct:: Variable

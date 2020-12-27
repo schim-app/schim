@@ -28,14 +28,14 @@ Schim aims to bring the best of IT to industry. This includes open source, the
 `Unix philosophy <https://en.wikipedia.org/wiki/Unix>`_ - primarily the
 "programs that work together" part, Git and any other tools you want. It
 includes a rich CLI interface, because what good is a program if it can't be
-automated using scripts. Also, a major pet-peeve of mine, virtually all software
+automated using scripts? Also, a major pet-peeve of mine, virtually all software
 used in industry is completely proprietary. This means that they mostly use
 encrypted binary files. This is so irritating because you cannot use other tools
 to edit files in these projects and can't utilize Git to its full potential.
-Therefore, you are constrained by the feature-richness of the proprietary
-software. Schim operates with files that are human readable and uses a project
-directory structure, which allows you to tweak those files with any tools you
-can muster.
+Therefore, you are constrained by the feature-set of the proprietary software
+and can't modify it. Schim operates with files that are human readable and uses
+a project directory structure, which allows you to tweak those files with any
+tools you can muster.
 
 Be Productive
    ..

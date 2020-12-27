@@ -1,0 +1,34 @@
+docs
+├── conf.py
+├── contribute.rst
+├── developer
+│   ├── cli
+│   ├── fileio
+│   ├── gui
+│   └── model
+├── Doxyfile
+├── index.rst
+├── make.bat
+├── Makefile
+├── man
+├── manual
+│   ├── file-formats
+│   │   ├── examples
+├── quick-start.rst
+└── scripts
+img
+└── icon.svg
+Makefile
+pkg
+└── PKGBUILD
+src
+├── fileio
+├── model
+├── schim.pro
+└── ui
+    ├── objects
+    │   └── special
+    ├── widgets
+    └── windows
+symb
+└── headers

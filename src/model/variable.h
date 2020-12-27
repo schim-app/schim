@@ -16,7 +16,7 @@ struct Variable
     Variable(const QString &name, const QString &value = "");
     Variable(const QString &name, const QString &value, const QString &description);
 
-    static QRegExp allowedPatterns();
+    static QString allowedPatterns();
     static Variable find(const VariableSet &list, QString name);
     static QString substitute(QString str, const VariableSet &variableSet);
 };

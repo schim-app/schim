@@ -18,8 +18,8 @@ SYNOPSIS
 
 schim [--version] [--help] [<command>] [<options>]
 
-By default, if no <command> is specified, **schim-editor(1)** is run. This can be
-changed in the configuration (see **schim-config(1)**).
+By default, if no <command> is specified, **schim-editor(1)** is run. This can
+be changed in the configuration (see **schim-config(1)**).
 
 DESCRIPTION
 ===========
@@ -42,7 +42,7 @@ SCHIM COMMANDS
 
 schim-editor(1)
 ---------------
-Launch Schim's graphical editor. The default command unless changed in
+Launch Schim's graphical editor. This is the default command unless changed in
 configuration (see **schim-config(1)**).
 
 schim-export(1)
