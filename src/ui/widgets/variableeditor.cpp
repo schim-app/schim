@@ -2,10 +2,6 @@
 
 #include "ui_variableeditor.h"
 
-/****************
- * VariableItem *
- ****************/
-
 /**********************
  * VariableTableModel *
  **********************/
@@ -25,7 +21,7 @@ int VariableTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant VariableTableModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
+    if (!index.isValid() || (role != Qt::DisplayRole && role != Qt::EditRole))
         return {};
     auto var = variables[index.row()];
     switch (index.column())
@@ -68,9 +64,18 @@ bool VariableTableModel::setData(const QModelIndex &index, const QVariant &value
         int col = index.column();
         if (col == 0)
         {
-            // TODO
+            if (var.names.isEmpty())
+                var.names = QStringList{value.toString()};
+            var.names[0] = value.toString();
         }
+        else if (col == 1)
+            var.names = (var.names[0] + ' ' + value.toString()).split(' ');
+        else if (col == 2)
+            var.value = value.toString();
+        else if (col == 3)
+            var.description = value.toString();
         emit dataChanged(index, index);
+        emit changed();
     }
     return true;
 }
@@ -81,19 +86,25 @@ bool VariableTableModel::insertRows(int row, int count, const QModelIndex &paren
     for (int i = 0; i < count; ++i)
         variables.insert(row, {});
     endInsertRows();
+    emit changed();
     return true;
 }
 
-void VariableTableModel::append()
+bool VariableTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    insertRows(variables.size(), 1, {});
+    beginRemoveRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i)
+        variables.removeAt(i);
+    endRemoveRows();
+    emit changed();
+    return true;
 }
 
 void VariableTableModel::setVariables(const VariableSet &variables)
 {
-    beginInsertRows({}, 0, variables.size() - 1);
+    beginResetModel();
     this->variables = variables;
-    endInsertRows();
+    endResetModel();
 }
 
 VariableSet VariableTableModel::getVariables() const
@@ -124,9 +135,10 @@ VariableEditor::VariableEditor(QWidget *parent)
     for (auto *child : children())
         child->installEventFilter(this);
 
-    reload();
-
     model = new VariableTableModel();
+    connect(model, &VariableTableModel::changed, this, [&] () {
+        emit changed();
+    });
     ui->table->setModel(model);
 }
 
@@ -135,25 +147,9 @@ VariableEditor::~VariableEditor()
     delete ui;
 }
 
-void VariableEditor::reload()
-{
-    /*
-    auto nameAbbrevList = variable.name.split(" ");
-    if (!nameAbbrevList.empty())
-        ui->editName->setText(nameAbbrevList[0]);
-    else
-        ui->editName->clear();
-
-    ui->editAbbreviations->setText(QString(variable.name).replace(QRegExp("^[^ ]{1,} "), ""));
-    ui->editValue->setText(variable.value);
-    ui->editDescription->setText(variable.description);
-    */
-}
-
 void VariableEditor::setVariables(const VariableSet &set)
 {
     model->setVariables(set);
-    reload();
 }
 
 VariableSet VariableEditor::getVariables() const
@@ -189,7 +185,11 @@ void VariableEditor::updateVariableName()
 void VariableEditor::on_btnAddVariable_clicked()
 {
     static int timerId = -1;
-    model->append();
+    model->insertRows(model->rowCount({}), 1, {});
+    auto lastRowFirstCell = model->index(model->rowCount({}) - 1, 0);
+    ui->table->selectionModel()->select(lastRowFirstCell,
+                                        QItemSelectionModel::ClearAndSelect);
+    ui->table->edit(lastRowFirstCell);
     emit changed();
 
     if (timerId != -1)
@@ -202,43 +202,8 @@ void VariableEditor::on_btnAddVariable_clicked()
 
 void VariableEditor::on_btnRemoveVariable_clicked()
 {
-    /*
-    if (focusedEditor)
-    { // Remove the corresponding editor
-        variableEditors.removeOne(focusedEditor);
-        ui->variablesView->layout()->removeWidget(focusedEditor);
-        delete focusedEditor;
-    }
-
-    focusedEditor = nullptr;
-    changed = true;
-
-    updateDesignatorFields();
-    */
-}
-
-void VariableEditor::on_editName_textEdited(const QString &text)
-{
-    Q_UNUSED(text)
-    /*
-    // If the name has been typed in for the first time, create an abbreviation
-    // that consists of the first character of the name
-    if (text.size() == 1 && ui->editAbbreviations->text().isEmpty())
-    {
-        variable.name = text + " " + text[0];
-        reload();
-    }
-    else
-        updateVariableName();
-    emit changed();
-    */
-}
-
-void VariableEditor::on_editAbbreviations_textEdited(const QString &text)
-{
-    /*
-    Q_UNUSED(text)
-    updateVariableName();
-    emit changed();
-    */
+    QItemSelectionModel *select = ui->table->selectionModel();
+    if (select->hasSelection())
+        for (auto index : select->selectedIndexes())
+            model->removeRows(index.row(), 1, {});
 }

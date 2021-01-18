@@ -49,6 +49,7 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
     QRegExp pattern1("%" + allowedPatterns()),
             pattern2("%\\{" + allowedPatterns() + "\\}");
 
+    // Replace %% with a non printable character so it doesn't match against a variable
     str.replace("%%", QString() + char(1));
 
     // Search for %pattern or %{pattern} in `str`
@@ -64,7 +65,13 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
         // Replace the variable name with its contents
         QStringList captured = matchedPattern.capturedTexts();
         if (!captured.empty())
-            str.replace(captured[0], Variable::find(variableSet, captured[0]).value);
+        {
+            // Remove {} if second pattern was matched
+            QRegExp pat(allowedPatterns());
+            pat.indexIn(captured[0]);
+            str.replace(captured[0],
+                    Variable::find(variableSet, pat.capturedTexts()[0]).value);
+        }
     }
 
     str.replace(QString() + char(1), "%");

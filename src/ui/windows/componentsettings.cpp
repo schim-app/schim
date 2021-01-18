@@ -31,8 +31,6 @@ ComponentSettings::~ComponentSettings()
 
 void ComponentSettings::reload()
 {
-    auto variables = component->get()->getVariables();
-    ui->variableEditor->reload();
     updateDesignatorFields();
 }
 
@@ -50,38 +48,41 @@ QString ComponentSettings::compileDesignator()
 
 void ComponentSettings::updateDesignatorVariable()
 {
-    /* TODO rewrite
-    VariableSet &vars = component->get()->getLocalVariables();
-    for (auto *editor : variableEditors)
-    {
-        Variable var = editor->getVariables();
-        if (var.name.contains("designation"))
+    VariableSet vars = ui->variableEditor->getVariables();
+    bool found = false;
+    for (auto &var : vars)
+        if (var.names.contains("designator"))
         {
+            found = true;
             var.value = compileDesignator();
-            editor->setVariable(var);
-            return;
         }
-    }
-    vars.insert(0, {"designation d dt", compileDesignator()});
-    // There is no variable named designator
-    addVariableEditor(vars.first(), 0);
-    */
+    if (!found)
+        vars.push_front({{"designator", "DT", "d"}, compileDesignator(), "Component designation"});
+    ui->variableEditor->setVariables(vars);
 }
 
 void ComponentSettings::updateDesignatorFields()
 {
-    Variable var = Variable::find(ui->variableEditor->getVariables(), "designation");
-    QRegExp equal("=[^=+-]+"); // To parse the function
-    QRegExp plus("\\+[^=+-]+"); // To parse the location
-    QRegExp dash("-[^=+-]+"); // To parse the designation
+    Variable var = Variable::find(ui->variableEditor->getVariables(), "designator");
+    QRegExp equal("=[^=+-]+"); // To parse the function (=...)
+    QRegExp plus("\\+[^=+-]+"); // To parse the location (+...)
+    QRegExp dash("-[^=+-]+"); // To parse the designation (-...)
+
+    // Default is empty
+    ui->editFunction->setText("");
+    ui->editLocation->setText("");
+    ui->editDesignation->setText("");
+
     if (equal.indexIn(var.value) != -1)
-    ui->editFunction->setText(equal.capturedTexts().at(0).mid(1));
+        ui->editFunction->setText(equal.capturedTexts().at(0).mid(1));
     if (plus.indexIn(var.value) != -1)
-    ui->editLocation->setText(plus.capturedTexts().at(0).mid(1));
+        ui->editLocation->setText(plus.capturedTexts().at(0).mid(1));
     if (dash.indexIn(var.value) != -1)
-    ui->editDesignation->setText(dash.capturedTexts().at(0).mid(1));
+        ui->editDesignation->setText(dash.capturedTexts().at(0).mid(1));
+
+    // There is only a component designation
     if (QRegExp("[^=\\+-]+").exactMatch(var.value))
-    ui->editDesignation->setText(var.value);
+        ui->editDesignation->setText(var.value);
 }
 
 // CUSTOM SLOTS

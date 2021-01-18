@@ -15,6 +15,7 @@ typedef QStandardItem VariableItem;
 
 class VariableTableModel : public QAbstractTableModel
 {
+    Q_OBJECT
 public:
     VariableTableModel(QObject *parent = nullptr);
 
@@ -27,10 +28,13 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     bool insertRows(int row, int count, const QModelIndex &parent);
-    void append();
+    bool removeRows(int row, int count, const QModelIndex &parent);
+
     void setVariables(const VariableSet &variables);
     VariableSet getVariables() const;
 
+signals:
+    void changed();
 private:
     VariableSet variables;
 };
@@ -48,8 +52,6 @@ class VariableEditor : public QWidget
 public:
     explicit VariableEditor(QWidget *parent = nullptr);
     ~VariableEditor();
-
-    void reload();
 
     void setVariables(const VariableSet &var);
     VariableSet getVariables() const;
@@ -70,8 +72,6 @@ private slots:
 
     void on_btnAddVariable_clicked();
     void on_btnRemoveVariable_clicked();
-    void on_editName_textEdited(const QString &text);
-    void on_editAbbreviations_textEdited(const QString &text);
 
 private:
     Ui::VariableEditor *ui;
