@@ -78,3 +78,8 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
 
     return str;
 }
+
+bool Variable::operator==(const Variable &var) const
+{
+    return getTrueName() == var.getTrueName();
+}

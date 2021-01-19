@@ -72,7 +72,18 @@ void CompositeObject::setValue(const QString &name, const QString &value)
 
 void CompositeObject::addVariable(const Variable &variable)
 {
+    for (const auto &var : variables)
+        if (var == variable)
+            return;
     variables.append(variable);
+}
+
+void CompositeObject::setLocalVariables(const VariableSet &vars)
+{
+    variables.clear();
+    for (auto var : vars)
+        if (var.getTrueName() != "")
+            variables.append(var);
 }
 
 Object *CompositeObject::clone() const

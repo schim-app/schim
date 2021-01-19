@@ -14,13 +14,13 @@ CmdInsertObject::~CmdInsertObject()
 void CmdInsertObject::undo()
 {
     scene->removeItem(obj);
-    scene->getSheet()->removeAll(obj->get());
+    scene->getSheet()->getObjects().removeAll(obj->get());
 }
 
 void CmdInsertObject::redo()
 {
     scene->addItem(obj);
-    scene->getSheet()->append(obj->get());
+    scene->getSheet()->addObject(obj->get());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ void CmdDeleteSelection::undo()
         list[i]->setParentItem(parentList[i]);
         auto *modelObject = static_cast<GObject*>(list[i])->get();
         if (parentList[i] == nullptr)
-            scene->getSheet()->append(modelObject);
+            scene->getSheet()->addObject(modelObject);
         else
             parentList[i]->get()->append(modelObject);
         scene->addItem(list[i]);
@@ -63,7 +63,7 @@ void CmdDeleteSelection::redo()
         if (item->parentItem())
             static_cast<GObject*>(item)->parentItem()->get()->removeAll(modelObject);
         else
-            scene->getSheet()->removeAll(modelObject);
+            scene->getSheet()->getObjects().removeAll(modelObject);
         scene->removeItem(item);
     }
 }

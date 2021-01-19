@@ -40,11 +40,13 @@ public:
      * @brief Return the position of the object in the sheet.
      */
     virtual QPointF getPos() const;
+    Sheet *getSheet() const;
 
     /**
      * @brief Set the position of the object in the sheet.
      */
     virtual void setPos(const QPointF &pos);
+    void setSheet(Sheet *sheet);
 
     virtual Object *clone() const = 0;
 

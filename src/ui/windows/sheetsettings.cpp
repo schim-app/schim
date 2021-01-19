@@ -3,10 +3,14 @@
 
 #include "ui/mainwindow.h"
 
+#include <QMessageBox>
+
 SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     : ui(new Ui::SheetSettings), parent(parent), sheetId(sheetId)
 {
     ui->setupUi(this);
+    ui->variableEditor->setVariables(parent->getSheet()->getLocalVariables());
+    connect(ui->variableEditor, &VariableEditor::changed, this, &SheetSettings::onChanged);
 
     ui->cbShowGrid->setChecked(scene()->isGridEnabled());
     ui->cbSnapGrid->setChecked(scene()->isSnapEnabled());
@@ -37,11 +41,29 @@ void SheetSettings::show()
     QDialog::show();
 }
 
+void SheetSettings::onChanged()
+{
+    changed = true;
+}
+
 void SheetSettings::accept()
 {
     parent->getSheet()->setTitle(ui->editSheetTitle->text());
     parent->getTabView()->setTabText(sheetId, ui->editSheetTitle->text());
+    parent->getSheet()->setLocalVariables(ui->variableEditor->getVariables());
+    scene()->reload();
     QDialog::accept();
+}
+
+void SheetSettings::reject()
+{
+    if (!changed ||
+        QMessageBox::question(this, "Are you sure?", "Discard changes?")
+            == QMessageBox::Yes
+       )
+    {
+        QDialog::reject();
+    }
 }
 
 // SLOTS

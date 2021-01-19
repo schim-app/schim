@@ -228,6 +228,13 @@ GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform
     return static_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
 }
 
+void SheetScene::reload()
+{
+    for (auto *obj : items())
+        if (dynamic_cast<GObject *>(obj))
+            static_cast<GObject *>(obj)->reload();
+}
+
 // EVENTS
 
 void SheetScene::keyPressEvent(QKeyEvent *event)

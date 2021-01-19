@@ -21,7 +21,7 @@ void pdfWriteProject(const Project *project, const QString &filename)
     printer.setOrientation(QPrinter::Landscape);
 
     QPainter painter(&printer);
-    for (int i = 0; i < project->size(); ++i)
+    for (int i = 0; i < project->getSheets().size(); ++i)
     {
         if (i != 0)
         {
@@ -29,7 +29,7 @@ void pdfWriteProject(const Project *project, const QString &filename)
             printer.setOrientation(QPrinter::Landscape);
             printer.newPage();
         }
-        SheetScene *scene = new SheetScene((*project)[i]);
+        SheetScene *scene = new SheetScene((project->getSheets())[i]);
         scene->render(&painter);
     }
 }

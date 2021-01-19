@@ -133,7 +133,7 @@ void MainWindow::appendSheet()
     vimNumberConstrain(50);
     vimdo {
         Sheet *sheet = new Sheet;
-        activeProject->append(sheet);
+        activeProject->addSheet(sheet);
         ui->tabView->addTab(new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
@@ -146,7 +146,7 @@ void MainWindow::newSheetBefore()
     vimNumberConstrain(50);
     vimdo {
         Sheet *sheet = new Sheet;
-        activeProject->insert(getTabId(), sheet);
+        activeProject->getSheets().insert(getTabId(), sheet);
         ui->tabView->insertTab(getTabId(), new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
@@ -159,7 +159,7 @@ void MainWindow::newSheetAfter()
     vimNumberConstrain(50);
     vimdo {
         Sheet *sheet = new Sheet;
-        activeProject->insert(getTabId() + 1, sheet);
+        activeProject->getSheets().insert(getTabId() + 1, sheet);
         ui->tabView->insertTab(getTabId() + 1, new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
@@ -189,7 +189,7 @@ void MainWindow::newProject()
     activeProject = new Project();
     // Create a new sheet and add it to the project
     Sheet *firstSheet = new Sheet;
-    activeProject->append(firstSheet);
+    activeProject->addSheet(firstSheet);
 
     populateWithProject();
 }

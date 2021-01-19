@@ -11,7 +11,7 @@
  *
  * This class should always take care of the destruction of sheets.
  */
-class Project : public QList<Sheet*>
+class Project
 {
     QString title{"Untitled Project"};
 
@@ -26,12 +26,20 @@ public:
     QString getTitle() const;
     VariableSet &getVariables();
     VariableSet getVariables() const;
+    QList<Sheet *> &getSheets();
+    QList<Sheet *> getSheets() const;
 
     // SETTERS
     void setTitle(const QString &title);
+    void addSheet(Sheet *sheet);
+    void removeSheet(Sheet *sheet);
+
+    QList<Sheet *>::iterator begin();
+    QList<Sheet *>::iterator end();
 
 private:
     VariableSet variables;
+    QList<Sheet *> sheets;
 };
 
 #endif // PROJECT_H

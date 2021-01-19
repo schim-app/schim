@@ -53,6 +53,8 @@ struct Variable
      * have an empty value.
      */
     static QString substitute(QString str, const VariableSet &variableSet);
+
+    bool operator==(const Variable &var) const;
 };
 
 #endif // VARIABLE_H

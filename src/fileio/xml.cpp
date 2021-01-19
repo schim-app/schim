@@ -169,7 +169,7 @@ Project *xmlParseProject(const QString &filename)
             if (stream.isStartElement())
             {
                 if (stream.name() == "sheet")
-                    project->append(xmlParseSheet(stream));
+                    project->addSheet(xmlParseSheet(stream));
                 else
                     throw std::logic_error(std::string("Unrecognized tag: ")
                                            + stream.name().toString().toStdString());
@@ -195,7 +195,7 @@ void xmlWriteProject(Project *project, const QString &filename)
 
     stream.writeStartElement("project");
     stream.writeAttribute("title", project->getTitle());
-    for (auto *sheet : *project)
+    for (auto *sheet : project->getSheets())
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
 }
@@ -223,8 +223,10 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
             {
                 if (stream.name() == "header")
                     sheet->setHeader(xmlParseHeader(stream));
+                else if (stream.name() == "var")
+                    sheet->addVariable(xmlParseVariable(stream));
                 else
-                    sheet->append(xmlParseObject(stream));
+                    sheet->addObject(xmlParseObject(stream));
             }
         }
 
@@ -246,7 +248,9 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeAttribute("from", "headers/defaultheader.xsym");
     stream.writeEndElement();
 
-    for (auto *obj : *sheet)
+    for (const auto &var : sheet->getLocalVariables())
+        xmlWriteVariable(var, stream);
+    for (auto *obj : sheet->getObjects())
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
@@ -622,17 +626,21 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
         stream.writeAttribute("y", QString::number(pos.y()));
 
     foreach (auto var, component->getVariables())
-    {
-        stream.writeStartElement("var");
-        stream.writeAttribute("names", var.names.join(' '));
-        stream.writeAttribute("value", var.value);
-        stream.writeAttribute("desc", var.description);
-        stream.writeEndElement();
-    }
+        xmlWriteVariable(var, stream);
 
     foreach (auto obj, *component)
         xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
 }
+
 ///////////////////////////////////////////////////////////////////////////
+
+void xmlWriteVariable(const Variable &var, QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("var");
+    stream.writeAttribute("names", var.names.join(' '));
+    stream.writeAttribute("value", var.value);
+    stream.writeAttribute("desc", var.description);
+    stream.writeEndElement();
+}

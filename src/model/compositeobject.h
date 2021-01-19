@@ -40,6 +40,7 @@ public:
     void setPos(const QPointF &pos) override;
     void setValue(const QString &name, const QString &value);
     void addVariable(const Variable &variable);
+    void setLocalVariables(const VariableSet &vars);
 
     Object *clone() const override;
 

@@ -14,7 +14,7 @@ class Project;
  * so that we don't have to reimplement convenience
  * functions that QList already provides.
  */
-class Sheet : public QList<Object*>
+class Sheet
 {
 private:
     float width = 297, height = 210;
@@ -30,6 +30,8 @@ public:
     QString getTitle() const;
     Header *getHeader();
     QRectF getContentArea() const;
+    QList<Object *> &getObjects();
+    QList<Object *> getObjects() const;
     VariableSet &getLocalVariables();
     VariableSet getLocalVariables() const;
     VariableSet getVariables() const;
@@ -37,6 +39,7 @@ public:
     void setWidth(float width);
     void setHeight(float height);
     void setHeight() const;
+    void setProject(Project *project);
     void setTitle(const QString &title);
     /**
      * @brief Set this sheet's header.
@@ -46,9 +49,17 @@ public:
      * destructor is called.
      */
     void setHeader(Header *header);
+    void setLocalVariables(const VariableSet &vars);
+    void addVariable(const Variable &variable);
+
+    void addObject(Object *obj);
+    void removeObject(Object *obj);
+    QList<Object *>::iterator begin();
+    QList<Object *>::iterator end();
 
 private:
     VariableSet variables;
+    QList<Object *> objects;
     Project *project{};
 
     friend class Project;

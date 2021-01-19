@@ -27,7 +27,6 @@ private:
 private slots:
 
     void onChanged();
-    void onChildFocused();
 
     void accept() override;
     void reject() override;

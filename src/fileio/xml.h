@@ -64,4 +64,6 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream);
 Component *xmlParseComponent(QXmlStreamReader &stream);
 void xmlWriteComponent(Component *component, QXmlStreamWriter &stream);
 
+void xmlWriteVariable(const Variable &var, QXmlStreamWriter &stream);
+
 #endif // XML_H

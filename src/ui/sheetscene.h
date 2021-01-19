@@ -77,6 +77,9 @@ public:
     // OVERRIDEN METHODS
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);
 
+    // OTHER METHODS
+    void reload();
+
 private:
 
     // HELPER FUNCTIONS

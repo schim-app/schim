@@ -14,7 +14,7 @@ ComponentSettings::ComponentSettings(GComponent *component, QWidget *parent)
 
     ui->variableEditor->setVariables(component->get()->getVariables());
     reload();
-    // TODO Why do I have to connect this here when I have clicked "Go to slot" in QtDesigner?
+    // TODO Why do I have to connect this here when I have clicked "Go to slot" in QtDesigner? Maybe I have fixed this -- check?
     connect(ui->editFunction, &QLineEdit::textEdited, this, &ComponentSettings::on_editFunction_textEdited);
     connect(ui->editLocation, &QLineEdit::textEdited, this, &ComponentSettings::on_editLocation_textEdited);
     connect(ui->editDesignation, &QLineEdit::textEdited, this, &ComponentSettings::on_editDesignation_textEdited);
@@ -94,20 +94,9 @@ void ComponentSettings::onChanged()
     updateDesignatorFields();
 }
 
-void ComponentSettings::onChildFocused()
-{
-    // TODO apparently unused -- remove
-    //focusedEditor = (VariableEditor *) sender();
-}
-
 void ComponentSettings::accept()
 {
-    // TODO move this to VariableEditor?
-    VariableSet &vars = component->get()->getLocalVariables();
-    vars.clear();
-    for (auto var : ui->variableEditor->getVariables())
-        if (var.getTrueName() != "")
-            vars.append(var);
+    component->get()->setLocalVariables(ui->variableEditor->getVariables());
 
     QDialog::accept();
     component->reload();
@@ -116,7 +105,7 @@ void ComponentSettings::accept()
 void ComponentSettings::reject()
 {
     if (!changed ||
-        QMessageBox::question(this, "Are you sure?","Are you sure you want to discard changes to this component?")
+        QMessageBox::question(this, "Are you sure?", "Discard changes to this component?")
             == QMessageBox::Yes
        )
     {

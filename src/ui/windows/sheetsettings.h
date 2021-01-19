@@ -23,7 +23,10 @@ public:
     void show();
 
 private slots:
+
+    void onChanged();
     void accept() override;
+    void reject() override;
 
     // Grid
     void on_cbShowGrid_toggled(bool checked);
@@ -35,6 +38,7 @@ private:
     Ui::SheetSettings *ui;
     MainWindow *parent;
     int sheetId;
+    bool changed; // Tracks whether any modification was made
 
 };
 
