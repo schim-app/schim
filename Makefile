@@ -16,8 +16,8 @@ app:
 		dest/${ICON_DIR}/apps \
 		dest/${SHARE_DIR}/symb; \
 	cp schim dest/bin/; \
-	cp ../../img/icon.svg dest/${ICON_DIR}/apps/schim.svg; \
-	cp -r ../../symb/* dest/${SHARE_DIR}/symb/
+	cp ../../res/img/icon.svg dest/${ICON_DIR}/apps/schim.svg; \
+	cp -r ../../res/symb/* dest/${SHARE_DIR}/symb/
 
 docs: Makefile
 	cd docs; make all

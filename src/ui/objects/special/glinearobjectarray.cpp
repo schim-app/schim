@@ -42,7 +42,8 @@ void GLinearObjectArray::clear()
     for (auto *_child : childItems())
     {
         GObject *child = static_cast<GObject*>(_child);
-        scene()->removeItem(child);
+        if (scene())
+            scene()->removeItem(child);
         delete child->get();
         delete child;
     }

@@ -2,6 +2,7 @@
 
 #include "objects/gobject.h"
 #include "ui/objects/gline.h"
+#include "ui/objects/gheader.h"
 #include "ui/commands.h"
 #include "ui/operations.h"
 #include "global.h"
@@ -28,7 +29,7 @@ SheetScene::SheetScene(Sheet *sheet)
 
     // Add the sheet header, if it is defined
     if (sheet->getHeader())
-        addItem(GObject::assign(sheet->getHeader()));
+        setHeader(sheet->getHeader());
 
     // Populate the scene with the sheet contents
     for (auto *obj : *sheet)
@@ -85,6 +86,14 @@ QSizeF SheetScene::getGridSize()
 void SheetScene::setSheet(Sheet *sheet)
 {
     this->sheet = sheet;
+}
+
+void SheetScene::setHeader(Header *hdr)
+{
+    removeItem(headerItem);
+    delete headerItem;
+    headerItem = (GHeader*) GObject::assign(hdr);
+    addItem(headerItem);
 }
 
 void SheetScene::setSnapCursorGuides(bool snap)
@@ -315,13 +324,23 @@ void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     cursorPos = event->scenePos();
     if (dynamic_cast<ComponentList*>(event->source()))
-    {
+    { // A component is being dragged in
         auto *componentList = (ComponentList*) event->source();
         auto indexes = componentList->selectionModel()->selectedIndexes();
-        if (indexes.size() > 0)
+        if (indexes.size() > 0) // At least one component is selected
         {
-            auto *item = static_cast<DatabaseItem*>(indexes[0].internalPointer());
-            startOperation(new ComponentInsertOperation(this, item->getObject()->clone()));
+            // Only the first selected component will be inserted
+            auto *obj = static_cast<DatabaseItem*>(indexes[0].internalPointer())->getObject();
+            Header *hdr;
+
+            // If the item is a header, it will receive special treatment
+            if ((hdr = dynamic_cast<Header*>(obj->clone())))
+            { // Replace the current sheet header with this one
+                setHeader(hdr);
+                sheet->setHeader(hdr);
+            }
+            else // Start scene operation
+                startOperation(new ComponentInsertOperation(this, obj->clone()));
         }
     }
 }

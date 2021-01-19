@@ -53,7 +53,7 @@ protected:
     virtual void clear();
 
 private:
-    QRectF contentArea{5, 5, 287, 175};
+    QRectF contentArea{0, 0, 297, 210};
 };
 
 #endif // HEADER_H

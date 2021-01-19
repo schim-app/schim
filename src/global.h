@@ -7,13 +7,13 @@
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
 
 #ifdef QT_DEBUG
-static QString systemSymbolPath = "../../symb", systemMacroPath = "../../macros";
+static QString systemSymbolPath = "../../res/symb", systemMacroPath = "../../macros";
 #else
 static QString systemSymbolPath = "../share/schim/symb", systemMacroPath = "macros";
 #endif
 
 // TODO depends on OS
-static QString currentProjectPath = "", userSymbolPath = "../../symb";
+static QString currentProjectPath = "", userSymbolPath = "../../res/symb";
 
 /**
  * Change the value of the setting with the specified key.

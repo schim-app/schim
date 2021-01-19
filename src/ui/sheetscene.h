@@ -10,12 +10,11 @@
 class SheetView;
 class QMouseEvent;
 class GObject;
+class GHeader;
 class Operation;
 
 class SheetScene : public QGraphicsScene
 {
-    Sheet *sheet;
-    QUndoStack undoStack{this};
 
 public:
     /**
@@ -41,6 +40,7 @@ public:
 
     // SETTERS
     void setSheet(Sheet *sheet);
+    void setHeader(Header *hdr);
     void setSnapCursorGuides(bool snap);
 
     void setGridSize(float x, float y = -1);
@@ -103,6 +103,10 @@ private slots:
 
 private:
     // ATTRIBUTES
+
+    Sheet *sheet;
+    QUndoStack undoStack{this};
+    GHeader *headerItem{};
 
     // A white sheet of paper
     QGraphicsRectItem *pageBackgroundItem;

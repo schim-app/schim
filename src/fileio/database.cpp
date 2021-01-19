@@ -95,13 +95,14 @@ void DatabaseItem::setPath(QString path)
     {
         this->path = path;
         path = resolvePath(path);
+        delete object;
         if (QFileInfo(path).isDir())
-        {
-            delete object;
             object = nullptr;
-        }
         else
+        {
+            setName(xmlPeekName(path));
             object = xmlParseObject(path);
+        }
         // Invalidate the icon - it will have to be generated again when required
         icon = nullptr;
     }
@@ -154,6 +155,10 @@ DatabaseItem *DatabaseItem::getParentItem()
     return parent;
 }
 
+/***********
+* Database *
+ ***********/
+
 Database::Database(const QString &path)
     : path(path)
 {
@@ -167,8 +172,7 @@ Database::~Database()
 
 QVariant Database::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
-        return {};
+    if (!index.isValid()) return {};
     DatabaseItem *item = static_cast<DatabaseItem*>(index.internalPointer());
     if (role == Qt::DisplayRole)
         return item->getData(index.column());
@@ -176,6 +180,16 @@ QVariant Database::data(const QModelIndex &index, int role) const
         return item->getIcon();
     else return {};
 }
+
+void Database::update()
+{
+    if (rootItem)
+        delete rootItem;
+    rootItem = new DatabaseItem(path);
+    iterate(resolvePath(path), rootItem);
+}
+
+// BOILERPLATE
 
 Qt::ItemFlags Database::flags(const QModelIndex &index) const
 {
@@ -242,6 +256,8 @@ int Database::columnCount(const QModelIndex &parent) const
         return rootItem->getColumnCount();
 }
 
+// HELPER METHODS
+
 void Database::iterate(const QString &dir, DatabaseItem *parent)
 {
     QDir _dir(dir, "", QDir::DirsLast | QDir::Name, QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
@@ -258,12 +274,4 @@ void Database::iterate(const QString &dir, DatabaseItem *parent)
         else
             parent->appendItem(new DatabaseItem(file.absoluteFilePath()));
     }
-}
-
-void Database::update()
-{
-    if (rootItem)
-        delete rootItem;
-    rootItem = new DatabaseItem(path);
-    iterate(resolvePath(path), rootItem);
 }

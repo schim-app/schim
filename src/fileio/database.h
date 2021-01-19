@@ -15,7 +15,13 @@ public:
     void appendItem(DatabaseItem *child);
 
     // SETTERS
+    /**
+     * @brief Set the path of this database item.
+     */
     void setPath(QString path);
+    /**
+     * @brief Set the friendly name of the item.
+     */
     void setName(const QString &name);
 
     // GETTERS
@@ -46,18 +52,24 @@ public:
     explicit Database(const QString &path);
     ~Database();
 
-    // OVERRIDDEN GETTERS
+    /**
+     * @brief Used by the view to display each item's data.
+     *
+     * Each item has only a preview icon and a name.
+     */
     QVariant data(const QModelIndex &index, int role) const override;
+    void update();
+
+    // BOILERPLATE
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = {}) const override;
     int columnCount(const QModelIndex &parent = {}) const override;
 
-    void update();
-
 private:
 
+    // HELPER METHODS
     void iterate(const QString &dir, DatabaseItem *parent);
     // ATTRIBUTES
 
