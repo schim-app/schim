@@ -6,7 +6,6 @@
 
 Operation::Operation(SheetScene *scene)
     : scene(scene) {
-    connect(this, &Operation::testSig, this, [this](){});
 }
 
 Operation::~Operation() { }
@@ -27,7 +26,7 @@ void Operation::cancel()
         delete obj->get();
         delete obj;
     }
-    scene->operationFinished();
+    emit finished();
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +51,7 @@ void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
             scene->removeItem(obj);
             scene->command(new CmdInsertObject(obj, scene));
             state = 2; // Finished state
-            scene->operationFinished();
+            emit finished();
         }
     }
 }
@@ -95,7 +94,7 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
             scene->removeItem(obj);
             scene->command(new CmdInsertObject(obj, scene));
             state = 2;
-            scene->operationFinished();
+            emit finished();
         }
     }
 }
@@ -118,9 +117,10 @@ GRect *RectInsertOperation::object() const
 
 //////////////////////////////////////////////////////////////////////////////////
 
-TextInsertOperation::TextInsertOperation(SheetScene *scene)
+TextInsertOperation::TextInsertOperation(SheetScene *scene, GText *text)
     : Operation(scene)
 {
+    this->obj = text;
 }
 
 void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -128,19 +128,24 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->buttons() == Qt::LeftButton && state == 0)
     {
         auto pos = scene->getSnappedCursorPos();
-        obj = new GText;
-        obj->get()->setPos(pos);
-        obj->reload();
-        scene->addItem(obj);
-        object()->setEditMode(true);
+        if (obj == nullptr)
+            obj = new GText;
+        // Position the object relative to its parent (if it has one)
+        if (obj->parentItem() == nullptr)
+            obj->get()->setPos(pos);
+        else
+            obj->get()->setPos(obj->parentItem()->mapFromScene(pos));
+        obj->reload(); // Update the object visually
+        scene->addItem(obj); // Add it to the scene
+        object()->setEditMode(true); // Initiate edit mode
 
         // We declare these as local variables so we can capture them inside the lambda
         GText *obj = object();
         auto *scene = this->scene;
 
         // On unfocus, either:
-        // - remove the item from the scene if it is left empty
-        // - insert the item into the model if it has text in it
+        // - remove the item from the scene if it is empty
+        // - insert the item into the model if text has been entered
         connect(object(), &GText::focusOut, [scene, obj]() {
             if (obj->get()->getText().isEmpty())
             {
@@ -151,8 +156,8 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
             else
                 scene->command(new CmdInsertObject(obj, scene));
         });
-        scene->operationFinished();
         state = 1;
+        emit finished(); // Notify interested parties the operation is done.
     }
 }
 
@@ -179,7 +184,7 @@ void ComponentInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         obj->setPos(pos);
         obj->apply();
         scene->command(new CmdInsertObject(obj, scene));
-        scene->operationFinished();
+        emit finished();
     }
 }
 

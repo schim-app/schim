@@ -6,6 +6,7 @@
 
 #include <QObject>
 
+class TextInsertOperation; //TODO tm
 class GComponent : public GCompositeObject
 {
     Q_OBJECT
@@ -23,8 +24,12 @@ public:
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
-private slots:
+public slots:
     void edit();
+    void addText();
+
+private:
+    Operation *operation;
 };
 
 #endif // GCOMPONENT_H

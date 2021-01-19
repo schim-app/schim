@@ -163,6 +163,7 @@ void SheetScene::startOperation(Operation *op)
     if (operation)
         operation->cancel();
     operation = op;
+    connect(operation, &Operation::finished, this, &SheetScene::onOperationFinished);
 }
 
 QPointF SheetScene::snap(const QPointF &pt) const
@@ -182,13 +183,6 @@ QPointF SheetScene::forcedSnap(const QPointF &pt) const
 void SheetScene::showGuides(bool show)
 {
     showCursorGuides = show;
-}
-
-void SheetScene::operationFinished(bool destroy)
-{
-    if (destroy)
-        delete operation;
-    operation = nullptr;
 }
 
 // HELPER FUNCTIONS
@@ -323,4 +317,12 @@ void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
             startOperation(new ComponentInsertOperation(this, item->getObject()->clone()));
         }
     }
+}
+
+// SLOTS
+
+void SheetScene::onOperationFinished()
+{
+    operation->deleteLater();
+    operation = nullptr;
 }

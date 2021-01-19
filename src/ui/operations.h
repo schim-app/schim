@@ -35,7 +35,7 @@ public:
     virtual void cancel();
 
 signals:
-    void testSig();
+    void finished();
 
 protected:
     SheetScene *scene{};
@@ -71,11 +71,10 @@ class TextInsertOperation : public Operation
 {
     Q_OBJECT
 public:
-    TextInsertOperation(SheetScene *scene);
+    TextInsertOperation(SheetScene *scene, GText *text = nullptr);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-private:
     /// Convenience function to cast obj
     GText *object() const;
 };

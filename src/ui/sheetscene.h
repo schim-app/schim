@@ -73,7 +73,6 @@ public:
      */
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
-    void operationFinished(bool destroy = true);
 
     // OVERRIDEN METHODS
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);
@@ -92,6 +91,10 @@ private:
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
+
+private slots:
+    // SLOTS
+    void onOperationFinished();
 
     friend class SheetView;
 
