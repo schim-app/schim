@@ -56,7 +56,10 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     if (cosmetic)
         pen.setWidthF(1.5);
     painter->setPen(pen);
-    painter->drawLine(0, 0, get()->dx(), get()->dy());
+    auto p1 = mapFromParent(get()->p1());
+    auto p2 = mapFromParent(get()->p2());
+
+    painter->drawLine(p1, p2);
 
     return;
     //TODO temporary -- draw the shape for debugging
