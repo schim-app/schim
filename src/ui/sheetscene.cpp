@@ -223,8 +223,15 @@ void SheetScene::applyCursorMovement(const QPointF &pt)
     // Send hover event to item and each of its parents
     QGraphicsSceneHoverEvent hoverEvent;
     hoverEvent.setScenePos(pt);
+    hoveredItem = nullptr;
     for (auto *item = itemAt(pt,{}); item != nullptr; item = item->parentItem())
-        item->hoverEnterEvent(&hoverEvent);
+    {
+        if (item->acceptHoverEvents())
+        {
+            item->hoverEnterEvent(&hoverEvent);
+            hoveredItem = item;
+        }
+    }
 
     // Update the cursor guides
     update();
