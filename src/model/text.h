@@ -29,7 +29,7 @@ public:
     QString getFont() const;
 
 private:
-    QString text, font;
+    QString text, font = "Sans Serif";
     float textHeight = 4;
 
     friend class GText;

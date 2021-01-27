@@ -25,7 +25,11 @@ void GLinearObjectArray::reload()
     clear();
     for (int i = 0; i < get()->getCount(); ++i)
     {
-        auto *item = GObject::assign(get()->generate(i));
+        auto obj = get()->generate(i);
+        // TODO this is very inelegant, fix ASAP
+        if (dynamic_cast<CompositeObject *>(get()->getBaseObject()))
+            obj->setParent((CompositeObject *) get()->getBaseObject());
+        auto *item = GObject::assign(obj);
         scene()->addItem(item);
         item->setParentItem(this);
         item->setFlags({});

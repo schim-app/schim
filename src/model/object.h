@@ -41,12 +41,14 @@ public:
      */
     virtual QPointF getPos() const;
     Sheet *getSheet() const;
+    CompositeObject *getParent() const;
 
     /**
      * @brief Set the position of the object in the sheet.
      */
     virtual void setPos(const QPointF &pos);
     void setSheet(Sheet *sheet);
+    void setParent(CompositeObject *parent);
 
     virtual Object *clone() const = 0;
 

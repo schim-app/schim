@@ -97,6 +97,7 @@ void Sheet::setHeader(Header *header)
 {
     delete this->header;
     this->header = header;
+    header->setSheet(this);
 }
 
 void Sheet::setLocalVariables(const VariableSet &vars)

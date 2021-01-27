@@ -2,13 +2,13 @@
 	<rect x="5" y="5" w="287" h="195"/>
 	<line x1="5" y1="180" x2="292" y2="180"/>
 	<linear-array dx="28.2" dy="0" count="10">
-		<var name="d" value="0"/>
+		<var names="d" value="0"/>
 		<text text="%d" x="22" y="5.25" height="2"/>
 		<line x1="38.2" y1="5" x2="38.2" y2="10"/>
 	</linear-array>
 	<line x1="5" y1="10" x2="292" y2="10"/>
 	<linear-array dx="0" dy="28.333" count="6">
-		<var name="d" value="A"/>
+		<var names="d" value="A"/>
 		<text text="%d" x="6" y="22.5" height="2"/>
 		<line x1="5" y1="38.333" x2="10" y2="38.333"/>
 	</linear-array>
