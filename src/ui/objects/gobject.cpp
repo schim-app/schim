@@ -41,6 +41,7 @@ GObject::~GObject()
         qDeleteAll(*handles);
         delete handles;
     }
+    qDeleteAll(childItems());
 }
 
 // GETTERS

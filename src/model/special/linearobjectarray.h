@@ -10,7 +10,7 @@ public:
 
     int getCount() override;
 
-    Object *generate(int index) const override;
+    void generate() override;
 
 private:
     float deltaX = 1, deltaY = 0;

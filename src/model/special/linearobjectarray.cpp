@@ -10,12 +10,22 @@ int LinearObjectArray::getCount()
     return count;
 }
 
-Object *LinearObjectArray::generate(int index) const
+void LinearObjectArray::generate()
 {
-    if (index < 0 || index >= count) // Out of bounds
-        return nullptr;
+    qDeleteAll(*this);
+    clear();
 
-    Object *obj = baseObj->clone();
-    obj->setPos(baseObj->getPos() + index * QPointF{deltaX, deltaY});
-    return obj;
+    if (count == 0)
+        return;
+    reserve(count);
+
+    append(baseObj);
+    baseObj->setParent(this);
+    for (int i = 1; i < count; ++i)
+    {
+        Object *obj = baseObj->clone();
+        obj->setPos(baseObj->getPos() + i * QPointF{deltaX, deltaY});
+        obj->setParent(this);
+        append(obj);
+    }
 }
