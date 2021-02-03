@@ -5,11 +5,13 @@ ICON_DIR=share/icons/hicolor/scalable
 SHARE_DIR=share/schim
 MAN_DIR=share/man/man1
 
+JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).*_\2_p')
+
 # This target will create a directory tree within _build/release/dest
 # that can be moved to /usr/ or /usr/local using `make install`
 app:
 	mkdir -p _build/release
-	cd _build/release; qmake CONFIG+=release ../../src/schim.pro; make
+	cd _build/release; cmake --config Release ../../src/; cmake --build ./ -j ${JOBS} 
 	@####
 	cd _build/release; rm -rf dest/; \
 	mkdir -p dest/bin \
