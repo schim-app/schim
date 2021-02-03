@@ -35,6 +35,11 @@ void Header::init()
 
 }
 
+void Header::setContentArea(const QRectF &rect)
+{
+    contentArea = rect;
+}
+
 QRectF Header::getContentArea() const
 {
     return contentArea;

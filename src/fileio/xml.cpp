@@ -531,7 +531,12 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
         {
             stream.readNext();
             if (stream.isStartElement())
-                header->append(xmlParseObject(stream));
+            {
+                if (stream.name() == "content-area")
+                    header->setContentArea(*xmlParseRect(stream));
+                else
+                    header->append(xmlParseObject(stream));
+            }
         }
     }
     catch (...)

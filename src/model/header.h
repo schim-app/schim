@@ -41,6 +41,7 @@ public:
     /** Initialize the graphical model with objects that are non-configurable */
     virtual void init();
 
+    void setContentArea(const QRectF &rect);
     QRectF getContentArea() const;
 
     Header *clone() const;

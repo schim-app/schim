@@ -1,4 +1,5 @@
 <header name="Default header">
+	<content-area x="10" y="10" w="282" h="170"/>
 	<rect x="5" y="5" w="287" h="195"/>
 	<line x1="5" y1="180" x2="292" y2="180"/>
 	<linear-array dx="28.2" dy="0" count="10">
