@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #include "sheetscene.h"
 
 #include "objects/gobject.h"
@@ -144,6 +145,7 @@ void SheetScene::cursorLeft()
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(cursorPos - QPointF{gridX, 0}))
                 );
+    emit cursorChanged();
 }
 
 void SheetScene::cursorDown()
@@ -151,6 +153,7 @@ void SheetScene::cursorDown()
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(cursorPos + QPointF{0, gridY}))
                 );
+    emit cursorChanged();
 }
 
 void SheetScene::cursorUp()
@@ -158,6 +161,7 @@ void SheetScene::cursorUp()
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(cursorPos - QPointF{0, gridY}))
                 );
+    emit cursorChanged();
 }
 
 void SheetScene::cursorRight()
@@ -165,6 +169,7 @@ void SheetScene::cursorRight()
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(cursorPos + QPointF{gridX, 0}))
                 );
+    emit cursorChanged();
 }
 
 void SheetScene::startOperation(Operation *op)
@@ -216,6 +221,7 @@ QPointF SheetScene::constrainToContentArea(QPointF pt) const
 void SheetScene::applyCursorMovement(const QPointF &pt)
 {
     // Send mouse move event to item
+    // TODO
     QGraphicsSceneMouseEvent mouseEvent;
     mouseEvent.setScenePos(pt);
     mouseMoveEvent(&mouseEvent);

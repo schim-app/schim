@@ -14,6 +14,9 @@
 #include <QString>
 #include <QCompleter>
 #include <QtMath>
+#include <QGraphicsSceneEvent>
+
+#include <QDebug>
 
 SheetView::SheetView(Sheet *sheet, QWidget *parent)
     : QGraphicsView(parent)
@@ -27,6 +30,7 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     updateBackground();
 
     connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
+    connect(scene(), &SheetScene::cursorChanged, this, &SheetView::onCursorChanged);
 
     // Create actions
     // TODO change this when vim becomes disable-able
@@ -142,6 +146,17 @@ void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
     _rubberBandDragging = true;
 }
 
+void SheetView::onCursorChanged()
+{
+    auto pos = scene()->getSnappedCursorPos();
+
+    // We do not wont to trigger a mouseMoveEvent this time
+    setMouseTracking(false);
+    cursor().setPos(mapToGlobal(mapFromScene(pos)));
+    qApp->processEvents();
+    setMouseTracking(true);
+}
+
 void SheetView::leaveEvent(QEvent *event)
 {
     scene()->showGuides(false);
@@ -152,6 +167,11 @@ void SheetView::leaveEvent(QEvent *event)
 
 void SheetView::enterEvent(QEvent *event)
 {
+    // Update cursor guides to match actual cursor position
+    QGraphicsSceneMouseEvent mouseEvent;
+    mouseEvent.setScenePos(mapToScene(mapFromGlobal(cursor().pos())));
+    scene()->mouseMoveEvent(&mouseEvent);
+
     scene()->showGuides(true);
     viewport()->update();
     QGraphicsView::enterEvent(event);

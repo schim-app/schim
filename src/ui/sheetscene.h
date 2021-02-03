@@ -15,6 +15,7 @@ class Operation;
 
 class SheetScene : public QGraphicsScene
 {
+    Q_OBJECT
 
 public:
     /**
@@ -79,6 +80,9 @@ public:
 
     // OTHER METHODS
     void reload();
+
+signals:
+    void cursorChanged();
 
 private:
 

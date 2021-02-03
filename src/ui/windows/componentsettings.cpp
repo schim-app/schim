@@ -12,7 +12,7 @@ ComponentSettings::ComponentSettings(GComponent *component, QWidget *parent)
 
     // Initialization
 
-    ui->variableEditor->setVariables(component->get()->getVariables());
+    ui->variableEditor->setVariables(component->get()->getLocalVariables());
     reload();
     // TODO Why do I have to connect this here when I have clicked "Go to slot" in QtDesigner? Maybe I have fixed this -- check?
     connect(ui->editFunction, &QLineEdit::textEdited, this, &ComponentSettings::on_editFunction_textEdited);

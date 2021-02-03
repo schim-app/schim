@@ -44,6 +44,7 @@ private:
 
 private slots:
     void onRubberBandChanged(QRect rect, QPointF, QPointF);
+    void onCursorChanged();
 
 private:
 
