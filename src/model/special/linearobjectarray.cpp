@@ -5,6 +5,14 @@ LinearObjectArray::LinearObjectArray(Object *base, float deltaX, float deltaY, i
 {
 }
 
+LinearObjectArray::LinearObjectArray(const LinearObjectArray &obj)
+    : ObjectArray(obj)
+{
+    count = obj.count;
+    deltaX = obj.deltaX;
+    deltaY = obj.deltaY;
+}
+
 int LinearObjectArray::getCount()
 {
     return count;
@@ -28,4 +36,9 @@ void LinearObjectArray::generate()
         obj->setParent(this);
         append(obj);
     }
+}
+
+Object *LinearObjectArray::clone() const
+{
+    return new LinearObjectArray(*this);
 }

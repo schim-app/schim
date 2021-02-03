@@ -49,7 +49,7 @@ public:
 
     friend class GCompositeObject;
 
-private:
+protected:
     // TODO determine appropriate container
     VariableSet variables;
     QPointF pos{};

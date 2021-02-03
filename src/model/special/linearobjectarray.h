@@ -7,10 +7,13 @@ class LinearObjectArray : public ObjectArray
 {
 public:
     LinearObjectArray(Object *base, float deltaX, float deltaY, int count);
+    LinearObjectArray(const LinearObjectArray &obj);
 
     int getCount() override;
 
     void generate() override;
+
+    Object *clone() const override;
 
 private:
     float deltaX = 1, deltaY = 0;

@@ -100,8 +100,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::tabCloseRequest(int index)
 {
-    delete ui->tabView->widget(index);
+    auto *tab = ui->tabView->widget(index);
     ui->tabView->removeTab(index);
+    delete tab;
 }
 
 void MainWindow::anyActionTriggered()

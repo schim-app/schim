@@ -7,6 +7,7 @@ class ObjectArray : public CompositeObject
 {
 public:
     ObjectArray(Object *base);
+    ObjectArray(const ObjectArray &obj);
     virtual ~ObjectArray();
 
     /** @brief Set the base item of the array. */

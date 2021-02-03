@@ -3,6 +3,12 @@
 ObjectArray::ObjectArray(Object *base)
     : baseObj(base) { }
 
+ObjectArray::ObjectArray(const ObjectArray &obj)
+{
+    variables = obj.variables;
+    baseObj = obj.baseObj->clone();
+}
+
 ObjectArray::~ObjectArray() { }
 
 void ObjectArray::rebase(int index)
