@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(schim VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -12,6 +13,16 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core Gui Widgets Xml Svg PrintSupport REQUIRED)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/libdxflib.a
+    COMMENT "Building dxflib..."
+    COMMAND mkdir -p dxflib
+    COMMAND cd dxflib/ && qmake ${CMAKE_SOURCE_DIR}/dxflib/ && make
+    COMMAND cp ${CMAKE_SOURCE_DIR}/dxflib/src/*.h dxflib/
+)
+add_custom_target(dxf DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libdxflib.a)
+
 add_executable(schim
     fileio/database.cpp 
     fileio/dxf.cpp 
@@ -103,6 +114,12 @@ add_executable(schim
     ui/windows/textsettings.ui
 )
 
+add_dependencies(schim dxf)
+
+add_library(dxflib STATIC IMPORTED)
+set_target_properties(dxflib PROPERTIES
+    IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a"
+)
 target_link_libraries(schim
     Qt5::Core
     Qt5::Gui
@@ -110,7 +127,5 @@ target_link_libraries(schim
     Qt5::Xml
     Qt5::Svg
     Qt5::PrintSupport
+    dxflib
 )
-if (UNIX)
-    target_link_libraries(schim dxflib)
-endif ()

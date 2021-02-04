@@ -1,6 +1,7 @@
-*.pro.user
+*.user
+*.bak
 _build/
-docs/_build
+**/_build/
 .qmake.stash
 src/**/ui_*.h
-org/
+
