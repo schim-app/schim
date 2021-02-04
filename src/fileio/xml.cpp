@@ -13,7 +13,7 @@
 #define read_xml_file(filename) \
     QFile file(filename); \
     if (!file.open(QIODevice::ReadOnly)) \
-        throw std::runtime_error(filename.toStdString() + ": Unable to open XML file for reading"); \
+        throw std::runtime_error("Unable to open XML file for reading " + filename.toStdString() ); \
     QXmlStreamReader stream(&file)
 
 #define write_xml_file(filename)
@@ -34,7 +34,7 @@ void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
         if (stream.isStartElement())
         {
             if (stream.name() != tagname)
-                throw std::logic_error("Root tag is invalid");
+                throw std::logic_error("Root tag is invalid: " + stream.name().toString().toStdString());
             break;
         }
     }
@@ -141,7 +141,7 @@ QString xmlPeekName(const QString &filename)
     }
     return "";
     // TODO temporarily disabled exception
-    throw std::logic_error(filename.toStdString() + ": No name is defined for this object");
+    throw std::logic_error(": No name is defined for this object: " + filename.toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -188,7 +188,7 @@ void xmlWriteProject(Project *project, const QString &filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly))
-        throw std::runtime_error("Unable to open XML file for writing");
+        throw std::runtime_error("Unable to open XML file for writing: " + filename.toStdString());
     QXmlStreamWriter stream(&file);
     stream.setAutoFormatting(true);
     stream.setAutoFormattingIndent(4); // consider changing this to tabs
@@ -275,7 +275,7 @@ Object *xmlParseObject(QXmlStreamReader &stream)
     else if (stream.name() == "linear-array")
         object = xmlParseLinearObjectArray(stream);
     else
-        throw std::logic_error("Unknown object type");
+        throw std::logic_error("Unknown object type: " + stream.name().toString().toStdString());
 
     auto objectName = stream.name();
 
@@ -317,9 +317,9 @@ Line *xmlParseLine(QXmlStreamReader &stream)
         else if (attr.name() == "width")
             linewidth = attr.value().toString().toFloat(&conversion_ok);
         else
-            throw std::logic_error("Unknown line attribute");
+            throw std::logic_error("Unknown line attribute: " + attr.name().toString().toStdString());
         if (!conversion_ok)
-            throw std::logic_error("Line attributes are of invalid format");
+            throw std::logic_error("Line attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
     Line *line = new Line(x1, y1, x2, y2);
     line->setLinewidth(linewidth);
@@ -359,9 +359,9 @@ Rect *xmlParseRect(QXmlStreamReader &stream)
         else if (attr.name() == "h")
             h = attr.value().toString().toFloat(&conversion_ok);
         else
-            throw std::logic_error("Unknown rectangle attribute");
+            throw std::logic_error("Unknown rectangle attribute: " + attr.name().toString().toStdString());
         if (!conversion_ok)
-            throw std::logic_error("Rectangle attributes are of invalid format");
+            throw std::logic_error("Rectangle attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
     return new Rect(x, y, w, h);
 }
@@ -402,9 +402,9 @@ Text *xmlParseText(QXmlStreamReader &stream)
             else if (attr.name() == "font")
                 text->setFont(attr.value().toString());
             else
-                throw std::logic_error("Unknown attributes for text object");
+                throw std::logic_error("Unknown attribute for text object: " + attr.name().toString().toStdString());
             if (!conversion_ok)
-                throw std::logic_error("Text object attributes are of invalid format");
+                throw std::logic_error("Rectangle attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
 
             text->setPos({x, y});
         }
@@ -498,9 +498,9 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
         else if (attr.name() == "count")
             count = attr.value().toUInt(&conversion_ok);
         else
-            throw std::logic_error("Unknown attribute for linear object array");
+            throw std::logic_error("Unknown attribute for linear object array: " + attr.name().toString().toStdString());
         if (!conversion_ok)
-            throw std::logic_error("Linear object array attributes are of invalid format");
+            throw std::logic_error("Linear object array attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
     CompositeObject *baseObj = xmlParseCompositeObject(stream);
     if (baseObj->size() == 1 && dynamic_cast<CompositeObject*>((*baseObj)[0]))
@@ -580,7 +580,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
         //TODO enable this else
             //throw std::logic_error("Unknown component attribute");
         if (!conversion_ok)
-            throw std::logic_error("Component attributes are of invalid format");
+            throw std::logic_error("Component attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
 
     if (obj == nullptr) // The content was not taken from a file
