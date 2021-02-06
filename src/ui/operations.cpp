@@ -138,7 +138,8 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         else
             obj->get()->setPos(obj->parentItem()->mapFromScene(pos));
         obj->reload(); // Update the object visually
-        scene->addItem(obj); // Add it to the scene
+        if (!obj->parentItem()) // Add it to the scene if it is parent-less
+            scene->addItem(obj);
         object()->setEditMode(true); // Initiate edit mode
 
         // We declare these as local variables so we can capture them inside the lambda
@@ -156,7 +157,7 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 obj->deleteLater();
             }
             else
-                scene->command(new CmdInsertObject(obj, scene));
+                scene->command(new CmdInsertObject(obj, scene, obj->parentItem()));
         });
         state = 1;
         emit finished(); // Notify interested parties the operation is done.

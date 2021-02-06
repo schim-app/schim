@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *scene)
-    : obj(obj), scene(scene) { }
+CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *scene, GCompositeObject *parent)
+    : obj(obj), scene(scene), parent(parent) { }
 
 CmdInsertObject::~CmdInsertObject()
 {
@@ -19,8 +19,16 @@ void CmdInsertObject::undo()
 
 void CmdInsertObject::redo()
 {
-    scene->addItem(obj);
-    scene->getSheet()->addObject(obj->get());
+    if (parent)
+    {
+        obj->setParentItem(parent);
+        parent->get()->append(obj->get());
+    }
+    else
+    {
+        scene->addItem(obj);
+        scene->getSheet()->addObject(obj->get());
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

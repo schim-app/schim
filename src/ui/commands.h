@@ -12,13 +12,14 @@
 class CmdInsertObject : public QUndoCommand
 {
 public:
-    CmdInsertObject(GObject *obj, SheetScene *scene);
+    CmdInsertObject(GObject *obj, SheetScene *scene, GCompositeObject *parent = nullptr);
     ~CmdInsertObject();
     void undo() override;
     void redo() override;
 
 private:
     GObject *obj;
+    GCompositeObject *parent;
     SheetScene *scene;
 };
 

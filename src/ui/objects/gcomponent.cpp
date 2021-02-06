@@ -82,7 +82,6 @@ void GComponent::addText()
 {
     GText *obj = new GText; // Create new graphical text object
     TextInsertOperation *op = new TextInsertOperation(scene(), obj);
-    obj->setParentItem(this);
-    get()->append(obj->get()); // Add the text to this Component in the model.
+    obj->setParentItem(this); // The operation must know this text has a parent
     scene()->startOperation(op);
 }
