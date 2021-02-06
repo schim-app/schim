@@ -11,8 +11,12 @@ depends=('qt5-base')
 makedepends=('git')
 # TODO test all dependencies in VM
 
-source=("$pkgname::git+https://github.com/harisgusic/$pkgname")
-sha256sums=('SKIP')
+sha256sums=('SKIP') # TODO change to valid one
+
+prepare() {
+    rm -rf "$srcdir/$pkgname"
+    git clone --depth 1 --recurse-submodules "$url" "$srcdir/$pkgname"
+}
 
 package() {
 	cd "$srcdir/$pkgname"
