@@ -16,17 +16,17 @@ void pdfWriteProject(const Project *project, const QString &filename)
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(filename);
-    printer.setMargins({});
-    printer.setPageSize(QPrinter::A4);
-    printer.setOrientation(QPrinter::Landscape);
+    printer.setPageMargins({});
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageOrientation(QPageLayout::Landscape);
 
     QPainter painter(&printer);
     for (int i = 0; i < project->getSheets().size(); ++i)
     {
         if (i != 0)
         {
-            printer.setPageSize(QPrinter::A4);
-            printer.setOrientation(QPrinter::Landscape);
+            printer.setPageSize(QPageSize(QPageSize::A4));
+            printer.setPageOrientation(QPageLayout::Landscape);
             printer.newPage();
         }
         SheetScene *scene = new SheetScene((project->getSheets())[i]);
