@@ -101,7 +101,8 @@ void DatabaseItem::setPath(QString path)
         else
         {
             setName(xmlPeekName(path));
-            object = xmlParseObject(path);
+            object = (CompositeObject *) xmlParseObject(path);
+            object->setSourceFile(this->path);
         }
         // Invalidate the icon - it will have to be generated again when required
         icon = nullptr;

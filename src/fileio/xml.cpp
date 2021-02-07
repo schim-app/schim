@@ -244,9 +244,7 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
     stream.writeStartElement("sheet");
     stream.writeAttribute("title", sheet->getTitle());
 
-    stream.writeStartElement("header");
-    stream.writeAttribute("from", "headers/defaultheader.xsym");
-    stream.writeEndElement();
+    xmlWriteHeader(sheet->getHeader(), stream);
 
     for (const auto &var : sheet->getLocalVariables())
         xmlWriteVariable(var, stream);
@@ -260,7 +258,7 @@ void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
 
 Object *xmlParseObject(QXmlStreamReader &stream)
 {
-    Object *object;
+    Object *object = nullptr;
 
     if (stream.name() == "line")
         object = xmlParseLine(stream);
@@ -279,6 +277,7 @@ Object *xmlParseObject(QXmlStreamReader &stream)
 
     auto objectName = stream.name();
 
+    // TODO maybe the following part can be removed.
     // Eat up all remaining tokens related to this object
     while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
         stream.readNext();
@@ -443,10 +442,11 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 
     foreach (auto attr, stream.attributes())
     {
-        if (attr.name() == "from")
-        { // The content is taken from another file
-            if (obj == nullptr)
-                obj = parseCompositeObject(resolvePath(attr.value().toString()));
+        if (attr.name() == "from" && obj == nullptr)
+        {
+            // The content is taken from another file
+            obj = parseCompositeObject(resolvePath(attr.value().toString()));
+            //obj->setSourceFile(attr.value().toString());
         }
     }
 
@@ -516,10 +516,11 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
     Header *header = nullptr;
     foreach (auto attr, stream.attributes())
     {
-        if (attr.name() == "from")
+        if (attr.name() == "from" && header == nullptr)
         { // The header content is taken from another file
-            if (header == nullptr)
-                header = new Header(parseCompositeObject(resolvePath(attr.value().toString())));
+            header = new Header(xmlParseHeader(resolvePath(attr.value().toString())));
+            // TODO how can I make it possible to get the header data from a dxf file
+            header->setSourceFile(attr.value().toString());
         }
     }
 
@@ -553,8 +554,12 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
     // single from="headers/defaultheader.xsym" attribute
     stream.writeStartElement("header");
 
-    foreach (auto obj, *header)
-        xmlWriteObject(obj, stream);
+    // TODO do this for all other types of CompositeObject
+    if (header->getSourceFile() != "") // The header is associated with a source file
+        stream.writeAttribute("from", header->getSourceFile());
+    else
+        foreach (auto obj, *header)
+            xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
 }
@@ -571,7 +576,10 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
         if (attr.name() == "from")
         { // The content is taken from another file
             if (obj == nullptr)
+            {
                 obj = Component::absorb(parseCompositeObject(resolvePath(attr.value().toString())));
+                obj->setSourceFile(attr.value().toString());
+            }
         }
         else if (attr.name() == "x")
             pos.setX(attr.value().toFloat());

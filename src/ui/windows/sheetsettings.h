@@ -20,8 +20,6 @@ public:
     void setSheetId(int id);
     SheetScene *scene() const;
 
-    void show();
-
 private slots:
 
     void onChanged();
@@ -34,12 +32,18 @@ private slots:
     void on_sbGridX_valueChanged(double value);
     void on_sbGridY_valueChanged(double value);
 
+    void on_btnHeader_triggered(QAction *action);
+
+    void on_btnClearHeader_clicked();
+
+    void on_editHeader_textEdited(const QString &text);
+
 private:
     Ui::SheetSettings *ui;
     MainWindow *parent;
     int sheetId;
-    bool changed; // Tracks whether any modification was made
-
+    bool _changed = false; // Tracks whether any modification was made
+    QString originalHeader;
 };
 
 #endif // SHEETSETTINGS_H

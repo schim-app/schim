@@ -38,7 +38,7 @@ public:
 
 private:
     QString path, name;
-    Object *object{};
+    CompositeObject *object{};
     DatabaseItem *parent;
     QVector<DatabaseItem*> childItems;
     // Dynamically allocated by generateIcon when needed

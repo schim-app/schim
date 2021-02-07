@@ -23,8 +23,16 @@ const Rect *GRect::get() const
 
 QRectF GRect::boundingRect() const
 {
+    // TODO Why is get() sometimes null here??
     float infl = get()->linewidth; // Inflation
-    return get()->marginsAdded({infl, infl, infl, infl}).translated(-get()->getPos());
+    if (get())
+    {
+        auto x = get()->marginsAdded({infl, infl, infl, infl});
+        auto y = get()->getPos();
+        return x.translated(-y);
+    }
+    else
+        return {};
 }
 
 void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

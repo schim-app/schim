@@ -35,12 +35,14 @@ public:
     VariableSet getVariables() const;
     VariableSet &getLocalVariables();
     VariableSet getLocalVariables() const;
+    QString getSourceFile() const;
 
     // SETTERS
     void setPos(const QPointF &pos) override;
     void setValue(const QString &name, const QString &value);
     void addVariable(const Variable &variable);
     void setLocalVariables(const VariableSet &vars);
+    void setSourceFile(const QString &filename);
 
     Object *clone() const override;
 
@@ -53,6 +55,8 @@ protected:
     // TODO determine appropriate container
     VariableSet variables;
     QPointF pos{};
+    // If != "", the object is always taken from the specified file
+    QString file;
 };
 
 #endif // COMPOSITEOBJECT_H

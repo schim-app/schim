@@ -7,7 +7,11 @@
 Sheet::Sheet(bool defaultHeader)
 {
     if (defaultHeader)
-        header = xmlParseHeader(QString(resolvePath("headers/defaultheader.xsym")));
+    {
+        QString file = "headers/defaultheader.xsym";
+        header = xmlParseHeader(QString(resolvePath(file)));
+        header->setSourceFile(file);
+    }
 }
 
 Sheet::~Sheet()
@@ -95,9 +99,11 @@ void Sheet::setTitle(const QString &title)
 
 void Sheet::setHeader(Header *header)
 {
-    delete this->header;
+    if (header != this->header)
+        delete this->header;
     this->header = header;
-    header->setSheet(this);
+    if (header != nullptr)
+        header->setSheet(this);
 }
 
 void Sheet::setLocalVariables(const VariableSet &vars)

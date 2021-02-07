@@ -74,6 +74,7 @@ public:
      */
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
+    bool tryChangeHeader(Header *hdr);
 
     // OVERRIDEN METHODS
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);

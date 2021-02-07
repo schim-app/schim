@@ -12,6 +12,7 @@ CompositeObject::CompositeObject(const CompositeObject &obj)
     this->reserve(obj.size());
     for (Object *object : obj)
         this->append(object->clone());
+    file = obj.file;
 }
 
 CompositeObject::~CompositeObject()
@@ -54,6 +55,11 @@ VariableSet CompositeObject::getLocalVariables() const
     return variables;
 }
 
+QString CompositeObject::getSourceFile() const
+{
+    return file;
+}
+
 void CompositeObject::setPos(const QPointF &pos)
 {
     this->pos = pos;
@@ -84,6 +90,12 @@ void CompositeObject::setLocalVariables(const VariableSet &vars)
     for (auto var : vars)
         if (var.getTrueName() != "")
             variables.append(var);
+}
+
+void CompositeObject::setSourceFile(const QString &filename)
+{
+    this->file = filename;
+    // TODO maybe load the object from the file...
 }
 
 Object *CompositeObject::clone() const

@@ -14,6 +14,7 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QtMath>
+#include <QMessageBox>
 
 //TODO remove
 #include <QDebug>
@@ -95,6 +96,9 @@ void SheetScene::setHeader(Header *hdr)
     delete headerItem;
     headerItem = (GHeader*) GObject::assign(hdr);
     addItem(headerItem);
+
+    // Update model
+    sheet->setHeader(hdr);
 }
 
 void SheetScene::setSnapCursorGuides(bool snap)
@@ -197,6 +201,20 @@ QPointF SheetScene::forcedSnap(const QPointF &pt) const
 void SheetScene::showGuides(bool show)
 {
     showCursorGuides = show;
+}
+
+bool SheetScene::tryChangeHeader(Header *hdr)
+{
+    // Ask the user for confirmation
+    if ((sheet->getHeader() == nullptr ||
+            sheet->getHeader()->getSourceFile() == "") &&
+            QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
+            == QMessageBox::No)
+        return false;
+
+    // Upon confirmation, change the header
+    setHeader(hdr);
+    return true;
 }
 
 // HELPER FUNCTIONS
@@ -348,10 +366,8 @@ void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
             // If the item is a header, it will receive special treatment
             if ((hdr = dynamic_cast<Header*>(obj->clone())))
-            { // Replace the current sheet header with this one
-                setHeader(hdr);
-                sheet->setHeader(hdr);
-            }
+                // Replace the current sheet header with this one
+                tryChangeHeader(hdr);
             else // Start scene operation
                 startOperation(new ComponentInsertOperation(this, obj->clone()));
         }
