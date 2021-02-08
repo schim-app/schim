@@ -47,8 +47,9 @@ public:
      * The sheet becomes the owner of `header` and
      * is responsible for its deletion when the sheet's
      * destructor is called.
+     * @param destroy Whether to destroy the old header.
      */
-    void setHeader(Header *header);
+    void setHeader(Header *header, bool destroy = true);
     void setLocalVariables(const VariableSet &vars);
     void addVariable(const Variable &variable);
 

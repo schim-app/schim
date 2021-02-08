@@ -22,6 +22,7 @@ public:
     Rect(qreal x, qreal y, qreal width, qreal height);
     /** @brief Copy constructor */
     Rect(const Rect &rect);
+    Object *clone() const override;
 
     QPointF getPos() const override;
     float getLinewidth() const;
@@ -32,7 +33,8 @@ public:
     void setProperty(const QString &name, const QString &value) override;
     QString getProperty(const QString &name) const override;
 
-    Object *clone() const override;
+    bool operator==(const Rect &obj) const;
+    bool operator!=(const Rect &obj) const;
 
     friend class GRect;
 };

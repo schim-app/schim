@@ -17,6 +17,11 @@ Text::Text(const Text &text)
     textHeight = text.textHeight;
 }
 
+Object *Text::clone() const
+{
+    return new Text(*this);
+}
+
 void Text::setPos(const QPointF &pos)
 {
     setX(pos.x());
@@ -105,7 +110,13 @@ QString Text::getProperty(const QString &name) const
     else throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for text");
 }
 
-Object *Text::clone() const
+bool Text::operator==(const Text &obj) const
 {
-    return new Text(*this);
+    return Object::operator==(obj) && QPointF(*this) == obj && textHeight == obj.textHeight
+            && font == obj.font;
+}
+
+bool Text::operator!=(const Text &obj) const
+{
+    return !(*this == obj);
 }

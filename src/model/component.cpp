@@ -26,3 +26,14 @@ Component *Component::absorb(CompositeObject *obj)
     delete obj;
     return retVal;
 }
+
+bool Component::operator==(const Component &obj) const
+{
+    // TODO Customize for this type of object
+    return CompositeObject::operator==(obj);
+}
+
+bool Component::operator!=(const Component &obj) const
+{
+    return !(*this == obj);
+}

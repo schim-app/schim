@@ -19,8 +19,9 @@ public:
     CompositeObject();
     /** @brief Copy constructor */
     CompositeObject(const CompositeObject &obj);
-
     ~CompositeObject();
+
+    Object *clone() const override;
 
     // GETTERS
     QPointF getPos() const override;
@@ -40,16 +41,17 @@ public:
     // SETTERS
     void setPos(const QPointF &pos) override;
     void setValue(const QString &name, const QString &value);
-    void addVariable(const Variable &variable);
     void setLocalVariables(const VariableSet &vars);
     void setSourceFile(const QString &filename);
 
-    Object *clone() const override;
-
+    // MODIFIER METHODS
+    void addVariable(const Variable &variable);
     void append(Object *object);
     void append(const QList<Object*> &list);
 
-    friend class GCompositeObject;
+    // OPERATORS
+    bool operator==(const CompositeObject &obj) const;
+    bool operator!=(const CompositeObject &obj) const;
 
 protected:
     // TODO determine appropriate container
@@ -57,6 +59,9 @@ protected:
     QPointF pos{};
     // If != "", the object is always taken from the specified file
     QString file;
+
+    friend class GCompositeObject;
+
 };
 
 #endif // COMPOSITEOBJECT_H

@@ -19,6 +19,10 @@ public:
     /** @brief Steal everything from `obj` and delete it. */
     static Component *absorb(CompositeObject *obj);
 
+    // OPERATORS
+    virtual bool operator==(const Component &obj) const;
+    virtual bool operator!=(const Component &obj) const;
+
 private:
     QSharedPointer<Device> device;
 };

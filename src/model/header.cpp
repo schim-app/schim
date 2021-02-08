@@ -25,6 +25,11 @@ Header::Header(const Header &obj)
     contentArea = obj.contentArea;
 }
 
+Header *Header::clone() const
+{
+    return new Header(*this);
+}
+
 void Header::update()
 {
     clear();
@@ -45,9 +50,19 @@ QRectF Header::getContentArea() const
     return contentArea;
 }
 
-Header *Header::clone() const
+bool Header::operator==(const Header &obj) const
 {
-    return new Header(*this);
+    return CompositeObject::operator==(obj)
+            && obj.contentArea == contentArea
+            && obj.displayColumns == displayColumns
+            && obj.displayRows == displayColumns
+            && obj.columnMarkers == columnMarkers
+            && obj.rowMarkers == rowMarkers;
+}
+
+bool Header::operator!=(const Header &obj) const
+{
+    return !(*this == obj);
 }
 
 void Header::clear()

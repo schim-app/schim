@@ -97,9 +97,12 @@ void Sheet::setTitle(const QString &title)
     this->title = title;
 }
 
-void Sheet::setHeader(Header *header)
+void Sheet::setHeader(Header *header, bool destroy)
 {
-    if (header != this->header)
+    if (header == this->header)
+        return;
+
+    if (destroy)
         delete this->header;
     this->header = header;
     if (header != nullptr)

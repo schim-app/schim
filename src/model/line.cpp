@@ -11,6 +11,11 @@ Line::Line(const Line &line)
     linewidth = line.linewidth;
 }
 
+Object *Line::clone() const
+{
+    return new Line(*this);
+}
+
 float Line::getLinewidth() const
 {
     return linewidth;
@@ -68,7 +73,12 @@ QString Line::getProperty(const QString &name) const
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for line");
 }
 
-Object *Line::clone() const
+bool Line::operator==(const Line &obj) const
 {
-    return new Line(*this);
+    return Object::operator==(obj) && QLineF::operator==(obj) && linewidth == obj.linewidth;
+}
+
+bool Line::operator!=(const Line &obj) const
+{
+    return !(*this == obj);
 }

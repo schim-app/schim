@@ -11,6 +11,11 @@ Rect::Rect(const Rect &rect)
     linewidth = rect.linewidth;
 }
 
+Object *Rect::clone() const
+{
+    return new Rect(*this);
+}
+
 QPointF Rect::getPos() const
 {
     return topLeft();
@@ -67,7 +72,12 @@ QString Rect::getProperty(const QString &name) const
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for rectangle");
 }
 
-Object *Rect::clone() const
+bool Rect::operator==(const Rect &obj) const
 {
-    return new Rect(*this);
+    return Object::operator==(obj) && QRectF(*this) == obj && linewidth == obj.linewidth;
+}
+
+bool Rect::operator!=(const Rect &obj) const
+{
+    return !(*this == obj);
 }

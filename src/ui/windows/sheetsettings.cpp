@@ -60,21 +60,17 @@ void SheetSettings::onChanged()
 
 void SheetSettings::accept()
 {
+    Header *hdr = nullptr;;
     // TODO handle invalid file names properly
     if (ui->editHeader->text() != "")
     {
-        Header *hdr = xmlParseHeader(resolvePath(ui->editHeader->text()));
+        hdr = xmlParseHeader(resolvePath(ui->editHeader->text()));
         hdr->setSourceFile(ui->editHeader->text());
-        if (!scene()->tryChangeHeader(hdr))
-        {
-            delete hdr;
-            return;
-        }
     }
-    else
-    {
-        scene()->command(new CmdChangeHeader(nullptr, scene()));
-    }
+    bool changed, confirmed;
+    scene()->tryChangeHeader(hdr, &changed, &confirmed);
+    if (!changed)
+        delete hdr;
 
     parent->getSheet()->setTitle(ui->editSheetTitle->text());
     parent->getTabView()->setTabText(sheetId, ui->editSheetTitle->text());

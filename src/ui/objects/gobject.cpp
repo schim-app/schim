@@ -134,6 +134,8 @@ void GObject::setCosmetic(bool cosmetic)
 GObject *GObject::assign(Object *obj)
 {
 #define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
+    Header *hdr = dynamic_cast<Header*>(obj);
+
     if_cast_return(Line, obj);
     if_cast_return(Rect, obj);
     if_cast_return(Text, obj);
@@ -141,6 +143,7 @@ GObject *GObject::assign(Object *obj)
     if_cast_return(Component, obj);
     if_cast_return(LinearObjectArray, obj);
     if_cast_return(CompositeObject, obj);
+
 #undef if_cast_return
     return nullptr;
 }

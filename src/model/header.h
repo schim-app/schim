@@ -35,6 +35,7 @@ public:
     Header(CompositeObject *obj);
     /** @brief Copy constructor */
     Header(const Header &obj);
+    Header *clone() const;
 
     /** Update the graphical model to match the configuration. */
     virtual void update();
@@ -44,7 +45,9 @@ public:
     void setContentArea(const QRectF &rect);
     QRectF getContentArea() const;
 
-    Header *clone() const;
+    // OPERATORS
+    bool operator==(const Header &obj) const;
+    bool operator!=(const Header &obj) const;
 
 protected:
     /**

@@ -20,6 +20,7 @@ public:
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
     /** @brief Copy constructor */
     Line(const Line &line);
+    Object *clone() const override;
 
     float getLinewidth() const;
     QPointF getPos() const override;
@@ -27,10 +28,13 @@ public:
     void setLinewidth(float w);
     void setPos(const QPointF &pos) override;
 
+    // PROPERTIES
     void setProperty(const QString &name, const QString &value) override;
     QString getProperty(const QString &name) const override;
 
-    Object *clone() const override;
+    // OPERATORS
+    bool operator==(const Line &obj) const;
+    bool operator!=(const Line &obj) const;
 
     friend class GLine;
 };

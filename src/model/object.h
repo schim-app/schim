@@ -28,7 +28,6 @@ public:
     Object() = default;
     /** @brief Copy constructor */
     Object(const Object &object) = default;
-
     /**
      * @brief This destructor does nothing.
      *
@@ -36,6 +35,7 @@ public:
      * by derived classes.
      */
     virtual ~Object() = default;
+    virtual Object *clone() const = 0;
 
     /**
      * @brief Return the position of the object in the sheet.
@@ -54,7 +54,9 @@ public:
     virtual void setProperty(const QString &name, const QString &value);
     virtual QString getProperty(const QString &name) const;
 
-    virtual Object *clone() const = 0;
+    // OPERATORS
+    virtual bool operator==(const Object &obj) const;
+    virtual bool operator!=(const Object &obj) const;
 
 protected:
     CompositeObject *parent{};

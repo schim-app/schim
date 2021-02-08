@@ -21,6 +21,13 @@ CompositeObject::~CompositeObject()
         delete child;
 }
 
+Object *CompositeObject::clone() const
+{
+    return new CompositeObject(*this);
+}
+
+// GETTERS
+
 QPointF CompositeObject::getPos() const
 {
     return pos;
@@ -60,6 +67,8 @@ QString CompositeObject::getSourceFile() const
     return file;
 }
 
+// SETTERS
+
 void CompositeObject::setPos(const QPointF &pos)
 {
     this->pos = pos;
@@ -76,14 +85,6 @@ void CompositeObject::setValue(const QString &name, const QString &value)
     addVariable({{name}, "", value});
 }
 
-void CompositeObject::addVariable(const Variable &variable)
-{
-    for (const auto &var : variables)
-        if (var == variable)
-            return;
-    variables.append(variable);
-}
-
 void CompositeObject::setLocalVariables(const VariableSet &vars)
 {
     variables.clear();
@@ -98,9 +99,14 @@ void CompositeObject::setSourceFile(const QString &filename)
     // TODO maybe load the object from the file...
 }
 
-Object *CompositeObject::clone() const
+// MODIFIER METHODS
+
+void CompositeObject::addVariable(const Variable &variable)
 {
-    return new CompositeObject(*this);
+    for (const auto &var : variables)
+        if (var == variable)
+            return;
+    variables.append(variable);
 }
 
 void CompositeObject::append(Object *object)
@@ -118,4 +124,24 @@ void CompositeObject::append(const QList<Object *> &list)
         obj->sheet = sheet;
     }
     QList::append(list);
+}
+
+bool CompositeObject::operator==(const CompositeObject &obj) const
+{
+    if (file == obj.file) // Objects are taken from the same file
+        return true;
+
+    if (obj.size() != size() || obj.variables != variables)
+        return false; // Objects do not have same number of children
+
+    for (int i = 0; i < size(); ++i)
+        if (at(i) != obj.at(i))
+            return false; // A child object is different
+
+    return Object::operator==(obj) && obj.pos == pos;
+}
+
+bool CompositeObject::operator!=(const CompositeObject &obj) const
+{
+    return !(*this == obj);
 }

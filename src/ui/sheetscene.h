@@ -41,7 +41,12 @@ public:
 
     // SETTERS
     void setSheet(Sheet *sheet);
-    void setHeader(Header *hdr);
+    /**
+     * @brief Set the header in the scene and in the model.
+     * @param hdr The new header.
+     * @param destroy Whether to destroy the old header in the model.
+     */
+    void setHeader(Header *hdr, bool destroy = true);
     void setSnapCursorGuides(bool snap);
 
     void setGridSize(float x, float y = -1);
@@ -75,7 +80,18 @@ public:
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
     bool askHeaderChangeConfirmation() const;
-    bool tryChangeHeader(Header *hdr);
+    /**
+     * @brief Try to set the sheet header to `hdr` and update the scene.
+     *
+     * @param hdr The new header.
+     * @param changed [Out] Whether the header has been changed.
+     * @param confirmed [Out] Whether the user confirmed the change.
+     *
+     * @note The user is prompted for confirmation only if the sheet
+     * previously had a local header. If that is not the case, `confirmed`
+     * is true by default.
+     */
+    void tryChangeHeader(Header *hdr,bool *changed = nullptr, bool *confirmed = nullptr);
 
     // OVERRIDEN METHODS
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);

@@ -13,6 +13,7 @@ public:
     Text(const QString &text = "");
     /** @brief Copy constructor */
     Text(const Text &text);
+    Object *clone() const override;
 
     void setPos(const QPointF &pos) override;
     void setText(const QString &text);
@@ -29,7 +30,9 @@ public:
     void setProperty(const QString &name, const QString &value) override;
     QString getProperty(const QString &name) const override;
 
-    Object *clone() const override;
+    // OPERATORS
+    bool operator==(const Text &obj) const;
+    bool operator!=(const Text &obj) const;
 
 private:
     QString text, font = "Sans Serif";

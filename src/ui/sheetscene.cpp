@@ -90,7 +90,7 @@ void SheetScene::setSheet(Sheet *sheet)
     this->sheet = sheet;
 }
 
-void SheetScene::setHeader(Header *hdr)
+void SheetScene::setHeader(Header *hdr, bool destroy)
 {
     removeItem(headerItem);
     delete headerItem;
@@ -98,7 +98,7 @@ void SheetScene::setHeader(Header *hdr)
     addItem(headerItem);
 
     // Update model
-    sheet->setHeader(hdr);
+    sheet->setHeader(hdr, destroy);
 }
 
 void SheetScene::setSnapCursorGuides(bool snap)
@@ -212,15 +212,25 @@ bool SheetScene::askHeaderChangeConfirmation() const
     return true;
 }
 
-bool SheetScene::tryChangeHeader(Header *hdr)
+void SheetScene::tryChangeHeader(Header *hdr, bool *changed, bool *confirmed)
 {
-    // Ask the user for confirmation
-    if (!askHeaderChangeConfirmation())
-        return false;
+    if (changed) *changed = false;
+    if (confirmed) *confirmed = true;
+    bool hadLocalHdr = sheet->getHeader() && sheet->getHeader()->getSourceFile() == "";
+    // ONLY one of them is null or they are both not null and they are not equal
+    bool newHdrDifferent = ((!hdr && sheet->getHeader()) || (hdr && !sheet->getHeader()))
+            || (hdr && sheet->getHeader() && *hdr != *sheet->getHeader());
+
+    if (!newHdrDifferent) return;
+    if (hadLocalHdr && !askHeaderChangeConfirmation())
+    {
+        if (confirmed)
+        return;
+    }
 
     // Upon confirmation, change the header
     command(new CmdChangeHeader(hdr, this));
-    return true;
+    if (changed) *changed = true;
 }
 
 // HELPER FUNCTIONS

@@ -87,21 +87,24 @@ CmdChangeHeader::~CmdChangeHeader()
 {
     if (isObsolete())
     {
-        delete newHeader;
-        delete oldHeader;
+        // Delete the header that is not currently in the sheet
+        if (scene->getSheet()->getHeader() == newHeader)
+            delete oldHeader;
+        else
+            delete newHeader;
     }
 }
 
 void CmdChangeHeader::undo()
 {
-    if (newHeader != nullptr)
-        newHeader = newHeader->clone();
-    scene->setHeader(oldHeader);
+    //if (newHeader != nullptr)
+        //newHeader = newHeader->clone();
+    scene->setHeader(oldHeader, false); // newHeader will be automatically deleted
 }
 
 void CmdChangeHeader::redo()
 {
-    if (oldHeader != nullptr)
-        oldHeader = oldHeader->clone();
-    scene->setHeader(newHeader);
+    //if (oldHeader != nullptr)
+        //oldHeader = oldHeader->clone();
+    scene->setHeader(newHeader, false);
 }
