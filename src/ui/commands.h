@@ -5,6 +5,7 @@
 #include "sheetscene.h"
 #include "ui/objects/gobject.h"
 #include "ui/objects/gcompositeobject.h"
+#include "ui/objects/gheader.h"
 
 #include <QUndoCommand>
 
@@ -34,6 +35,19 @@ public:
 private:
     QList<QGraphicsItem *> list;
     QList<GCompositeObject *> parentList;
+    SheetScene *scene;
+};
+
+class CmdChangeHeader : public QUndoCommand
+{
+public:
+    CmdChangeHeader(Header *newHeader, SheetScene *scene);
+    ~CmdChangeHeader();
+    void undo() override;
+    void redo() override;
+
+private:
+    Header *newHeader, *oldHeader;
     SheetScene *scene;
 };
 

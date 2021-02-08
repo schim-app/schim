@@ -75,3 +75,33 @@ void CmdDeleteSelection::redo()
         scene->removeItem(item);
     }
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+CmdChangeHeader::CmdChangeHeader(Header *newHeader, SheetScene *scene)
+    : newHeader(newHeader), oldHeader(scene->getSheet()->getHeader()), scene(scene)
+{
+}
+
+CmdChangeHeader::~CmdChangeHeader()
+{
+    if (isObsolete())
+    {
+        delete newHeader;
+        delete oldHeader;
+    }
+}
+
+void CmdChangeHeader::undo()
+{
+    if (newHeader != nullptr)
+        newHeader = newHeader->clone();
+    scene->setHeader(oldHeader);
+}
+
+void CmdChangeHeader::redo()
+{
+    if (oldHeader != nullptr)
+        oldHeader = oldHeader->clone();
+    scene->setHeader(newHeader);
+}

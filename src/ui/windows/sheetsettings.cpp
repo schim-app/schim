@@ -4,9 +4,9 @@
 #include "ui/mainwindow.h"
 #include "fileio/xml.h"
 #include "global.h"
+#include "ui/commands.h"
 
 #include <QMessageBox>
-
 // TODO rm
 #include <QDebug>
 
@@ -72,7 +72,9 @@ void SheetSettings::accept()
         }
     }
     else
-        scene()->setHeader(nullptr);
+    {
+        scene()->command(new CmdChangeHeader(nullptr, scene()));
+    }
 
     parent->getSheet()->setTitle(ui->editSheetTitle->text());
     parent->getTabView()->setTabText(sheetId, ui->editSheetTitle->text());

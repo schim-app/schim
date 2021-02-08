@@ -203,17 +203,23 @@ void SheetScene::showGuides(bool show)
     showCursorGuides = show;
 }
 
+bool SheetScene::askHeaderChangeConfirmation() const
+{
+    if (sheet->getHeader() == nullptr ||
+            sheet->getHeader()->getSourceFile() == "")
+        return QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
+                == QMessageBox::Yes;
+    return true;
+}
+
 bool SheetScene::tryChangeHeader(Header *hdr)
 {
     // Ask the user for confirmation
-    if ((sheet->getHeader() == nullptr ||
-            sheet->getHeader()->getSourceFile() == "") &&
-            QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
-            == QMessageBox::No)
+    if (!askHeaderChangeConfirmation())
         return false;
 
     // Upon confirmation, change the header
-    setHeader(hdr);
+    command(new CmdChangeHeader(hdr, this));
     return true;
 }
 

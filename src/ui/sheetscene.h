@@ -74,6 +74,7 @@ public:
      */
     QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
+    bool askHeaderChangeConfirmation() const;
     bool tryChangeHeader(Header *hdr);
 
     // OVERRIDEN METHODS
