@@ -26,3 +26,12 @@ void Object::setParent(CompositeObject *parent)
 {
     this->parent = parent;
 }
+
+void Object::setProperty(const QString &name, const QString &value)
+{
+}
+
+QString Object::getProperty(const QString &name) const
+{
+    return "";
+}

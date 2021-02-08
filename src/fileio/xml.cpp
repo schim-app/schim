@@ -67,6 +67,16 @@ Variable xmlParseVariable(QXmlStreamReader &stream)
     return var;
 }
 
+void xmlReadProperties(Object *object, QXmlStreamReader &stream)
+{
+    try
+    {
+        foreach (const auto &attr, stream.attributes())
+            object->setProperty(attr.name().toString(), attr.value().toString());
+    }
+    catch (std::exception &e) { delete object; throw; }
+}
+
 /*********************
  * Parse by filename *
  *********************/
@@ -300,28 +310,8 @@ void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
 
 Line *xmlParseLine(QXmlStreamReader &stream)
 {
-    float x1 = 0, x2 = 0, y1 = 0, y2 = 0, linewidth = 0.5;
-
-    foreach (const auto &attr, stream.attributes())
-    {
-        bool conversion_ok;
-        if (attr.name() == "x1")
-            x1 = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "y1")
-            y1 = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "x2")
-            x2 = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "y2")
-            y2 = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "width")
-            linewidth = attr.value().toString().toFloat(&conversion_ok);
-        else
-            throw std::logic_error("Unknown line attribute: " + attr.name().toString().toStdString());
-        if (!conversion_ok)
-            throw std::logic_error("Line attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
-    }
-    Line *line = new Line(x1, y1, x2, y2);
-    line->setLinewidth(linewidth);
+    Line *line = new Line;
+    xmlReadProperties(line, stream);
     return line;
 }
 
@@ -330,12 +320,12 @@ void xmlWriteLine(Line *line, QXmlStreamWriter &stream)
     Line def; // Object with default values
     stream.writeStartElement("line");
 
-    stream.writeAttribute("x1", QString::number(line->p1().x()));
-    stream.writeAttribute("y1", QString::number(line->p1().y()));
-    stream.writeAttribute("x2", QString::number(line->p2().x()));
-    stream.writeAttribute("y2", QString::number(line->p2().y()));
+    stream.writeAttribute("x1", line->getProperty("x1"));
+    stream.writeAttribute("y1", line->getProperty("y1"));
+    stream.writeAttribute("x2", line->getProperty("x2"));
+    stream.writeAttribute("y2", line->getProperty("y2"));
     if (line->getLinewidth() != def.getLinewidth())
-        stream.writeAttribute("width", QString::number(line->getLinewidth()));
+        stream.writeAttribute("lw", line->getProperty("lw"));
 
     stream.writeEndElement();
 }
@@ -344,25 +334,9 @@ void xmlWriteLine(Line *line, QXmlStreamWriter &stream)
 
 Rect *xmlParseRect(QXmlStreamReader &stream)
 {
-    float x = 0, y = 0, w = 50, h = 50;
-
-    foreach (const auto &attr, stream.attributes())
-    {
-        bool conversion_ok;
-        if (attr.name() == "x")
-            x = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "y")
-            y = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "w")
-            w = attr.value().toString().toFloat(&conversion_ok);
-        else if (attr.name() == "h")
-            h = attr.value().toString().toFloat(&conversion_ok);
-        else
-            throw std::logic_error("Unknown rectangle attribute: " + attr.name().toString().toStdString());
-        if (!conversion_ok)
-            throw std::logic_error("Rectangle attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
-    }
-    return new Rect(x, y, w, h);
+    Rect *rect = new Rect;
+    xmlReadProperties(rect, stream);
+    return rect;
 }
 
 void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
@@ -370,10 +344,13 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
     Rect def; // Object with default values
     stream.writeStartElement("rect");
 
-    stream.writeAttribute("x", QString::number(rect->left()));
-    stream.writeAttribute("y", QString::number(rect->top()));
-    stream.writeAttribute("w", QString::number(rect->width()));
-    stream.writeAttribute("h", QString::number(rect->height()));
+    stream.writeAttribute("x", rect->getProperty("x"));
+    stream.writeAttribute("y", rect->getProperty("y"));
+    stream.writeAttribute("w", rect->getProperty("w"));
+    stream.writeAttribute("h", rect->getProperty("h"));
+
+    if (rect->getLinewidth() != def.getLinewidth())
+        stream.writeAttribute("lw", rect->getProperty("lw"));
 
     stream.writeEndElement();
 }
@@ -383,36 +360,7 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream)
 Text *xmlParseText(QXmlStreamReader &stream)
 {
     Text *text = new Text;
-
-    try
-    {
-        float x = text->getPos().x(), y = text->getPos().y();
-        foreach (const auto &attr, stream.attributes())
-        {
-            bool conversion_ok = true;
-            if (attr.name() == "text")
-                text->setText(attr.value().toString());
-            else if (attr.name() == "x")
-                x = attr.value().toString().toFloat(&conversion_ok);
-            else if (attr.name() == "y")
-                y = attr.value().toString().toFloat(&conversion_ok);
-            else if (attr.name() == "height")
-                text->setTextHeight(attr.value().toString().toFloat(&conversion_ok));
-            else if (attr.name() == "font")
-                text->setFont(attr.value().toString());
-            else
-                throw std::logic_error("Unknown attribute for text object: " + attr.name().toString().toStdString());
-            if (!conversion_ok)
-                throw std::logic_error("Rectangle attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
-
-            text->setPos({x, y});
-        }
-    }
-    catch (...)
-    {
-        delete text; throw;
-    }
-
+    xmlReadProperties(text, stream);
     return text;
 }
 
@@ -423,9 +371,9 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream)
 
     if (text->getText() != def.getText())
         stream.writeAttribute("text", text->getText());
-    stream.writeAttribute("x", QString::number(text->getPos().x()));
-    stream.writeAttribute("y", QString::number(text->getPos().y()));
-    stream.writeAttribute("height", QString::number(text->getTextHeight()));
+    stream.writeAttribute("x", text->getProperty("x"));
+    stream.writeAttribute("y", text->getProperty("y"));
+    stream.writeAttribute("height", text->getProperty("height"));
     if (text->getFont() != def.getFont())
         stream.writeAttribute("font", text->getFont());
 
@@ -446,7 +394,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
         {
             // The content is taken from another file
             obj = parseCompositeObject(resolvePath(attr.value().toString()));
-            //obj->setSourceFile(attr.value().toString());
+            obj->setSourceFile(attr.value().toString());
         }
     }
 

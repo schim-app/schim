@@ -38,11 +38,6 @@ void Text::setFont(const QString &name)
     font = name;
 }
 
-Object *Text::clone() const
-{
-    return new Text(*this);
-}
-
 QPointF Text::getPos() const
 {
     return *this;
@@ -76,4 +71,41 @@ float Text::getTextHeight() const
 QString Text::getFont() const
 {
     return font;
+}
+
+void Text::setProperty(const QString &name, const QString &value)
+{
+    float val;
+    bool conversion_ok;
+
+#define set_float_property(NAME, COMMAND) \
+    if (name == NAME) { \
+        val = value.toFloat(&conversion_ok); \
+        if (!conversion_ok) \
+            throw std::logic_error("Text property \"" + name.toStdString() + "\" is of invalid format"); \
+        COMMAND; \
+        return; \
+    }
+
+    set_float_property("x", setPos({val, getPos().y()}));
+    set_float_property("y", setPos({getPos().x(), val}));
+    set_float_property("height", setTextHeight(val));
+    if (name == "text") setText(value);
+    else if (name == "font") setFont(value);
+    else throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for text");
+}
+
+QString Text::getProperty(const QString &name) const
+{
+    if (name == "x") return QString::number(getPos().x());
+    if (name == "y") return QString::number(getPos().y());
+    if (name == "height") return QString::number(getTextHeight());
+    if (name == "text") return getText();
+    if (name == "font") return getFont();
+    else throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for text");
+}
+
+Object *Text::clone() const
+{
+    return new Text(*this);
 }

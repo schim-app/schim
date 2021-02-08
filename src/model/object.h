@@ -2,6 +2,7 @@
 #define ELEMENT_H
 
 #include <QPointF>
+#include <QString>
 
 class CompositeObject;
 class Sheet;
@@ -49,6 +50,9 @@ public:
     virtual void setPos(const QPointF &pos);
     void setSheet(Sheet *sheet);
     void setParent(CompositeObject *parent);
+
+    virtual void setProperty(const QString &name, const QString &value);
+    virtual QString getProperty(const QString &name) const;
 
     virtual Object *clone() const = 0;
 

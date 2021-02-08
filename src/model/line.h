@@ -27,6 +27,9 @@ public:
     void setLinewidth(float w);
     void setPos(const QPointF &pos) override;
 
+    void setProperty(const QString &name, const QString &value) override;
+    QString getProperty(const QString &name) const override;
+
     Object *clone() const override;
 
     friend class GLine;

@@ -19,14 +19,17 @@ public:
     void setTextHeight(float height);
     void setFont(const QString &name);
 
-    Object *clone() const override;
-
     QPointF getPos() const override;
     QString getText() const;
     QString getDisplayText(const VariableSet &variableList) const;
     QString getDisplayText() const;
     float getTextHeight() const;
     QString getFont() const;
+
+    void setProperty(const QString &name, const QString &value) override;
+    QString getProperty(const QString &name) const override;
+
+    Object *clone() const override;
 
 private:
     QString text, font = "Sans Serif";

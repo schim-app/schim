@@ -24,8 +24,13 @@ public:
     Rect(const Rect &rect);
 
     QPointF getPos() const override;
+    float getLinewidth() const;
 
     void setPos(const QPointF &pos) override;
+    void setLinewidth(float lw);
+
+    void setProperty(const QString &name, const QString &value) override;
+    QString getProperty(const QString &name) const override;
 
     Object *clone() const override;
 
