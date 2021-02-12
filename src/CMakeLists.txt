@@ -15,13 +15,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Widgets Xml Svg PrintSupport REQUIRED)
 
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/libdxflib.a
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a
     COMMENT "Building dxflib..."
     COMMAND mkdir -p dxflib
-    COMMAND cd dxflib/ && qmake ${CMAKE_SOURCE_DIR}/dxflib/ && make
+	COMMAND cd dxflib/ && qmake CONFIG+=warn_off ${CMAKE_SOURCE_DIR}/dxflib/ && make
     COMMAND cp ${CMAKE_SOURCE_DIR}/dxflib/src/*.h dxflib/
+    # TODO I don't know why it compiles inside release/ on Windows
+    COMMAND cp dxflib/release/libdxflib.a dxflib/ || true
 )
-add_custom_target(dxf DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libdxflib.a)
+add_custom_target(dxf DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a)
 
 add_executable(schim
     fileio/database.cpp 
@@ -113,9 +115,13 @@ add_executable(schim
     ui/windows/sheetsettings.ui 
     ui/windows/textsettings.ui
 )
+if (WIN32)
+	target_link_options(schim PRIVATE -mwindows)
+endif()
 
 add_dependencies(schim dxf)
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/dxflib)
 add_library(dxflib STATIC IMPORTED)
 set_target_properties(dxflib PROPERTIES
     IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a"

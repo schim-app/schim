@@ -20,6 +20,7 @@ clean:
 all: Makefile man html
 
 man: Makefile
+ifdef (${OS},UNIX)
 	mkdir -p _build/man
 	@for file in man/*.rst; do \
 		outname="$$(echo "$$file" | sed 's:\.rst::g')"; \
@@ -27,6 +28,7 @@ man: Makefile
 		echo $$text; \
 		eval $$text; \
 	done
+endif
 
 # TODO the catch-all catches 'all' target as well
 # TODO change back to catch-all once I figure it out
@@ -40,4 +42,10 @@ html: Makefile doxygen
 doxygen:
 	@mkdir -p _build/doxygen
 	@doxygen
+	@echo _build/doxygen/html/class*__inherit__graph.svg
+ifdef (${OS},UNIX)
+	@for file in _build/doxygen/html/class*__inherit__graph.svg; do \
+		mv "$$file" "$$(echo "$$file" | sed 's/inherit__graph/inh/')"; \
+	done
 	@scripts/rename _build/doxygen/html
+endif
