@@ -12,7 +12,7 @@ BUILDDIR      = _build
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile
+.PHONY: help Makefile man html
 
 clean:
 	rm -rf _build/
@@ -20,7 +20,7 @@ clean:
 all: Makefile man html
 
 man: Makefile
-ifdef (${OS},UNIX)
+ifneq (${OS},Windows_NT)
 	mkdir -p _build/man
 	@for file in man/*.rst; do \
 		outname="$$(echo "$$file" | sed 's:\.rst::g')"; \
@@ -42,8 +42,7 @@ html: Makefile doxygen
 doxygen:
 	@mkdir -p _build/doxygen
 	@doxygen
-	@echo _build/doxygen/html/class*__inherit__graph.svg
-ifdef (${OS},UNIX)
+ifneq (${OS},Windows_NT)
 	@for file in _build/doxygen/html/class*__inherit__graph.svg; do \
 		mv "$$file" "$$(echo "$$file" | sed 's/inherit__graph/inh/')"; \
 	done
