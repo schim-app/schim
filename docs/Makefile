@@ -16,10 +16,9 @@ help:
 
 all: man html qthelp
 
-html: doxygen
+html:
 	@scripts/gen-tree
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
-	cd _build/ && mkdir -p html/doxygen && cp -r doxygen/html/* html/doxygen
 
 latex: doxygen
 	@scripts/gen-tree
@@ -39,6 +38,7 @@ ifneq (${OS},Windows_NT)
 	done
 endif
 
+# This target is will be built from conf.py
 doxygen:
 	@mkdir -p _build/doxygen
 	@doxygen

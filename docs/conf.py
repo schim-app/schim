@@ -39,6 +39,13 @@ breathe_default_members = ('members', 'protected-members', 'undoc-members')
 primary_domain = 'cpp'
 highlight_language = 'cpp'
 
+# Build doxygen from here -- ReadTheDocs requires this
+import subprocess
+subprocess.call('mkdir -p _build/doxygen', shell=True)
+subprocess.call('make doxygen', shell=True)
+subprocess.call('cd _build/ && mkdir -p html/doxygen && cp -r doxygen/html/* html/doxygen',
+        shell=True)
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'

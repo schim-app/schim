@@ -1,3 +1,3 @@
 [submodule "src/dxflib"]
 	path = src/dxflib
-	url = git@github.com:HarisGusic/dxflib.git
+	url = https://github.com/HarisGusic/dxflib
