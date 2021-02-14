@@ -4,6 +4,8 @@ Quick Start
 
 .. toctree::
 
+.. todo:: Simply redirect to github page?
+
 Building Schim
 ==============
 

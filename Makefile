@@ -35,14 +35,16 @@ CMAKE_BUILD = cmake --build ./ -j ${JOBS}
 app: qthelp
 	mkdir -p "${BUILD_DIR}"
 	cd "${BUILD_DIR}"; ${CMAKE} && ${CMAKE_BUILD}
-	@####
+	@# Setup directory structure
 	cd "${BUILD_DIR}"; \
 	mkdir -p dest/bin \
 		"dest/${ICON_DIR}/apps" \
 		"dest/${SHARE_DIR}/symb"; \
-	cp schim dest/bin/; \
-	cp ../../res/img/icon.svg "dest/${ICON_DIR}/apps/schim.svg"; \
-	cp -r ../../res/symb/* "dest/${SHARE_DIR}/symb/"
+	cp schim dest/bin/
+	@# Create launcher and copy resources
+	cp misc/schim.sh "${BUILD_DIR}/"; \
+	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"; \
+	cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"
 ifeq ($(OS),Windows_NT)
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe
 endif
