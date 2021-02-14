@@ -1,5 +1,5 @@
 
-# <img align="left" width="40" height="40" src="../res/img/icon.svg" alt="Icon"/> Schim documentation
+# <img align="left" width="25" src="../res/img/icon.svg" alt="Icon"/> Schim documentation
 
 The documentation is built using [Sphinx](https://www.sphinx-doc.org/en/master/)
 and hosted on the great [ReadTheDocs](https://schim.rtfd.io). Also, the HTML

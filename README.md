@@ -1,13 +1,14 @@
 <p align="center">
     <img alt="schim logo" src="res/img/icon.svg" width="80px" />
-    <h1 style="border-bottom: none" align="center">Schim</h1>
-    <h3 align="center">A schematic editor for the modern computer user</h2>
+    <h1 align="center">Schim</h1>
+    <h3 align="center">A schematic editor for the modern computer user</h3>
 </p>
+
 ---
 
 Welcome to the official Schim repository.
 
-<h3 style="font-weight:normal" align="center"> Schim = <i><b>SCH</b>ematic <b>IM</b>proved</i> </h4>
+<h3 style="font-weight:normal" align="center"> Schim = <i><b>SCH</b>ematic <b>IM</b>proved</i> </h3>
 
 **Schim** is a tool used to create electrical schematics, mainly for industrial
 applications. It aspires to become the standard open source tool for this
