@@ -19,6 +19,8 @@ else
 endif
 CMAKE_BUILD = cmake --build ./ -j ${JOBS}
 
+.PHONY: docs
+
 ###########
 # COMPILE #
 ###########
@@ -41,7 +43,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 # DOCS
-docs: Makefile
+docs: 
 	cd docs; "${MAKE}" all
 
 # BINARY + DOCS
@@ -64,11 +66,6 @@ uninstall:
 		"${INSTALL_DIR}/${ICON_DIR}/apps/schim.svg" \
 		"${INSTALL_DIR}/${SHARE_DIR}" \
 		"${INSTALL_DIR}/${MAN_DIR}"
-
-# TODO remove this?
-package: app
-	cd _build/release; \
-	tar --transform 's_^dest_usr/local_' -cvf schim.pkg.tar.zst dest/
 
 clean:
 	rm -rf _build/*

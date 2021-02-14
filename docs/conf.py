@@ -12,7 +12,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Schim'
-copyright = '2020, Haris Gušić'
+copyright = '2021, Haris Gušić'
 author = 'Haris Gušić'
 
 # -- General configuration ---------------------------------------------------
@@ -42,6 +42,6 @@ highlight_language = 'cpp'
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
-html_favicon = '../img/icon.svg'
+html_favicon = '../res/img/icon.svg'
 
 html_static_path = ['_static']

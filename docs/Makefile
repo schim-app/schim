@@ -14,12 +14,21 @@ help:
 
 .PHONY: help Makefile man html
 
-clean:
-	rm -rf _build/
+all: man html qthelp
 
-all: Makefile man html
+html: doxygen
+	@scripts/gen-tree
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
+	cd _build/ && mkdir -p html/doxygen && cp -r doxygen/html/* html/doxygen
 
-man: Makefile
+latex: doxygen
+	@scripts/gen-tree
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
+
+qthelp:
+	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
+
+man:
 ifneq (${OS},Windows_NT)
 	mkdir -p _build/man
 	@for file in man/*.rst; do \
@@ -30,21 +39,18 @@ ifneq (${OS},Windows_NT)
 	done
 endif
 
-# TODO the catch-all catches 'all' target as well
-# TODO change back to catch-all once I figure it out
-
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-html: Makefile doxygen
-	@scripts/gen-tree
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
 doxygen:
 	@mkdir -p _build/doxygen
 	@doxygen
-ifneq (${OS},Windows_NT)
+ifneq (${OS},Windows_NT) # TODO reinstate this again on Windows
 	@for file in _build/doxygen/html/class*__inherit__graph.svg; do \
-		mv "$$file" "$$(echo "$$file" | sed 's/inherit__graph/inh/')"; \
+		cp "$$file" "$$(echo "$$file" | sed 's/inherit__graph/inh/')"; \
 	done
-	@scripts/rename _build/doxygen/html
 endif
+
+pdf: latex
+	cd _build/latex/ && pdflatex -interaction=nonstopmode schim.tex
+
+clean:
+	rm -rf _build/
+
