@@ -6,9 +6,13 @@
 
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
 
+#define SHARE_DIR "../share/schim"
+
 #ifdef QT_DEBUG
+#define QT_HELP "../../docs/_build/qthelp/Schim.qhc"
 static QString systemSymbolPath = "../../res/symb", systemMacroPath = "../../macros";
 #else
+#define QT_HELP SHARE_DIR "/Schim.qhc"
 static QString systemSymbolPath = "../share/schim/symb", systemMacroPath = "macros";
 #endif
 

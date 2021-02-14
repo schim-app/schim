@@ -12,7 +12,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets Xml Svg PrintSupport REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a
@@ -67,47 +67,6 @@ add_executable(schim
     ui/windows/componentsettings.cpp 
     ui/windows/sheetsettings.cpp 
     ui/windows/textsettings.cpp
-### HEADERS ###
-    fileio/database.h 
-    fileio/dxf.h 
-    fileio/miscfiles.h 
-    fileio/pdf.h 
-    fileio/xml.h 
-    global.h 
-    model/component.h 
-    model/compositeobject.h 
-    model/objectarray.h 
-    model/special/corner.h 
-    model/device.h 
-    model/header.h 
-    model/line.h 
-    model/object.h 
-    model/project.h 
-    model/rect.h 
-    model/sheet.h 
-    model/special/linearobjectarray.h 
-    model/text.h 
-    model/variable.h 
-    ui/commands.h 
-    ui/mainwindow.h 
-    ui/objects/gcomponent.h 
-    ui/objects/gcompositeobject.h 
-    ui/objects/gheader.h 
-    ui/objects/gline.h 
-    ui/objects/gobject.h 
-    ui/objects/grect.h 
-    ui/objects/gtext.h 
-    ui/objects/special/glinearobjectarray.h 
-    ui/operations.h 
-    ui/sheetscene.h 
-    ui/sheetview.h 
-    ui/vimlike.h 
-    ui/widgets/componentlist.h 
-    ui/widgets/componentcompleter.h 
-    ui/widgets/variableeditor.h 
-    ui/windows/componentsettings.h 
-    ui/windows/sheetsettings.h 
-    ui/windows/textsettings.h
 ### FORMS ###
     ui/mainwindow.ui 
     ui/widgets/variableeditor.ui 
@@ -133,5 +92,6 @@ target_link_libraries(schim
     Qt5::Xml
     Qt5::Svg
     Qt5::PrintSupport
+    Qt5::Help
     dxflib
 )

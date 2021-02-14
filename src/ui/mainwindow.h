@@ -102,6 +102,7 @@ private slots:
     void cursorDown();
     void cursorUp();
     void cursorRight();
+    void showHelp();
 
     void on_todoButton_pressed();
 

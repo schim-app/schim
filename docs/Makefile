@@ -14,7 +14,7 @@ help:
 
 .PHONY: help Makefile man html
 
-all: man html qthelp
+all: man html qthelp pdf
 
 html:
 	@scripts/gen-tree
@@ -26,6 +26,7 @@ latex: doxygen
 
 qthelp:
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
+	cd _build/qthelp && qhelpgenerator Schim.qhcp
 
 man:
 ifneq (${OS},Windows_NT)

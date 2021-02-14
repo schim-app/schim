@@ -11,7 +11,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QScrollBar>
+#include <QProcess> // For QtAssistant help
 
+#include <QDebug>
 
 MainWindow* MainWindow::instance{};
 
@@ -436,6 +438,14 @@ void MainWindow::cursorRight()
         vimdo scene()->cursorRight();
 }
 
+void MainWindow::showHelp()
+{
+    // TODO make attribute of MainWindow, take care of destruction, etc.
+    QProcess *process = new QProcess;
+    process->start(QLatin1String("assistant"),
+                   QStringList{"-collectionFile", qApp->applicationDirPath() + "/" QT_HELP});
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -506,17 +516,18 @@ void MainWindow::setupActions()
         { new QAction("Move cursor down", this), {}, {Qt::Key_J}, &MainWindow::cursorDown},
         { new QAction("Move cursor up", this), {}, {Qt::Key_K}, &MainWindow::cursorUp},
         { new QAction("Move cursor right", this), {}, {Qt::Key_L}, &MainWindow::cursorRight},
-        { ui->actionNew, {},  {}, &MainWindow::newProject},
-        { ui->actionOpen, {},  {}, &MainWindow::openProject},
-        { ui->actionSave, {}, {}, &MainWindow::save},
-        { ui->actionSaveAs, {}, {}, &MainWindow::saveAs},
-        { ui->actionPrint, {}, {}, &MainWindow::print},
-        { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet},
-        { ui->actionInsertLine, {}, {}, &MainWindow::insertLine},
-        { ui->actionInsertRect, {}, {}, &MainWindow::insertRect},
-        { ui->actionInsertText, {}, {}, &MainWindow::insertText},
-        { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet},
-        { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet},
+        { ui->actionHelp, {}, {}, &MainWindow::showHelp },
+        { ui->actionNew, {},  {}, &MainWindow::newProject },
+        { ui->actionOpen, {},  {}, &MainWindow::openProject },
+        { ui->actionSave, {}, {}, &MainWindow::save },
+        { ui->actionSaveAs, {}, {}, &MainWindow::saveAs },
+        { ui->actionPrint, {}, {}, &MainWindow::print },
+        { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet },
+        { ui->actionInsertLine, {}, {}, &MainWindow::insertLine },
+        { ui->actionInsertRect, {}, {}, &MainWindow::insertRect },
+        { ui->actionInsertText, {}, {}, &MainWindow::insertText },
+        { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet },
+        { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet },
     };
     if (vimEnabled)
         foreach (auto action, additionalActions)
