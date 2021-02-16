@@ -52,7 +52,9 @@ endif
 qthelp:
 	mkdir -p "${BUILD_DIR}/dest/${SHARE_DIR}"
 	cd docs && "${MAKE}" qthelp
-	cp docs/_build/qthelp/Schim.qhc "${BUILD_DIR}/dest/${SHARE_DIR}/"
+	@echo "Copying help files to destination directory..."
+	@cp docs/_build/qthelp/Schim.{qhc,qch} "${BUILD_DIR}/dest/${SHARE_DIR}/"
+	@echo "Help files successfully generated."
 
 man:
 	mkdir -p "${BUILD_DIR}/dest/${SHARE_DIR}"
