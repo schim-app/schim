@@ -58,7 +58,6 @@ To build Schim, you need to have the following dependencies installed:
 
 * [Python](https://python.org) >= 3.7
 * [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html) >= 3.0.0 for help
-* [python-docutils](https://pypi.org/project/docutils/) for man pages
 
 ### Linux
 
@@ -76,7 +75,7 @@ cd _build/release/;
 ./schim.sh
 ```
 
-If you wish to install Schim into a custom directory, run the following command
+If you wish to install Schim into a custom directory, run the following command:
 
 ```shell
 make install INSTALL_DIR=<DIR>
