@@ -37,7 +37,7 @@ and can't modify it. Schim operates with files that are human readable and uses
 a project directory structure, which allows you to tweak those files with any
 tools you can muster.
 
-Be Productive
+Designed for Productivity
    ..
 
 It is also designed to maximize productivity. As the name might suggest, it also

@@ -3,6 +3,7 @@ User Manual
 ===========
 
 .. toctree::
+   :maxdepth: 5
 
 Getting Started
 ===============

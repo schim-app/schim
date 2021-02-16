@@ -38,7 +38,7 @@ pip install sphinx breathe docutils sphinx-rtd-theme
 
 #### Other dependencies (TODO add more)
 * qt5-tools (for Qt Help)
-
+* [https://pandoc.org](Pandoc) (for converting man -> rst) TODO alternative?
 ---
 
 Once the dependencies are satisfied, the documentation can be built by the

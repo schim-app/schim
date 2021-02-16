@@ -6,7 +6,7 @@
 #include <QLineF>
 
 /**
- * Class that represents a line object.
+ * @brief Class that represents a line object.
  *
  * It inherits QLineF so we don't have to reimplement convenience
  * functions that QLineF already provides.

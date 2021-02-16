@@ -15,7 +15,7 @@ JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).
 ################
 
 CMAKE_PREFIX_PATH ?= 
-ifeq ($(OS),Windows_NT)
+ifeq (${OS},Windows_NT)
 	CMAKE = cmake -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
 			-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${TYPE} ../../src/
 else
@@ -45,7 +45,7 @@ app: qthelp
 	cp misc/schim.sh "${BUILD_DIR}/"; \
 	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"; \
 	cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"
-ifeq ($(OS),Windows_NT)
+ifeq (${OS},Windows_NT)
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe
 endif
 
@@ -67,7 +67,7 @@ install: app man
 	mkdir -p "${INSTALL_DIR}"
 	mkdir -p "${INSTALL_DIR}/${MAN_DIR}"
 	cp -r "${BUILD_DIR}"/dest/* "${INSTALL_DIR}"
-	cp -r docs/_build/man/* "${INSTALL_DIR}/${MAN_DIR}"
+	cp -r docs/_build/man/*.1 "${INSTALL_DIR}/${MAN_DIR}"
 
 uninstall:
 	rm -rf "${INSTALL_DIR}/bin/schim" \

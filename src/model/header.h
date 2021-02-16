@@ -51,8 +51,9 @@ public:
 
 protected:
     /**
-     * Clear all objects that are configurable (display rows, columns, etc.) from the list of children.
-     * The objects are also deleted. Objects that are not configurable are untouched.
+     * Clear all objects that are configurable (display rows, columns, etc.)
+     * from the list of children. The objects are also deleted. Objects that are
+     * not configurable are untouched.
      */
     virtual void clear();
 

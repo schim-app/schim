@@ -25,11 +25,11 @@ Documentation
 Directory Structure
 ===================
 
-For the sake of clarity, ``.cpp`` files with matching ``.h`` files have been
-omitted. All ``.h`` files have matching ``.cpp`` files.
+For the sake of clarity, ``cpp`` files with matching ``.h`` files have been
+omitted. All ``.h`` files have matching ``cpp`` files.
 
-.. include:: tree.txt
-   :literal:
+.. literalinclude:: tree.txt
+   :language: none
 
 Conceptual Structure
 ====================
