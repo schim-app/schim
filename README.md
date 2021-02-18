@@ -58,6 +58,7 @@ To build Schim, you need to have the following dependencies installed:
 
 * [Python](https://python.org) >= 3.7
 * [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html) >= 3.0.0 for help
+* qt5-assistant
 
 ### Linux
 

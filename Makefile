@@ -3,7 +3,7 @@ INSTALL_DIR ?= /usr/local
 
 TYPE ?= Release
 
-BUILD_DIR = _build/$(shell if [ ${TYPE} == Release ]; then echo release; else echo debug; fi)
+BUILD_DIR = _build/$(shell [ "${TYPE}" = Release ] && echo release || echo debug)
 ICON_DIR = share/icons/hicolor/scalable
 SHARE_DIR = share/schim
 MAN_DIR = share/man/man1
