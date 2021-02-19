@@ -1,7 +1,0 @@
-=====
-GText
-=====
-
-.. toctree::
-
-.. doxygenclass:: GText

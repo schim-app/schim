@@ -17,12 +17,12 @@ author = 'Haris Gušić'
 #########################
 
 extensions = [
-        'sphinx.ext.todo', 'breathe', 'sphinx.ext.autosectionlabel'
+        'sphinx.ext.todo', 'breathe', 'sphinx.ext.autosectionlabel',
+        'sphinx_tabs.tabs'
 ]
 
 # Note: the man/ directory has its own conf.py and is not built by this one
-exclude_patterns = ['_build', 'man', 'Thumbs.db', '.DS_Store']
-
+exclude_patterns = ['_build', 'man', 'inc', 'Thumbs.db', '.DS_Store']
 todo_include_todos = True
 
 ##################
@@ -33,7 +33,7 @@ breathe_projects = { "Schim": "_build/doxygen/xml/" }
 breathe_default_project = "Schim"
 # Stop breathe from ignoring main.cpp
 breathe_implementation_filename_extensions = []
-breathe_default_members = ('members', 'protected-members', 'undoc-members')
+breathe_default_members = ('members')
 
 primary_domain = 'cpp'
 highlight_language = 'cpp'
@@ -45,13 +45,16 @@ highlight_language = 'cpp'
 html_theme = 'sphinx_rtd_theme'
 html_favicon = '../res/img/icon.svg'
 
-#################
-# Miscellaneous #
-#################
+##########
+# Markup #
+##########
 
 smartquotes = False # Do not display '--' as long dashes
+default_role = 'envvar' # Like :code: role, but the text is black
 
-# Additional build steps
+##########################
+# Additional build steps #
+##########################
 
 # ReadTheDocs doesn't use Make -- it builds directly using sphinx
 if READTHEDOCS:

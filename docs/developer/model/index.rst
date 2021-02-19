@@ -5,11 +5,11 @@ Model
 .. toctree::
 
 Everything that exists in a project is represented by a model class, including
-the project itself. A model class contains those attributes that are consistent
-regardless of the format in which something is accessed. For example, the model
-class of an object does not contain information about whether the object is
-selected for editing, because that is only relevant in the context of the
-graphical editor.  All model classes reside in files under the ``src/model/``
+the project itself. A model class contains those attributes that remain the
+same regardless of the format in which something is accessed. For example, the
+model class of an object does not contain information about whether the object
+is selected for editing, because that is only relevant in the context of the
+graphical editor.  All model classes reside in files under the `src/model/`
 directory or one of its subdirectories.
 
 Project
@@ -18,22 +18,55 @@ Project
 A project is nothing more than a collection of sheets (of paper) and some
 configured parameters.
 
-.. doxygenclass:: Project
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Project
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Project
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classProject.html>`_
+     ..
 
 Sheet
 =====
 
-.. doxygenclass:: Sheet
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Sheet
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Sheet
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classSheet.html>`_
+     ..
 
 Object
 ======
 
 All objects are derived from the base class Object.
 
-.. doxygenclass:: Object
-   :protected-members:
-   :private-members:
-   :undoc-members:
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Object
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Object
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classObject.html>`_
+     ..
 
 .. image:: /_build/doxygen/html/classObject__inh.svg
    :align: center
@@ -42,34 +75,53 @@ Primitive objects
 =================
 
 Objects that directly inherit from the class :ref:`Object` (apart from
-:ref:`CompositeObject`) are primitive objects. Currently, the following primitive
-objects are defined:
+:ref:`CompositeObject<Composite objects>`) are primitive objects. Currently, the
+following primitive objects are defined:
 
-.. toctree::
-   :maxdepth: 1
-
-   objects/line.rst
-   objects/rect.rst
-   objects/text.rst
+* `Line <../../doxygen/classLine.html>`_
+* `Rect <../../doxygen/classRect.html>`_
+* `Text <../../doxygen/classText.html>`_
 
 Composite objects
 =================
 
 Objects like electrical devices consist of multiple primitive objects such as
 lines, rectangles, etc. Such objects are called composite objects. They are all
-derived from the class :ref:`CompositeObject`, which in turn inherits
-:ref:`Object`.
+derived from the class :ref:`CompositeObject<Composite objects>`, which in turn
+inherits :ref:`Object`.
 
-The core differentiator between primitive and composite objects is that
-composite objects have is that they contain a list (by inheriting QList as well)
-of objects they are composed of.
+.. tabs::
 
-.. doxygenclass:: CompositeObject
+   .. tab:: Outline
+
+      .. doxygenclass:: CompositeObject
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: CompositeObject
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classCompositeObject.html>`_
+     ..
 
 Variables
 =========
 
-For familiarity with the concept of variables, see :ref:`variables_manual` in
+For familiarity with the concept of variables, see :ref:`manual_variables` in
 the user manual.
 
-.. doxygenstruct:: Variable
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenstruct:: Variable
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenstruct:: Variable
+         :no-link:
+         :undoc-members:
+
+* `Full reference <../../doxygen/structVariable.html>`_
+     ..
+

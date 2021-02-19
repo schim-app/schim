@@ -1,7 +1,0 @@
-====
-Rect
-====
-
-.. toctree::
-
-.. doxygenclass:: Rect

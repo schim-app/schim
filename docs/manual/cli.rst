@@ -1,4 +1,3 @@
-======================
 Command Line Interface
 ======================
 
@@ -17,7 +16,11 @@ Command Line Interface
       ../man/schim-set.rst
       ../man/schim-alias.rst
 
-.. only:: not ReadTheDocs
+.. TODO we get a warning here because ../_intermediate/man/ does not exist
+   although none of the conditions (not ReadTheDocs and not qthelp) are
+   satisfied. This is probably a bug with Sphinx
+
+.. only:: not ReadTheDocs and not qthelp
 
    .. toctree::
       :maxdepth: 1

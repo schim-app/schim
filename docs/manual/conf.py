@@ -1,10 +1,14 @@
-# -- Project information -----------------------------------------------------
+#######################
+# Project information #
+#######################
 
 project = 'Schim'
 copyright = '2021, Haris Gušić'
 author = 'Haris Gušić'
 
-# -- General configuration ---------------------------------------------------
+#########################
+# General configuration #
+#########################
 
 extensions = [
         'sphinx.ext.todo', 'sphinx.ext.autosectionlabel'

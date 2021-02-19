@@ -9,10 +9,10 @@ Project files use the extension .xproj whereas symbol files use the .xsym
 extension. Other than XML, Schim projects and symbols can be exported
 to/imported from DXF (.dxf) and exported to the following formats:
 
-- Portable Document Format (.pdf)
-- Common image formats (.jpg, .png, .svg)
+- Portable Document Format ( `.pdf` )
+- Common image formats ( `.jpg`, `.png`, `.svg` )
 
-.. _manual-xml:
+.. _manual_xml:
 
 XML
 ===

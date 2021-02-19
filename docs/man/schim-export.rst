@@ -7,6 +7,8 @@ SYNOPSIS
 
 .. code-block:: none
 
+   schim [--version|--help]
+   schim [<command>] [<options>]
    schim export [<options>] [<INPUT-FILE>]
    schim export [<options>] -
 
@@ -28,17 +30,17 @@ to **stdout**.
 OPTIONS
 =======
 
-   **-h\ , --help**
+   `-h` , `--help`
       Prints the synopsis and a list of the most commonly used options.
 
-   **-f**\ *<FORMAT>,*\ **--format\ =**\ *<FORMAT>*
+   `-f \<FORMAT\>`, `--format=\<FORMAT\>`
       Set the output format. Can be one of: pdf, png, svg. By omitting
       this option, pdf is automatically used.
 
-   **-o**\ *<FILE>,*\ **--output\ =**\ *<FILE>*
+   `-o <FILE>`, `--output=\<FILE\>`
       The output is written to <FILE>.
 
-   **-r**\ *<SHEETS>,*\ **--range\ =**\ *<SHEETS>*
+   `-r \<SHEETS\>`, `--range=\<SHEETS\>`
       The range of the document to be exported. <SHEETS> can be
       specified as a list of comma-separated page numbers (e.g.
       '1,2,4'), a range (e.g. '2-5'), or a combination of both (e.g.

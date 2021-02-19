@@ -46,7 +46,11 @@ TODO: Make AUR repo
 
 ## Building
 
-To build Schim, you need to have the following dependencies installed:
+### Cloning
+
+```shell
+git clone --recurse-submodules 'https://github.com/HarisGusic/schim'
+```
 
 ### Build dependencies (TODO check versions)
 

@@ -7,14 +7,23 @@ GUI
 The main window
 ===============
 
-The main window form is defined in ``src/ui/mainwindow.ui``. The class holds a
-static instance of ``MainWindow`` called ``instance``, which allows other
-classes to access the main window.
+The class holds a static instance of ``MainWindow`` called ``instance``, which
+allows other classes to access the main window.
 
-src/ui/mainwindow.h
-   ..
+.. tabs::
 
-.. doxygenclass:: MainWindow
+   .. tab:: Outline
+
+      .. doxygenclass:: MainWindow
+         :outline:
+         :no-link:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: MainWindow
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classMainWindow.html>`_
+     ..
 
 The schematic editor
 ====================
@@ -36,18 +45,28 @@ the letter 'G' (for graphical). For example, a :ref:`Line` is wrapped by
 
 The following classes are derived from :ref:`GObject`:
 
-.. toctree::
-
-   gobjects/gline.rst
-   gobjects/grect.rst
-   gobjects/gtext.rst
-   gobjects/gcompositeobject.rst
-   gobjects/gheader.rst
+* `GLine <../../doxygen/classGLine.html>`_
+* `GRect <../../doxygen/classGRect.html>`_
+* `GText <../../doxygen/classGText.html>`_
+* `GCompositeObject <../../doxygen/classGCompositeObject.html>`_
+* `GHeader <../../doxygen/classGHeader.html>`_
 
 .. image:: /_build/doxygen/html/classGObject__inh.svg
    :align: center
 
-.. doxygenclass:: GObject
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: GObject
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: GObject
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classGObject.html>`_
+     ..
 
 .. _QGraphicsView: https://doc.qt.io/qt-5/qgraphicsview.html
 .. _QGraphicsScene: https://doc.qt.io/qt-5/qgraphicsscene.html

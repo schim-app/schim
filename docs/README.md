@@ -44,5 +44,6 @@ pip install sphinx sphinx-rtd-theme breathe
 
 #### Other dependencies
 * Make >= TODO
+* Doxygen >= TODO
 * qt5-tools >= TODO (for Qt Help)
 

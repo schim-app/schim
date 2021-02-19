@@ -1,7 +1,0 @@
-====
-Line
-====
-
-.. toctree::
-
-.. doxygenclass:: Line

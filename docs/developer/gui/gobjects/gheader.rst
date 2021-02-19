@@ -1,7 +1,0 @@
-=======
-GHeader
-=======
-
-.. toctree::
-
-.. doxygenclass:: GHeader
