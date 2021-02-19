@@ -8,7 +8,7 @@ BUILDDIR      = _build
 help:
 	@${SPHINXBUILD} -M help "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS} ${O}
 
-.PHONY: help Makefile man html qthelp
+.PHONY: help Makefile man html qthelp pdf latex
 
 ################################################################################
 #                       Targets that build documentation                       #
@@ -20,9 +20,8 @@ html: prepare-man doxygen cp-doxygen
 	@scripts/gen-tree
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
 
-latex: doxygen
-	@scripts/gen-tree
-	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
+latex:
+	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
 
 # TODO Build man here?
 qthelp:
