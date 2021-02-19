@@ -7,7 +7,8 @@ SYNOPSIS
 
 .. code-block:: none
 
-   schim [--version] [--help] [<command>] [<options>]
+   schim [--version|--help]
+   schim [<command>] [<options>]
 
 By default, if no <command> is specified, **schim-editor(1)** is run.
 This can be changed in the configuration (see **schim-config(1)**).
@@ -23,11 +24,11 @@ interface to automate a wide range of tasks.
 OPTIONS
 =======
 
-   **-v\ , --version**
-      Prints the currently installed version of Schim.
+`-v`\ , `--version`
+   Prints the currently installed version of Schim.
 
-   **-h\ , --help**
-      Prints the synopsis and a list of the most commonly used commands.
+`-h`\ , `--help`
+   Prints the synopsis and a list of the most commonly used commands.
 
 SCHIM COMMANDS
 ==============

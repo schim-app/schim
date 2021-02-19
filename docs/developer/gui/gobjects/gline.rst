@@ -1,7 +1,0 @@
-=====
-GLine
-=====
-
-.. toctree::
-
-.. doxygenclass:: GLine

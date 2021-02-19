@@ -8,7 +8,7 @@ BUILDDIR      = _build
 help:
 	@${SPHINXBUILD} -M help "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS} ${O}
 
-.PHONY: help Makefile man html
+.PHONY: help Makefile man html qthelp
 
 ################################################################################
 #                       Targets that build documentation                       #
@@ -16,7 +16,7 @@ help:
 
 all: man html qthelp pdf prepare-man
 
-html: prepare-man doxygen
+html: prepare-man doxygen cp-doxygen
 	@scripts/gen-tree
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
 
@@ -61,6 +61,11 @@ prepare-man: man
 	@for file in man/schim*.rst; do \
 		scripts/prepare-man.sh "$$file" _intermediate/man; \
 	done
+
+# Copy doxygen HTML output to ${BUILDDIR}/html so the doxygen
+# documentation is available as well (as its own entity)
+cp-doxygen:
+	cd _build/ && mkdir -p html/doxygen && cp -r doxygen/html/* html/doxygen
 
 ################################################################################
 
