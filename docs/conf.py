@@ -17,11 +17,12 @@ author = 'Haris Gušić'
 #########################
 
 extensions = [
-        'sphinx.ext.todo', 'breathe', 'sphinx.ext.autosectionlabel'
+        'sphinx.ext.todo', 'breathe', 'sphinx.ext.autosectionlabel',
+        'sphinx_tabs.tabs'
 ]
 
 # Note: the man/ directory has its own conf.py and is not built by this one
-exclude_patterns = ['_build', 'man', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'man', 'inc', 'Thumbs.db', '.DS_Store']
 todo_include_todos = True
 
 ##################
@@ -32,7 +33,7 @@ breathe_projects = { "Schim": "_build/doxygen/xml/" }
 breathe_default_project = "Schim"
 # Stop breathe from ignoring main.cpp
 breathe_implementation_filename_extensions = []
-breathe_default_members = ('members', 'protected-members')
+breathe_default_members = ('members')
 
 primary_domain = 'cpp'
 highlight_language = 'cpp'

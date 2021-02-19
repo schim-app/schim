@@ -10,19 +10,20 @@ The main window
 The class holds a static instance of ``MainWindow`` called ``instance``, which
 allows other classes to access the main window.
 
-`src/ui/mainwindow.h`
-   ..
+.. tabs::
 
-.. doxygenclass:: MainWindow
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: MainWindow
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+   .. tab:: Outline
 
+      .. doxygenclass:: MainWindow
+         :outline:
+         :no-link:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: MainWindow
+         :no-link:
+         :undoc-members:
 * `Full reference <../../doxygen/classMainWindow.html>`_
- ..
+     ..
 
 The schematic editor
 ====================
@@ -53,12 +54,19 @@ The following classes are derived from :ref:`GObject`:
 .. image:: /_build/doxygen/html/classGObject__inh.svg
    :align: center
 
-.. doxygenclass:: GObject
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: GObject
-   :no-link:
-.. include:: /inc/enddetails.rst
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: GObject
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: GObject
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classGObject.html>`_
+     ..
 
 .. _QGraphicsView: https://doc.qt.io/qt-5/qgraphicsview.html
 .. _QGraphicsScene: https://doc.qt.io/qt-5/qgraphicsscene.html

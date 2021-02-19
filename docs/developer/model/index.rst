@@ -5,7 +5,7 @@ Model
 .. toctree::
 
 Everything that exists in a project is represented by a model class, including
-the project itself. A model class contains those attributes that are remain the
+the project itself. A model class contains those attributes that remain the
 same regardless of the format in which something is accessed. For example, the
 model class of an object does not contain information about whether the object
 is selected for editing, because that is only relevant in the context of the
@@ -18,38 +18,55 @@ Project
 A project is nothing more than a collection of sheets (of paper) and some
 configured parameters.
 
-.. doxygenclass:: Project
-   :outline:
-            
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: Project
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Project
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Project
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classProject.html>`_
+     ..
 
 Sheet
 =====
 
-.. doxygenclass:: Sheet
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: Sheet
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Sheet
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Sheet
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classSheet.html>`_
+     ..
 
 Object
 ======
 
 All objects are derived from the base class Object.
 
-.. doxygenclass:: Object
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: Object
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Object
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: Object
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classObject.html>`_
+     ..
 
 .. image:: /_build/doxygen/html/classObject__inh.svg
    :align: center
@@ -73,17 +90,19 @@ lines, rectangles, etc. Such objects are called composite objects. They are all
 derived from the class :ref:`CompositeObject<Composite objects>`, which in turn
 inherits :ref:`Object`.
 
-The core differentiator between primitive and composite objects is that
-composite objects have is that they contain a list (by inheriting QList as well)
-of objects they are composed of.
+.. tabs::
 
-.. doxygenclass:: CompositeObject
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenclass:: CompositeObject
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+   .. tab:: Outline
+
+      .. doxygenclass:: CompositeObject
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenclass:: CompositeObject
+         :no-link:
+         :undoc-members:
+* `Full reference <../../doxygen/classCompositeObject.html>`_
+     ..
 
 Variables
 =========
@@ -91,10 +110,18 @@ Variables
 For familiarity with the concept of variables, see :ref:`manual_variables` in
 the user manual.
 
-.. doxygenstruct:: Variable
-   :outline:
-.. include:: /inc/startdetails.rst
-.. doxygenstruct:: Variable
-   :no-link:
-   :undoc-members:
-.. include:: /inc/enddetails.rst
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenstruct:: Variable
+         :outline:
+   .. tab:: Detailed description
+
+      .. doxygenstruct:: Variable
+         :no-link:
+         :undoc-members:
+
+* `Full reference <../../doxygen/structVariable.html>`_
+     ..
+

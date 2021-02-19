@@ -12,7 +12,7 @@ to/imported from DXF (.dxf) and exported to the following formats:
 - Portable Document Format ( `.pdf` )
 - Common image formats ( `.jpg`, `.png`, `.svg` )
 
-.. _manual-xml:
+.. _manual_xml:
 
 XML
 ===
