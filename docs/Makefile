@@ -4,6 +4,9 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
 
+# Should be /bin/bash for ReadTheDocs
+SHELL = '/bin/bash'
+
 # Put it first so that "make" without argument is like "make help".
 help:
 	@${SPHINXBUILD} -M help "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS} ${O}
@@ -14,11 +17,13 @@ help:
 #                       Targets that build documentation                       #
 ################################################################################
 
-all: man html qthelp pdf prepare-man
+all: man html qthelp pdf prepare-man graphs
 
-html: prepare-man doxygen cp-doxygen
-	@scripts/gen-tree
+html: prepare-man doxygen
+	@echo "Generate directory tree file."
+	@scripts/gen-tree.sh
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
+	@"${MAKE}" graphs
 
 latex:
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
@@ -42,13 +47,8 @@ pdf: latex
 ################################################################################
 
 doxygen:
-	@mkdir -p _build/doxygen
+	@mkdir -p _build/{html/doxygen,doxygen/xml}
 	@doxygen
-ifneq (${OS},Windows_NT) # TODO reinstate this again on Windows
-	@for file in _build/doxygen/html/class*__inherit__graph.svg; do \
-		cp "$$file" "$$(echo "$$file" | sed 's/inherit__graph/inh/')"; \
-	done
-endif
 
 # Tweak manpage sources for inclusion in the HTML version of the docs.
 # A NAME section containing the description is added to each file from man/.
@@ -61,10 +61,16 @@ prepare-man: man
 		scripts/prepare-man.sh "$$file" _intermediate/man; \
 	done
 
-# Copy doxygen HTML output to ${BUILDDIR}/html so the doxygen
-# documentation is available as well (as its own entity)
-cp-doxygen:
-	cd _build/ && mkdir -p html/doxygen && cp -r doxygen/html/* html/doxygen
+graphs:
+	@echo "Creating DOT graphs..."
+	@PREFIX="$$(pwd)"; \
+	shopt -s globstar nullglob; \
+	for f in $$(find manual/ dev/ -name "*.dot" -type f); do \
+	    DEST="_build/html/$${f/.dot/}.svg"; \
+	    mkdir -p "$$(dirname "$$DEST")" && \
+	    dot -Tsvg "$$f" -o "$$DEST"; \
+	done
+	@echo "Done creating graphs."
 
 ################################################################################
 

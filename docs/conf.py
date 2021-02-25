@@ -1,6 +1,5 @@
 # Some global variables
 import os
-
 # Indicates whether this is built on ReadTheDocs
 READTHEDOCS = os.environ.get('READTHEDOCS', False)
 
@@ -51,6 +50,10 @@ html_favicon = '../res/img/icon.svg'
 
 smartquotes = False # Do not display '--' as long dashes
 default_role = 'envvar' # Like :code: role, but the text is black
+
+rst_prolog = ''
+# Setup snippets that will be included in all rst files
+exec(open('./include.py').read())
 
 ##########################
 # Additional build steps #

@@ -22,11 +22,11 @@ exclude_patterns.remove('man')
 
 # Build doxygen and move the generated files to _build/html/doxygen
 subprocess.call('make doxygen', shell=True)
-subprocess.call('make cp-doxygen', shell=True)
 # Tweak manpages for inclusion in the HTML version of the docs
 subprocess.call('make prepare-man', shell=True)
 # Move them to man/ so the resulting http link looks nicer [man_link]
 subprocess.call('mv _intermediate/man/* man/', shell=True)
+subprocess.call('make graphs', shell=True)
 
 ############################
 # Debugging on ReadTheDocs #

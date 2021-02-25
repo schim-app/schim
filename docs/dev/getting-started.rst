@@ -25,14 +25,20 @@ Documentation
 Directory Structure
 ===================
 
-For the sake of clarity, `cpp` files with matching `h` files have been
-omitted. All `h` files have matching `cpp` files, except `main.cpp`.
-
-.. literalinclude:: tree.txt
+.. literalinclude:: /_build/tree.txt
    :language: none
 
 Conceptual Structure
 ====================
+
+|startovw|
+
+.. image:: /_build/html/dev/overview.svg
+   :align: center
+|br|
+*Note:* An arrow from object A to B means that **A sees B**.
+
+|endcollapse|
 
 The project is divided into four conceptual groups, which are meant to be as
 decoupled as possible:

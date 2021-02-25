@@ -24,7 +24,8 @@ configured parameters.
 
       .. doxygenclass:: Project
          :outline:
-   .. tab:: Detailed description
+                  
+   .. tab:: Details
 
       .. doxygenclass:: Project
          :no-link:
@@ -41,7 +42,8 @@ Sheet
 
       .. doxygenclass:: Sheet
          :outline:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenclass:: Sheet
          :no-link:
@@ -52,6 +54,17 @@ Sheet
 Object
 ======
 
+|startovw|
+
+.. rubric:: Inheritance graph
+.. image:: /_build/html/doxygen/classObject__inherit__graph.svg
+   :align: center
+.. rubric:: Collaboration graph
+.. image:: /_build/html/doxygen/classObject__coll__graph.svg
+   :align: center
+
+|endcollapse|
+
 All objects are derived from the base class Object.
 
 .. tabs::
@@ -60,16 +73,14 @@ All objects are derived from the base class Object.
 
       .. doxygenclass:: Object
          :outline:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenclass:: Object
          :no-link:
          :undoc-members:
 * `Full reference <../../doxygen/classObject.html>`_
      ..
-
-.. image:: /_build/doxygen/html/classObject__inh.svg
-   :align: center
 
 Primitive objects
 =================
@@ -96,7 +107,8 @@ inherits :ref:`Object`.
 
       .. doxygenclass:: CompositeObject
          :outline:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenclass:: CompositeObject
          :no-link:
@@ -116,7 +128,8 @@ the user manual.
 
       .. doxygenstruct:: Variable
          :outline:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenstruct:: Variable
          :no-link:

@@ -51,5 +51,5 @@ without those mappings.
    quick-start.rst
    contribute.rst
    manual/index.rst
-   developer/index.rst
+   dev/index.rst
 

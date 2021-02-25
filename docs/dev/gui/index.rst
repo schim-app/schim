@@ -17,7 +17,8 @@ allows other classes to access the main window.
       .. doxygenclass:: MainWindow
          :outline:
          :no-link:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenclass:: MainWindow
          :no-link:
@@ -37,6 +38,20 @@ Instead we use their subclasses: :ref:`SheetView`, :ref:`SheetScene` and
 GObject
 -------
 
+|startovw|
+
+.. rubric:: Inheritance graph
+.. image:: /_build/html/doxygen/classGObject__inherit__graph.svg
+   :align: center
+
+|br|
+
+.. rubric:: Collaboration graph
+.. image:: /_build/html/doxygen/classGObject__coll__graph.svg
+   :align: center
+
+|endcollapse|
+
 An object is visually represented as a :ref:`GObject`, which is a wrapper around
 an :ref:`Object`. Derived classes follow the same naming convention. Namely, the
 graphical class is named by prepending the corresponding model class name with
@@ -51,16 +66,14 @@ The following classes are derived from :ref:`GObject`:
 * `GCompositeObject <../../doxygen/classGCompositeObject.html>`_
 * `GHeader <../../doxygen/classGHeader.html>`_
 
-.. image:: /_build/doxygen/html/classGObject__inh.svg
-   :align: center
-
 .. tabs::
 
    .. tab:: Outline
 
       .. doxygenclass:: GObject
          :outline:
-   .. tab:: Detailed description
+
+   .. tab:: Details
 
       .. doxygenclass:: GObject
          :no-link:

@@ -1,0 +1,16 @@
+digraph {
+    nodesep = 2;
+    bgcolor = "transparent";
+    node[style=filled, fillcolor="#E7F2FA"];
+
+    CLI[shape=box];
+    GUI[shape=box];
+    Model[shape=box];
+    fileio[shape=box, label="File I/O"];
+
+    node[shape=ellipse, fillcolor="#6AB0DE"];
+
+    user -> {CLI, GUI} -> Model;
+    CLI -> fileio -> Model;
+    GUI -> fileio [dir=both];
+}
