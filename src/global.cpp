@@ -15,7 +15,8 @@ QSettings *getSettings(const QString &key)
 {
     if (
             key == "default_path" ||
-            key == "print_path"
+            key == "print_path" ||
+            key == "screenshot_path"
             )
         return new QSettings("schim", "volatile");
     else

@@ -252,6 +252,8 @@ void SheetView::init()
 
 void SheetView::recalculateBaselineZoom()
 {
+    if (scene() == nullptr)
+        return;
     float widthRatio = parentWidget()->width() / scene()->sheet->getWidth();
     float heightRatio = parentWidget()->height() / scene()->sheet->getHeight();
 

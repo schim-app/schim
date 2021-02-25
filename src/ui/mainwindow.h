@@ -103,6 +103,7 @@ private slots:
     void cursorUp();
     void cursorRight();
     void showHelp();
+    void takeScreenshot();
 
     void on_todoButton_pressed();
 

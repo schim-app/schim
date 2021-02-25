@@ -13,6 +13,8 @@
 #include <QScrollBar>
 #include <QProcess> // For QtAssistant help
 
+// TODO rm
+#include <QSvgGenerator>
 #include <QDebug>
 
 MainWindow* MainWindow::instance{};
@@ -446,6 +448,37 @@ void MainWindow::showHelp()
                    QStringList{"-collectionFile", qApp->applicationDirPath() + "/" QT_HELP});
 }
 
+void MainWindow::takeScreenshot()
+{
+    QString filename = QFileDialog::getSaveFileName(
+                this, "Open project file...",
+                getSetting("screenshot_path", QDir::homePath() + "/screenshot.png").toString(),
+                "Images (*.jpg *.png *.bmp);;SVG Images (*.svg);;All Files (*)"
+            );
+    // TODO add filters later
+    if (filename == "")
+        return;
+
+    QFileInfo info(filename);
+
+    if (info.suffix() == "svg")
+    {
+        QSvgGenerator gen;
+        gen.setFileName(filename);
+        gen.setSize(size());
+        gen.setViewBox(rect());
+        //TODO How to check if the operation was successful??
+        render(&gen);
+    }
+    else if (!grab().save(filename))
+    {
+        //TODO This scenario has not been tested
+        QMessageBox::critical(this, "Error", "Unable to write file");
+        return;
+    }
+    changeSetting("screenshot_path", filename);
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -528,6 +561,7 @@ void MainWindow::setupActions()
         { ui->actionInsertText, {}, {}, &MainWindow::insertText },
         { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet },
         { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet },
+        { ui->actionScreenshot, {}, {}, &MainWindow::takeScreenshot },
     };
     if (vimEnabled)
         foreach (auto action, additionalActions)
@@ -565,8 +599,6 @@ void MainWindow::clearTabs()
 
 void MainWindow::on_todoButton_pressed()
 {
-    if (getTab() != nullptr)
-        getTab()->viewport()->repaint();
 }
 
 //TODO remove
