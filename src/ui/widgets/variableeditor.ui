@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="statusTip">
+   <string>File src/ui/widgets/variableeditor.h; class VariableEditor in src/ui/widgets/variableeditor.h</string>
+  </property>
+  <property name="whatsThis">
+   <string/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="hlTop">

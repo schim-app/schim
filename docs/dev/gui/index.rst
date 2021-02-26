@@ -4,6 +4,13 @@ GUI
 
 .. toctree::
 
+.. important:: If you need to quickly find out where a graphical item is defined
+   in the source code, go to
+   
+   .. centered:: :menuselection:`Help-->Toggle Developer Hints`
+
+   in the application. This will display where the focused widget is defined.
+
 The main window
 ===============
 

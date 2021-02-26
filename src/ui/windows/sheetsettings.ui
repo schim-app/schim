@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>Sheet settings</string>
   </property>
+  <property name="toolTip">
+   <string>Change properties of the current sheet</string>
+  </property>
+  <property name="statusTip">
+   <string>File src/ui/windows/sheetsettings.ui; class SheetSettings in src/ui/windows/sheetsettings.h</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>

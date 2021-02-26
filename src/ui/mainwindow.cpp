@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabView->clear();
 
     ui->vimKeyStatus->setText("");
+    ui->statusbar->hide();
 
     setupActions();
 
@@ -207,7 +208,8 @@ void MainWindow::openProject()
     if (filename == "")
         return;
 
-    try {
+    try
+    {
         activeProject = xmlParseProject(filename);
 
         this->filename = filename;
@@ -215,7 +217,9 @@ void MainWindow::openProject()
 
         setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
         populateWithProject();
-    }  catch (std::exception &e) {
+    }
+    catch (std::exception &e)
+    {
         QMessageBox::critical(this, "Error", "Unable to read file");
     }
 }
@@ -479,6 +483,11 @@ void MainWindow::takeScreenshot()
     changeSetting("screenshot_path", filename);
 }
 
+void MainWindow::toggleDeveloperHints()
+{
+    ui->statusbar->setVisible(ui->statusbar->isHidden());
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -562,6 +571,7 @@ void MainWindow::setupActions()
         { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet },
         { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet },
         { ui->actionScreenshot, {}, {}, &MainWindow::takeScreenshot },
+        { ui->actionDeveloperHints, {}, {}, &MainWindow::toggleDeveloperHints }
     };
     if (vimEnabled)
         foreach (auto action, additionalActions)
@@ -588,6 +598,8 @@ void MainWindow::populateWithProject()
     ui->tabView->clear();
     for (Sheet *sheet : *activeProject) //TODO changing for to foreach makes the program crash
         ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
+    // The tooltip is only useful before the user ever opens a sheet.
+    ui->centralwidget->setToolTip("");
 }
 
 void MainWindow::clearTabs()

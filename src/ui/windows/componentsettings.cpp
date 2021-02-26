@@ -18,8 +18,9 @@ ComponentSettings::ComponentSettings(GComponent *component, QWidget *parent)
     connect(ui->editFunction, &QLineEdit::textEdited, this, &ComponentSettings::on_editFunction_textEdited);
     connect(ui->editLocation, &QLineEdit::textEdited, this, &ComponentSettings::on_editLocation_textEdited);
     connect(ui->editDesignation, &QLineEdit::textEdited, this, &ComponentSettings::on_editDesignation_textEdited);
-
     connect(ui->variableEditor, &VariableEditor::changed, this, &ComponentSettings::onChanged);
+
+    setStatusTip("class ComponentSettings in src/ui/windows/componentsettings.h");
 }
 
 ComponentSettings::~ComponentSettings()

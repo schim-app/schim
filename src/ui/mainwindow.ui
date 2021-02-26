@@ -24,9 +24,21 @@
     <normaloff>../../res/img/icon.svg</normaloff>../../res/img/icon.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="toolTip">
+    <string>Open a sheet here by going to File-&gt;New or File-&gt;Open</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabView">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="statusTip">
+       <string>Widget tabView in src/ui/mainwindow.ui</string>
+      </property>
+      <property name="whatsThis">
+       <string/>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -81,11 +93,17 @@
     <property name="title">
      <string>&amp;Sheet</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionNewSheet"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -97,6 +115,9 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionUndoInSheet"/>
     <addaction name="actionRedoInSheet"/>
    </widget>
@@ -104,8 +125,12 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionHelp"/>
     <addaction name="actionScreenshot"/>
+    <addaction name="actionDeveloperHints"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -141,7 +166,17 @@
       </widget>
      </item>
      <item>
-      <widget class="ComponentList" name="componentList"/>
+      <widget class="ComponentList" name="componentList">
+       <property name="toolTip">
+        <string>Component selector</string>
+       </property>
+       <property name="statusTip">
+        <string>Widget componentList in src/ui/mainwindow.ui; class ComponentList in src/ui/widgets/componentlist.h</string>
+       </property>
+       <property name="whatsThis">
+        <string>Here you can browse components and add them to a sheet by dragging. You can also change a sheet's header by dragging it to the sheet.</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -149,6 +184,9 @@
   <action name="actionNewSheet">
    <property name="text">
     <string>New sheet</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert a new sheet at the end</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+N</string>
@@ -242,7 +280,7 @@
   </action>
   <action name="actionHelp">
    <property name="text">
-    <string>Help</string>
+    <string>&amp;Help</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -250,10 +288,21 @@
   </action>
   <action name="actionScreenshot">
    <property name="text">
-    <string>Screenshot</string>
+    <string>&amp;Screenshot</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
+   </property>
+  </action>
+  <action name="actionDeveloperHints">
+   <property name="text">
+    <string>Toggle &amp;Developer Hints</string>
+   </property>
+   <property name="toolTip">
+    <string>Display developer info in the status bar when you hover over items</string>
+   </property>
+   <property name="whatsThis">
+    <string>When you hover over an item, the status bar will display where the item is defined in the source code. The status bar is at the bottom of the main window.</string>
    </property>
   </action>
  </widget>

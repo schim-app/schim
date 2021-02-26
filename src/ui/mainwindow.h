@@ -105,6 +105,8 @@ private slots:
     void showHelp();
     void takeScreenshot();
 
+    void toggleDeveloperHints();
+
     void on_todoButton_pressed();
 
 private: // Private methods

@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="toolTip">
+   <string>Change text properties</string>
+  </property>
+  <property name="statusTip">
+   <string>File src/ui/windows/textsettings.ui; class TextSettings in src/ui/windows/textsettings.h</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>

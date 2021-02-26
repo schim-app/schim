@@ -39,6 +39,10 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
 
     addAction(actionInsert);
     connect(actionInsert, &QAction::triggered, this, &SheetView::insertTriggered);
+
+    setWhatsThis("This is a sheet view. This is where you draw your schematics"
+                 "on a sheet of paper.");
+    setStatusTip("class SheetView in src/ui/sheetview.h");
 }
 
 SheetView::~SheetView()
