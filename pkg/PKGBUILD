@@ -4,7 +4,7 @@ pkgver=0.0.1
 pkgrel=1
 pkgdesc='An electrical schematic editor for the modern computer user'
 arch=('x86_64')
-url='https://github.com/harisgusic/schim'
+url='https://github.com/schim-app/schim'
 license=('TBD')
 # TODO figure out what to do with dxflib dependency
 depends=('qt5-base')
