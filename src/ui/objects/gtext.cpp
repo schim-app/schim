@@ -18,7 +18,7 @@ GText::GText(Text *obj)
 {
     GObject::setAcceptHoverEvents(true);
     displayItem = new GDisplayText;
-    displayItem->setDefaultTextColor(Qt::black);
+    displayItem->setDefaultTextColor(qApp->palette().color(QPalette::Text));
     displayItem->setDocument(new QTextDocument);
     displayItem->document()->setDocumentMargin(1);
     connect(displayItem, SIGNAL(focusOut()), this, SLOT(onFocusOut()));
@@ -61,10 +61,9 @@ QRectF GText::boundingRect() const
 
 void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPen pen(Qt::black, dpiInvariant(1), Qt::DashLine);
-
     if (isSelected() || isHovered() || editMode)
     {
+        QPen pen(qApp->palette().color(QPalette::Text), dpiInvariant(1), Qt::DashLine);
         pen.setCosmetic(true);
         painter->setPen(pen);
         painter->drawPath(shape());

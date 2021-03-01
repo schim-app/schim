@@ -27,7 +27,8 @@ SheetScene::SheetScene(Sheet *sheet)
 {
     if (sheet == nullptr) return;
 
-    pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()}, {Qt::black, 0}, Qt::white);
+    pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()},
+                                 {qApp->palette().color(QPalette::Text), 0}, qApp->palette().color(QPalette::Base));
 
     // Add the sheet header, if it is defined
     if (sheet->getHeader())

@@ -16,6 +16,7 @@
 #include "model/special/linearobjectarray.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QApplication>
 
 /***********
  * GObject *
@@ -90,14 +91,15 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
 {
     auto pen = painter->pen();
     // The default color (unless overriden) is black
-    pen.setColor(Qt::black);
+    pen.setColor(qApp->palette().color(QPalette::Text));
     pen.setCosmetic(cosmetic);
 
     // The order is important
     if (isSelected() || (parentItem() && parentItem()->isSelected()))
-        pen.setColor(colorSelected);
+        pen.setColor(qApp->palette().color(QPalette::Highlight));
     else if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
-        pen.setColor(colorHover);
+        // TODO the color source may be a little stupid, but it looks reasonably nice
+        pen.setColor(qApp->palette().color(QPalette::LinkVisited));
 
     painter->setPen(pen);
 }
@@ -227,7 +229,7 @@ GObjectHandle::GObjectHandle(GObject *obj)
 
     auto _pen = pen();
     _pen.setJoinStyle(Qt::MiterJoin);
-    _pen.setColor(colorSelected);
+    _pen.setColor(qApp->palette().color(QPalette::Highlight));
     setPen(_pen);
     setBrush(colorSelected);
 

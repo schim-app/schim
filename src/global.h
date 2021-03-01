@@ -6,6 +6,7 @@
 
 #include "fileio/database.h"
 
+// TODO colorSelected is obsolete -- give it some time then remove
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
 extern Database *globalDatabase;
 

@@ -28,9 +28,9 @@ Schim is available on **Linux** and **Windows**.
 
 ## Documentation
 
-Schim comes with a very comprehensive user manual and documentation for
-developers. Both can be found [here](https://schim.rtfd.io). For more detail on
-how the documentation is maintained, have a look at the [README](docs/README.md).
+Schim comes with a very comprehensive user manual and developer documentation.
+Both can be found [here](https://schim.rtfd.io). For more detail on how the
+documentation is maintained, have a look at the [README](docs/README.md).
 
 ## Installing
 

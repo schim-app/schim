@@ -217,7 +217,7 @@ void SheetView::onInsertionRequested(Object *obj)
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    QPen pen(Qt::black, dpiInvariant(1));
+    QPen pen(qApp->palette().color(QPalette::Text), dpiInvariant(1));
     pen.setCosmetic(true);
     painter->setPen(pen);
 
@@ -247,7 +247,9 @@ void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
         if (scene()->getSnapCursorGuides())
             pos = scene()->snap(pos);
 
-        pen.setColor({64, 64, 64});
+        QColor c = pen.color();
+        c.setAlphaF(0.75);
+        pen.setColor(c);
         painter->setPen(pen);
 
         // Horizontal

@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QGraphicsScene>
 #include <QImage>
+#include <QApplication>
 
 DatabaseItem::DatabaseItem(const QString &path, DatabaseItem *parentItem)
     : parent(parentItem)
@@ -106,8 +107,8 @@ QImage DatabaseItem::getIcon() const
 
     // Create the icon and finalize
 
-    icon = new QImage(iconSize, iconSize, QImage::Format_RGB32);
-    icon->fill(Qt::white);
+    icon = new QImage(iconSize, iconSize, QImage::Format_ARGB32);
+    icon->fill({0,0,0,0});
     QPainter painter(icon);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
     scene->render(&painter);

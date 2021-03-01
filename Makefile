@@ -74,11 +74,11 @@ man:
 install: app man
 	@echo "Copying files to installation directory..."
 	@umask 022
-	@mkdir -p "${INSTALL_DIR}"
 	@mkdir -p "${INSTALL_DIR}/${MAN_DIR}"
 	@# INSTALL_DIR can be the same as BUILD_DIR
 	@cp -r "${BUILD_DIR}"/dest/** "${INSTALL_DIR}" 2>/dev/null || true
 	@cp docs/_build/man/*.1* "${INSTALL_DIR}/${MAN_DIR}"
+	@cp -r res/examples "${INSTALL_DIR}/${SHARE_DIR}"
 
 uninstall:
 	rm -rf \
@@ -88,7 +88,7 @@ uninstall:
 		"${INSTALL_DIR}/${MAN_DIR}"
 
 ifeq (${MAKECMDGOALS},deploy)
-    INSTALL_DIR = "${BUILD_DIR}"/dest
+    INSTALL_DIR = "${BUILD_DIR}"/dest # Used with deploy target
 endif
 
 deploy: install
