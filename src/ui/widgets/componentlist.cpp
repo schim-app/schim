@@ -22,9 +22,13 @@ ComponentList::ComponentList(QWidget *parent)
     setDragEnabled(true);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
-    //header()->hide();
+    header()->hide();
+
     //TODO this is just a test database
-    setModel(new Database(systemSymbolPath)); // TODO create this database elsewhere
+    if (globalDatabase == nullptr)
+        globalDatabase = new Database(systemSymbolPath);
+
+    setModel(globalDatabase); // TODO create this database elsewhere
 }
 Database *ComponentList::model()
 {

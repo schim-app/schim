@@ -107,6 +107,7 @@ private:
     // HELPER FUNCTIONS
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
+    void insertComponentOrHeader(Object *obj);
 
     // OVERRIDDEN METHODS
     void keyPressEvent(QKeyEvent *event) override;

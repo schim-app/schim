@@ -1,11 +1,11 @@
 #ifndef SHEETVIEW_H
 #define SHEETVIEW_H
 
-#include <QGraphicsView>
-
-#include <model/sheet.h>
-
+#include "model/sheet.h"
 #include "sheetscene.h"
+#include "ui/widgets/insertcompleter.h"
+
+#include <QGraphicsView>
 
 class MainWindow;
 
@@ -45,6 +45,7 @@ private:
 private slots:
     void onRubberBandChanged(QRect rect, QPointF, QPointF);
     void onCursorChanged();
+    void onInsertionRequested(Object *obj);
 
 private:
 
@@ -66,6 +67,8 @@ private:
 
     // Used to compensate for different screen sizes
     float baselineZoom = 1, userZoom = 1;
+    /// Dynamically allocated just before first use, and persists afterwards
+    InsertCompleter *insertCompleter{};
 
     QPoint _panStartPos, _selectStartPos;
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setupActions();
 
+    // Override tab close requests
     connect(ui->tabView, &QTabWidget::tabCloseRequested, this, &MainWindow::tabCloseRequest);
 
     instance = this;

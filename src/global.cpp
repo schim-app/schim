@@ -6,6 +6,8 @@
 #include <QApplication>
 #include <QScreen>
 
+Database *globalDatabase = nullptr;
+
 /**
  * Dynamically allocate a QSettings object and return a pointer to it.
  * This function automatically determines if the key is volatile and

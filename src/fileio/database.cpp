@@ -29,6 +29,45 @@ void DatabaseItem::appendItem(DatabaseItem *child)
     child->parent = this;
 }
 
+// SETTERS
+
+void DatabaseItem::setPath(QString path)
+{
+    if (path != this->path)
+    {
+        this->path = path;
+        path = resolvePath(path);
+        delete object;
+        if (QFileInfo(path).isDir())
+            object = nullptr;
+        else
+        {
+            setName(xmlPeekName(path));
+            object = (CompositeObject *) xmlParseObject(path);
+            object->setSourceFile(this->path);
+        }
+        // Invalidate the icon - it will have to be generated again when required
+        icon = nullptr;
+    }
+}
+
+void DatabaseItem::setName(const QString &name)
+{
+    this->name = name;
+}
+
+// GETTERS
+
+QString DatabaseItem::getName() const
+{
+    return name;
+}
+
+QString DatabaseItem::getPath() const
+{
+    return path;
+}
+
 QImage DatabaseItem::getIcon() const
 {
     if (icon != nullptr) // An up-to-date icon has already been generated
@@ -76,6 +115,11 @@ QImage DatabaseItem::getIcon() const
     return *icon;
 }
 
+Object *DatabaseItem::getObject()
+{
+    return object;
+}
+
 Qt::ItemFlags DatabaseItem::getFlags() const
 {
     Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
@@ -84,35 +128,12 @@ Qt::ItemFlags DatabaseItem::getFlags() const
     return flags;
 }
 
-Object *DatabaseItem::getObject()
+bool DatabaseItem::isDir() const
 {
-    return object;
+    return object == nullptr;
 }
 
-void DatabaseItem::setPath(QString path)
-{
-    if (path != this->path)
-    {
-        this->path = path;
-        path = resolvePath(path);
-        delete object;
-        if (QFileInfo(path).isDir())
-            object = nullptr;
-        else
-        {
-            setName(xmlPeekName(path));
-            object = (CompositeObject *) xmlParseObject(path);
-            object->setSourceFile(this->path);
-        }
-        // Invalidate the icon - it will have to be generated again when required
-        icon = nullptr;
-    }
-}
-
-void DatabaseItem::setName(const QString &name)
-{
-    this->name = name;
-}
+// BOILERPLATE
 
 DatabaseItem *DatabaseItem::getChild(int row)
 {
@@ -146,11 +167,6 @@ int DatabaseItem::getRow() const
     return 0;
 }
 
-QString DatabaseItem::getName() const
-{
-    return name;
-}
-
 DatabaseItem *DatabaseItem::getParentItem()
 {
     return parent;
@@ -179,6 +195,8 @@ QVariant Database::data(const QModelIndex &index, int role) const
         return item->getData(index.column());
     else if (role == Qt::DecorationRole)
         return item->getIcon();
+    else if (role == Qt::ToolTipRole)
+        return resolvePath(item->getPath());
     else return {};
 }
 
@@ -209,9 +227,9 @@ QModelIndex Database::index(int row, int column, const QModelIndex &parent) cons
         return {};
     DatabaseItem *parentItem;
 
-    if (!parent.isValid())
+    if (!parent.isValid()) // Parent is root item
         parentItem = rootItem;
-    else
+    else // Parent is not root item
         parentItem = static_cast<DatabaseItem*>(parent.internalPointer());
 
     DatabaseItem *childItem = parentItem->getChild(row);

@@ -43,7 +43,7 @@ content
 will create a header from the default header, but it will contain an additional
 line which is specified in the body of the ``<header>`` tag.
 
-The attribute value is very flexible - it can be specified in a variety of
+The attribute value is very flexible -- it can be specified in a variety of
 formats. It is interpreted in the following order:
 
 * File path relative to project root

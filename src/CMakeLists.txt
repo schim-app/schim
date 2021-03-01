@@ -49,7 +49,7 @@ add_executable(schim
     model/variable.cpp 
     ui/commands.cpp 
     ui/mainwindow.cpp 
-    ui/objects/gcomponent.cpp 
+    ui/objects/gcomponent.cpp
     ui/objects/gcompositeobject.cpp 
     ui/objects/gheader.cpp 
     ui/objects/gline.cpp 
@@ -61,15 +61,17 @@ add_executable(schim
     ui/sheetscene.cpp 
     ui/sheetview.cpp 
     ui/vimlike.cpp 
+    ui/widgets/completer.cpp
+    ui/widgets/insertcompleter.cpp
     ui/widgets/componentlist.cpp 
-    ui/widgets/componentcompleter.cpp 
     ui/widgets/variableeditor.cpp 
     ui/windows/componentsettings.cpp 
     ui/windows/sheetsettings.cpp 
     ui/windows/textsettings.cpp
 ### FORMS ###
     ui/mainwindow.ui 
-    ui/widgets/variableeditor.ui 
+    ui/widgets/insertcompleter.ui
+    ui/widgets/variableeditor.ui
     ui/windows/componentsettings.ui 
     ui/windows/sheetsettings.ui 
     ui/windows/textsettings.ui

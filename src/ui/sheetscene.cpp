@@ -277,6 +277,16 @@ void SheetScene::applyCursorMovement(const QPointF &pt)
     update();
 }
 
+void SheetScene::insertComponentOrHeader(Object *obj)
+{
+    Header *hdr;
+    if ((hdr = dynamic_cast<Header*>(obj->clone())))
+        // Replace the current sheet header with this one
+        tryChangeHeader(hdr);
+    else // Start scene operation
+        startOperation(new ComponentInsertOperation(this, obj->clone()));
+}
+
 // OVERRIDEN METHODS
 
 GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
@@ -378,14 +388,7 @@ void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         {
             // Only the first selected component will be inserted
             auto *obj = static_cast<DatabaseItem*>(indexes[0].internalPointer())->getObject();
-            Header *hdr;
-
-            // If the item is a header, it will receive special treatment
-            if ((hdr = dynamic_cast<Header*>(obj->clone())))
-                // Replace the current sheet header with this one
-                tryChangeHeader(hdr);
-            else // Start scene operation
-                startOperation(new ComponentInsertOperation(this, obj->clone()));
+            insertComponentOrHeader(obj);
         }
     }
 }

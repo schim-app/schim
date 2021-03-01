@@ -4,7 +4,10 @@
 #include <QVariant>
 #include <QColor>
 
+#include "fileio/database.h"
+
 static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
+extern Database *globalDatabase;
 
 #define SHARE_DIR "../share/schim"
 

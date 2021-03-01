@@ -5,7 +5,8 @@
 #include <QLineEdit>
 
 Operation::Operation(SheetScene *scene)
-    : scene(scene) {
+    : scene(scene)
+{
 }
 
 Operation::~Operation() { }

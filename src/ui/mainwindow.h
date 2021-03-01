@@ -34,9 +34,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    // Getters
-
-	/** Return the tab widget */
+    // GETTERS
+    /** Return the tab widget */
     QTabWidget *getTabView() const;
 	/** Return the current tab id*/
     int getTabId() const;
@@ -55,8 +54,7 @@ public:
 
     static MainWindow *getInstance();
 
-    // Setters
-
+    // SETTERS
     void setTabId(int id);
 
     void keyPressEvent(QKeyEvent *event) override;
@@ -67,8 +65,7 @@ public:
 private slots:
     void tabCloseRequest(int index);
 
-    // Action processing
-
+    // ACTION PROCESSING
     void anyActionTriggered();
     void nextTab();
     void prevTab();
@@ -104,9 +101,7 @@ private slots:
     void cursorRight();
     void showHelp();
     void takeScreenshot();
-
     void toggleDeveloperHints();
-
     void on_todoButton_pressed();
 
 private: // Private methods

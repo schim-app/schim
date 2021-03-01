@@ -25,23 +25,34 @@ public:
     void setName(const QString &name);
 
     // GETTERS
+    QString getName() const;
+    QString getPath() const;
+    /**
+     * @brief Return the icon used to represent the item in the component list.
+     *
+     * The icon is dynamically allocated only when it is to be displayed
+     * to the user, and persists subsequently.
+     */
+    QImage getIcon() const;
+    Object *getObject();
+    Qt::ItemFlags getFlags() const;
+    bool isDir() const;
+
+    // BOILERPLATE
     DatabaseItem *getChild(int row);
     int getChildCount() const;
     int getColumnCount() const;
     QVariant getData(int column) const;
     int getRow() const;
-    QString getName() const;
     DatabaseItem *getParentItem();
-    QImage getIcon() const;
-    Qt::ItemFlags getFlags() const;
-    Object *getObject();
 
 private:
     QString path, name;
-    CompositeObject *object{};
     DatabaseItem *parent;
     QVector<DatabaseItem*> childItems;
-    // Dynamically allocated by generateIcon when needed
+
+    CompositeObject *object{};
+    /// Dynamically allocated by `getIcon` when needed
     mutable QImage *icon{};
 };
 
@@ -55,9 +66,10 @@ public:
     /**
      * @brief Used by the view to display each item's data.
      *
-     * Each item has only a preview icon and a name.
+     * Each item is displayed only with a preview icon and a name.
      */
     QVariant data(const QModelIndex &index, int role) const override;
+    /** @brief Update the database from the file system. */
     void update();
 
     // BOILERPLATE
@@ -70,9 +82,10 @@ public:
 private:
 
     // HELPER METHODS
+    /** @brief Recursively add all subdirectories and subfiles of `parent`. */
     void iterate(const QString &dir, DatabaseItem *parent);
-    // ATTRIBUTES
 
+    // ATTRIBUTES
     DatabaseItem *rootItem{};
     QString path;
 

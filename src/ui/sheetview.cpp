@@ -48,6 +48,7 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
 SheetView::~SheetView()
 {
     delete scene();
+    delete insertCompleter;
 }
 
 void SheetView::setZoom(float zoom)
@@ -104,7 +105,7 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() == Qt::MidButton)
     {
         // WARN doesn't work with some settings of ViewportAnchor
-        QPointF translation = mapToScene(event->pos()) - mapToScene(_panStartPos);
+        const QPointF translation = mapToScene(event->pos()) - mapToScene(_panStartPos);
         translate(translation.x(), translation.y());
         _panStartPos = event->pos();
     }
@@ -159,6 +160,12 @@ void SheetView::onCursorChanged()
     cursor().setPos(mapToGlobal(mapFromScene(pos)));
     qApp->processEvents();
     setMouseTracking(true);
+}
+
+void SheetView::onInsertionRequested(Object *obj)
+{
+    setFocus();
+    scene()->insertComponentOrHeader(obj);
 }
 
 void SheetView::leaveEvent(QEvent *event)
@@ -298,38 +305,16 @@ void SheetView::updateBackground()
     setBackgroundBrush(brush);
 }
 
-//TODO remove
-#include <QDirIterator>
-#include "ui/widgets/componentcompleter.h"
-#include <iostream>
-#include "fileio/xml.h"
-
 void SheetView::insertTriggered()
 {
-    //Add objects from the system directory
-    QStringList wordList;
-    QDirIterator iter(systemSymbolPath);
-    while (iter.hasNext())
+    // TODO how to provide the result to the scene -- signal/slot?
+    if (!insertCompleter)
     {
-        iter.next();
-        auto info = iter.fileInfo();
-        if (info.isDir() || info.fileName() == "!meta") continue;
-        wordList.append(xmlPeekName(info.absoluteFilePath()));
+        insertCompleter = new InsertCompleter(this);
+        connect(insertCompleter, &InsertCompleter::insertionRequested,
+                this, &SheetView::onInsertionRequested);
     }
-
-    // Add primitive objects
-    wordList << "Line" << "Rect" << "Text";
-
-    ComponentCompleter *lineEdit = new ComponentCompleter(this);
-
-    // Create and configure the completer
-    QCompleter *completer = new QCompleter(wordList);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    lineEdit->setCompleter(completer);
-
-    // Proper display of the lineEdit
-    lineEdit->move(mapFromGlobal(QCursor::pos()));
-    lineEdit->setFocus();
-    lineEdit->show();
-    //setCursor(Qt::BlankCursor);
+    insertCompleter->move(QCursor::pos());
+    insertCompleter->setFocus();
+    insertCompleter->show();
 }
