@@ -351,14 +351,16 @@ void MainWindow::scrollRight()
 
 void MainWindow::undoInSheet()
 {
+    vimNumberConstrain(10);
     if (getTab())
-        scene()->undo();
+        vimdo scene()->undo();
 }
 
 void MainWindow::redoInSheet()
 {
+    vimNumberConstrain(10);
     if (getTab())
-        scene()->redo();
+        vimdo scene()->redo();
 }
 
 void MainWindow::insertLine()

@@ -34,7 +34,6 @@ public:
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
-
     bool isGridEnabled();
     bool isSnapEnabled();
     QSizeF getGridSize();
@@ -48,7 +47,6 @@ public:
      */
     void setHeader(Header *hdr, bool destroy = true);
     void setSnapCursorGuides(bool snap);
-
     void setGridSize(float x, float y = -1);
     void setGridSize(QSizeF size);
     void setGridEnabled(bool enabled);
@@ -91,9 +89,10 @@ public:
      * previously had a local header. If that is not the case, `confirmed`
      * is true by default.
      */
-    void tryChangeHeader(Header *hdr,bool *changed = nullptr, bool *confirmed = nullptr);
+    void tryChangeHeader(Header *hdr, bool *changed = nullptr,
+                         bool *confirmed = nullptr);
 
-    // OVERRIDEN METHODS
+    // OVERRIDDEN
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);
 
     // OTHER METHODS
@@ -104,7 +103,7 @@ signals:
 
 private:
 
-    // HELPER FUNCTIONS
+    // HELPERS
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
     void insertComponentOrHeader(Object *obj);

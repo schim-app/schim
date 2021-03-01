@@ -51,6 +51,8 @@ SheetView::~SheetView()
     delete insertCompleter;
 }
 
+// SETTERS
+
 void SheetView::setZoom(float zoom)
 {
     userZoom = qMin(qMax(zoom, 0.25f), 20.0f);
@@ -75,10 +77,14 @@ void SheetView::zoomOut(float step)
     setZoom(userZoom / step);
 }
 
+// GETTERS
+
 SheetScene *SheetView::scene()
 {
     return (SheetScene*) QGraphicsView::scene();
 }
+
+// EVENTS
 
 void SheetView::mousePressEvent(QMouseEvent *event)
 {
@@ -146,28 +152,6 @@ void SheetView::dropEvent(QDropEvent *event)
     QGraphicsView::dropEvent(event);
 }
 
-void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
-{
-    _rubberBandDragging = true;
-}
-
-void SheetView::onCursorChanged()
-{
-    auto pos = scene()->getSnappedCursorPos();
-
-    // We do not wont to trigger a mouseMoveEvent this time
-    setMouseTracking(false);
-    cursor().setPos(mapToGlobal(mapFromScene(pos)));
-    qApp->processEvents();
-    setMouseTracking(true);
-}
-
-void SheetView::onInsertionRequested(Object *obj)
-{
-    setFocus();
-    scene()->insertComponentOrHeader(obj);
-}
-
 void SheetView::leaveEvent(QEvent *event)
 {
     scene()->showGuides(false);
@@ -204,6 +188,32 @@ void SheetView::wheelEvent(QWheelEvent *event)
     else
         QGraphicsView::wheelEvent(event);
 }
+
+// SLOTS
+
+void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
+{
+    _rubberBandDragging = true;
+}
+
+void SheetView::onCursorChanged()
+{
+    auto pos = scene()->getSnappedCursorPos();
+
+    // We do not wont to trigger a mouseMoveEvent this time
+    setMouseTracking(false);
+    cursor().setPos(mapToGlobal(mapFromScene(pos)));
+    qApp->processEvents();
+    setMouseTracking(true);
+}
+
+void SheetView::onInsertionRequested(Object *obj)
+{
+    setFocus();
+    scene()->insertComponentOrHeader(obj);
+}
+
+// OVERRIDEN
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
@@ -247,6 +257,8 @@ void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
     }
 
 }
+
+// HELPERS
 
 void SheetView::init()
 {

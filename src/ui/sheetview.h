@@ -28,34 +28,38 @@ public:
 
     ~SheetView();
 
+    // SETTERS
     void setZoom(float zoom);
     void resetZoom();
     void zoomIn(float step = 1.2);
     void zoomOut(float step = 1.2);
 
+    // GETTERS
     SheetScene *scene();
 
 private:
 
+    // EVENTS
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void dropEvent(QDropEvent *event) override;
-
-private slots:
-    void onRubberBandChanged(QRect rect, QPointF, QPointF);
-    void onCursorChanged();
-    void onInsertionRequested(Object *obj);
-
-private:
-
     void leaveEvent(QEvent *event) override;
     void enterEvent(QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+private slots:
+    // SLOTS
+    void onRubberBandChanged(QRect rect, QPointF, QPointF);
+    void onCursorChanged();
+    void onInsertionRequested(Object *obj);
+
+private:
+    // OVERRIDDEN
     void drawForeground(QPainter *painter, const QRectF &rect) override;
 
+    // HELPERS
     void init();
     void recalculateBaselineZoom();
     void processRubberBandDrag(QMouseEvent *event);
@@ -65,11 +69,13 @@ private:
 
 private:
 
-    // Used to compensate for different screen sizes
+    // ATTRIBUTES
+    /// Used to compensate for different screen sizes
     float baselineZoom = 1, userZoom = 1;
     /// Dynamically allocated just before first use, and persists afterwards
     InsertCompleter *insertCompleter{};
 
+    /// Helper attributes for event processing
     QPoint _panStartPos, _selectStartPos;
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;
 };

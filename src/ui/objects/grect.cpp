@@ -137,8 +137,8 @@ void GRect::handleChanged(GObjectHandle *handle)
         get()->setBottom(top);
 
         // Flip handles around horizontal axis
-        handles->swapItemsAt(0, 3);
-        handles->swapItemsAt(1, 2);
+        std::swap((*handles)[0], (*handles)[3]);
+        std::swap((*handles)[1], (*handles)[2]);
     }
     if (get()->left() > get()->right())
     {
@@ -148,8 +148,8 @@ void GRect::handleChanged(GObjectHandle *handle)
         get()->setRight(left);
 
         // Flip handles around vertical axis
-        handles->swapItemsAt(0, 1);
-        handles->swapItemsAt(2, 3);
+        std::swap((*handles)[0], (*handles)[1]);
+        std::swap((*handles)[2], (*handles)[3]);
     }
     reload();
     if (scene())

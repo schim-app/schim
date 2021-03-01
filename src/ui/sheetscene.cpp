@@ -234,7 +234,7 @@ void SheetScene::tryChangeHeader(Header *hdr, bool *changed, bool *confirmed)
     if (changed) *changed = true;
 }
 
-// HELPER FUNCTIONS
+// HELPERS
 
 QPointF SheetScene::constrainToContentArea(QPointF pt) const
 {
@@ -288,7 +288,7 @@ void SheetScene::insertComponentOrHeader(Object *obj)
         startOperation(new ComponentInsertOperation(this, obj->clone()));
 }
 
-// OVERRIDEN METHODS
+// OVERRIDDEN
 
 GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
 {
