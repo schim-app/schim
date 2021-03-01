@@ -1,6 +1,6 @@
 
 TYPE ?= Release
-VERSION = 0.0.0
+VERSION = 0.0.1
 SHELL = '/usr/bin/bash'
 
 # Directories
@@ -92,8 +92,10 @@ ifeq (${MAKECMDGOALS},deploy)
 endif
 
 deploy: install
+	@echo "Removing previous archive..."
+	@rm -rf _build/schim-"${VERSION}"-"${DEPLOY_TARGET}".tar.gz 
 	@echo "Creating tar archive..."
-	@INSTALL_DIR=${INSTALL_DIR}; \
+	@INSTALL_DIR="${INSTALL_DIR}"; \
 	tar --transform "s:$$INSTALL_DIR/::" \
 		-cf _build/schim-"${VERSION}"-"${DEPLOY_TARGET}".tar.gz \
 		"${INSTALL_DIR}"/*
