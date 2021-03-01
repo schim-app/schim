@@ -11,7 +11,7 @@ void pdfWriteProject(const Project *project, const QString &filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly))
-        throw std::runtime_error(filename.toStdString() + ": unable to open file for writing");
+        throw std::runtime_error("Unable to open file '" + filename.toStdString() + " for writing");
 
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);

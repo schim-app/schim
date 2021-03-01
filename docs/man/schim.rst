@@ -7,8 +7,8 @@ SYNOPSIS
 
 .. code-block:: none
 
-   schim [--version|--help]
-   schim [<command>] [<options>]
+   schim [--version] [--help]
+   schim [<options>] [<command>]
 
 By default, if no <command> is specified, **schim-editor(1)** is run.
 This can be changed in the configuration (see **schim-config(1)**).
@@ -37,7 +37,7 @@ schim-editor(1)
 ---------------
 
 Launch Schim's graphical editor. This is the default command unless
-changed in configuration (see **schim-config(1)).**
+changed in the configuration (see **schim-config(1)).**
 
 schim-export(1)
 ---------------

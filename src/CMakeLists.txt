@@ -12,7 +12,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
+find_package(Qt5 5.10 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a
@@ -68,6 +68,8 @@ add_executable(schim
     ui/windows/componentsettings.cpp 
     ui/windows/sheetsettings.cpp 
     ui/windows/textsettings.cpp
+    cli/cli_common.cpp
+    cli/cli_export.cpp
 ### FORMS ###
     ui/mainwindow.ui 
     ui/widgets/insertcompleter.ui
@@ -77,7 +79,7 @@ add_executable(schim
     ui/windows/textsettings.ui
 )
 if (WIN32)
-	target_link_options(schim PRIVATE -mwindows)
+    target_link_options(schim PRIVATE -mwindows)
 endif()
 
 add_dependencies(schim dxf)

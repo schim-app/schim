@@ -50,7 +50,6 @@ private:
     QString path, name;
     DatabaseItem *parent;
     QVector<DatabaseItem*> childItems;
-
     CompositeObject *object{};
     /// Dynamically allocated by `getIcon` when needed
     mutable QImage *icon{};

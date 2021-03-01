@@ -92,7 +92,8 @@ void SheetScene::setSheet(Sheet *sheet)
 
 void SheetScene::setHeader(Header *hdr, bool destroy)
 {
-    removeItem(headerItem);
+    if (headerItem != nullptr)
+        removeItem(headerItem);
     delete headerItem;
     headerItem = (GHeader*) GObject::assign(hdr);
     addItem(headerItem);

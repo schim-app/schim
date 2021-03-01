@@ -3,4 +3,4 @@
 dir="$(dirname "${BASH_SOURCE[0]}")"
 
 # Run the executable
-"$dir/dest/bin/schim"
+"$dir/dest/bin/schim" $@

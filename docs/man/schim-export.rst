@@ -7,8 +7,7 @@ SYNOPSIS
 
 .. code-block:: none
 
-   schim [--version|--help]
-   schim [<command>] [<options>]
+   schim export --help
    schim export [<options>] [<INPUT-FILE>]
    schim export [<options>] -
 

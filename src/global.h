@@ -19,6 +19,8 @@ static QString systemSymbolPath = "../../res/symb", systemMacroPath = "../../mac
 static QString systemSymbolPath = "../share/schim/symb", systemMacroPath = "macros";
 #endif
 
+#define VERSION "0.0.0"
+
 // TODO depends on OS
 static QString currentProjectPath = "", userSymbolPath = "../../res/symb";
 
