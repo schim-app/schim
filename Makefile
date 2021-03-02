@@ -20,9 +20,10 @@ JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).
 ################
 
 ifeq (${OS},Windows_NT)
-    CMAKE = cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${TYPE} ../../src/
+    CMAKE = VERSION=${VERSION} cmake -G "Unix Makefiles" \
+		-DCMAKE_BUILD_TYPE=${TYPE} ../../src/
 else
-    CMAKE = cmake -DCMAKE_BUILD_TYPE=${TYPE} ../../src/
+    CMAKE = VERSION=${VERSION} cmake -DCMAKE_BUILD_TYPE=${TYPE} ../../src/
 endif
 CMAKE_BUILD = cmake --build ./ -j ${JOBS}
 

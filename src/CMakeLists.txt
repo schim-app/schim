@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(schim VERSION 0.0.1 LANGUAGES CXX)
+project(schim VERSION $ENV{VERSION} LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -8,9 +8,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+configure_file(global.h.in global.h @ONLY)
 
 find_package(Qt5 5.10 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
 
