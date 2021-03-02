@@ -135,15 +135,15 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
+    QGraphicsView::mouseReleaseEvent(event);
     if (event->button() == Qt::LeftButton || event->button() == Qt::MidButton)
     {
         // Disable rubber-band select and pan
+        // This must come after base method call!
         setDragMode(DragMode::NoDrag);
         _rubberBandDragging = false;
         viewport()->setCursor(Qt::BlankCursor);
     }
-
-    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void SheetView::dropEvent(QDropEvent *event)
