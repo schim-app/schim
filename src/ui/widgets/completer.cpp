@@ -37,20 +37,6 @@ CompleterProxyModel *Completer::model()
 
 // HELPER FUNCTIONS
 
-bool iterate(const QModelIndex &index, const QAbstractItemModel *model,
-             std::function<bool(const QModelIndex&)> fun)
-{
-     if (index.isValid() && !fun(index))
-         return false;
-
-     if (!model->hasChildren(index) || (index.flags() & Qt::ItemNeverHasChildren))
-          return true;
-     for (int i = 0; i < model->rowCount(index); ++i)
-         if (!iterate(model->index(i, 0, index), model, fun))
-             return false;
-     return true;
-}
-
 CompleterProxyModel::CompleterProxyModel(QObject *parent)
     : QAbstractProxyModel(parent)
 {
@@ -60,7 +46,7 @@ QModelIndex CompleterProxyModel::mapToSource(const QModelIndex &proxy) const
 {
     int row = 0;
     QModelIndex foundIndex = {};
-    iterate({}, sourceModel(), [&](const QModelIndex &ind) {
+    sourceModel()->iterateLeaves({}, [&](const QModelIndex &ind) {
         QString str = ind.data().toString();
         if (!static_cast<DatabaseItem*>(ind.internalPointer())->isDir())
         {
@@ -80,7 +66,7 @@ QModelIndex CompleterProxyModel::mapFromSource(const QModelIndex &source) const
 {
     int row = 0;
     void *ptr = nullptr;
-    iterate({}, sourceModel(), [&](const QModelIndex &ind) {
+    sourceModel()->iterateLeaves({}, [&](const QModelIndex &ind) {
         if (ind == source)
         {
             ptr = ind.internalPointer();
@@ -104,7 +90,7 @@ QModelIndex CompleterProxyModel::index(int row, int column, const QModelIndex &p
     void *ptr = nullptr;
     int r = 0;
 
-    iterate({}, sourceModel(), [&](const QModelIndex &ind) {
+    sourceModel()->iterateLeaves({}, [&](const QModelIndex &ind) {
         if (!static_cast<DatabaseItem*>(ind.internalPointer())->isDir())
         {
             if (r == row)
@@ -127,7 +113,7 @@ QModelIndex CompleterProxyModel::parent(const QModelIndex &index) const
 int CompleterProxyModel::rowCount(const QModelIndex &parent) const
 {
     int count = 0;
-    iterate(parent, sourceModel(), [&](const QModelIndex &ind) {
+    sourceModel()->iterateLeaves(parent, [&](const QModelIndex &ind) {
         if (!static_cast<DatabaseItem*>(ind.internalPointer())->isDir())
             ++count;
         return true;
@@ -149,4 +135,9 @@ QVariant CompleterProxyModel::data(const QModelIndex &index, int role) const
     if (dynamic_cast<Header*>(static_cast<DatabaseItem*>(index.internalPointer())->getObject()))
         data = data.toString() + " [change]";
     return data;
+}
+
+Database *CompleterProxyModel::sourceModel() const
+{
+    return static_cast<Database*>(QAbstractProxyModel::sourceModel());
 }

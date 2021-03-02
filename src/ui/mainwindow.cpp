@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupActions();
 
     // Override tab close requests
-    connect(ui->tabView, &QTabWidget::tabCloseRequested, this, &MainWindow::tabCloseRequest);
+    connect(ui->tabView, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
 
     instance = this;
 }
@@ -102,13 +102,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     // Try to interpret input as a vim number
     if (vimEnabled)
         vimNumberFromKeyEvent(event);
-}
-
-void MainWindow::tabCloseRequest(int index)
-{
-    auto *tab = ui->tabView->widget(index);
-    ui->tabView->removeTab(index);
-    delete tab;
 }
 
 void MainWindow::anyActionTriggered()
@@ -211,13 +204,7 @@ void MainWindow::openProject()
 
     try
     {
-        activeProject = xmlParseProject(filename);
-
-        this->filename = filename;
-        changeSetting("default_path", filename);
-
-        setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
-        populateWithProject();
+        openProjectFromFile(filename);
     }
     catch (std::exception &e)
     {
@@ -491,6 +478,13 @@ void MainWindow::toggleDeveloperHints()
     ui->statusbar->setVisible(ui->statusbar->isHidden());
 }
 
+void MainWindow::onTabCloseRequested(int index)
+{
+    auto *tab = ui->tabView->widget(index);
+    ui->tabView->removeTab(index);
+    delete tab;
+}
+
 /**********************
  * Vim-specific stuff *
  **********************/
@@ -614,6 +608,17 @@ void MainWindow::clearTabs()
 
 void MainWindow::on_todoButton_pressed()
 {
+}
+
+void MainWindow::openProjectFromFile(const QString &filename)
+{
+    activeProject = xmlParseProject(filename);
+
+    this->filename = filename;
+    changeSetting("default_path", filename);
+
+    setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
+    populateWithProject();
 }
 
 //TODO remove

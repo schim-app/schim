@@ -74,6 +74,9 @@ int main(int argc, char *argv[])
         QApplication app(argc, argv);
         parser.process(args);
         (new MainWindow)->show();
+        if (posArgs.size() == 2)
+            MainWindow::getInstance()->openProjectFromFile(posArgs[1]);
+        // TODO allow to open multiple projects at once
         return app.exec();
     }
     else

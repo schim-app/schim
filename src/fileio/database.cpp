@@ -209,6 +209,19 @@ void Database::update()
     iterate(resolvePath(path), rootItem);
 }
 
+bool Database::iterateLeaves(const QModelIndex &ind, std::function<bool (const QModelIndex &)> fun)
+{
+     if (ind.isValid() && !fun(ind))
+         return false;
+
+     if (!hasChildren(ind) || (ind.flags() & Qt::ItemNeverHasChildren))
+          return true;
+     for (int i = 0; i < rowCount(ind); ++i)
+         if (!iterateLeaves(index(i, 0, ind), fun))
+             return false;
+     return true;
+}
+
 // BOILERPLATE
 
 Qt::ItemFlags Database::flags(const QModelIndex &index) const

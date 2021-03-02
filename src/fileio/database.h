@@ -70,6 +70,16 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     /** @brief Update the database from the file system. */
     void update();
+    /**
+     * @brief Iterate through all leaves of the database tree.
+     * @param index The index from which to start
+     * @param fun Function to execute for each leaf
+     * @return If the method is called recursively, this determines if
+     * the recursion should be terminated immediately after processing
+     * the first leaf.
+     */
+    bool iterateLeaves(const QModelIndex &index,
+                 std::function<bool(const QModelIndex&)> fun);
 
     // BOILERPLATE
     Qt::ItemFlags flags(const QModelIndex &index) const override;

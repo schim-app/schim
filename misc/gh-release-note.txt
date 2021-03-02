@@ -1,0 +1,2 @@
+**Note**: Do not download the source files attached to this release because they
+do not contain submodules. (GitHub's fault)

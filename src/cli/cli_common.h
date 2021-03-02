@@ -19,8 +19,9 @@ enum ErrCode
     FileError,
 };
 
-void unknown_option(const QString &opt);
+void unknown_option(const QString &opt, const QString &cmd = "schim");
 void unknown_command(const QString &cmd);
-void missing_positional(const QString &arg);
+void missing_positional(const QString &arg, const QString &cmd = "schim");
+void too_many_arguments(const QString &cmd = "schim");
 
 #endif // CLI_COMMON_H

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+MimeType=application/x-schim
+Name=Schim
+Exec=schim editor %F
+Icon=schim

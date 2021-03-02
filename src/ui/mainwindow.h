@@ -62,9 +62,6 @@ public:
     //TODO remove
     void dispValue(const QString &str);
 
-private slots:
-    void tabCloseRequest(int index);
-
     // ACTION PROCESSING
     void anyActionTriggered();
     void nextTab();
@@ -103,6 +100,11 @@ private slots:
     void takeScreenshot();
     void toggleDeveloperHints();
     void on_todoButton_pressed();
+
+    void openProjectFromFile(const QString &filename);
+
+private slots:
+    void onTabCloseRequested(int index);
 
 private: // Private methods
 
