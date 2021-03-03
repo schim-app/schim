@@ -53,15 +53,10 @@ public:
     // EVENTS
     void keyPressEvent(QKeyEvent *event) override;
 
-    //TODO remove
-    void dispValue(const QString &str);
-
     // ACTION PROCESSING
-    void anyActionTriggered();
     void nextTab(Vim::N n = 1);
     void prevTab(Vim::N n = 1);
     void appendSheet(Vim::N n);
-    void appendSheet();
     void newSheetBefore(Vim::N n = 1);
     void newSheetAfter(Vim::N n = 1);
     void closeTab(Vim::N = 0);
@@ -71,17 +66,6 @@ public:
     void save();
     void saveAs();
     void print();
-    void scrollUp(Vim::N n = 0);
-    void scrollDown(Vim::N n = 0);
-    void scrollLeft(Vim::N n = 0);
-    void scrollRight(Vim::N n = 0);
-    void undoInSheet(Vim::N n = 0);
-    void redoInSheet(Vim::N n = 0);
-    void insertLine();
-    void insertRect();
-    void insertText();
-    void increaseGridSize();
-    void decreaseGridSize();
     void cursorLeft();
     void cursorDown();
     void cursorUp();
@@ -89,7 +73,6 @@ public:
     void showHelp();
     void takeScreenshot();
     void toggleDeveloperHints();
-    void on_todoButton_pressed();
 
     void openProjectFromFile(const QString &filename);
 
@@ -109,8 +92,6 @@ private: // Private methods
 private: // Private members
     Ui::MainWindow *ui;
     int _vimNumber = 0;
-    // Actions that cannot be found in the menu + vim-ification of the ones that can
-    QList<std::tuple<QAction*, QKeySequence, QKeySequence, void (MainWindow::*)()>> additionalActions;
     Project *activeProject = nullptr;
     QString filename;
 

@@ -54,8 +54,8 @@ public:
     void setSnapToGrid(bool snap);
 
     // USER ACTIONS
-    void undo();
-    void redo();
+    void undo(Vim::N n = 0);
+    void redo(Vim::N n = 0);
     void command(QUndoCommand *command);
     void cursorLeft(Vim::N n = 0);
     void cursorDown(Vim::N n = 0);
@@ -66,6 +66,9 @@ public:
     void startOperation(Operation *op);
     void selectTexts();
     void selectPrimitive();
+    void insertLine();
+    void insertRect();
+    void insertText();
     /**
      * @brief Return the point on the grid that is closest to `pt`.
      *

@@ -131,13 +131,15 @@ void SheetScene::setSnapToGrid(bool snap)
 
 // USER ACTIONS
 
-void SheetScene::undo()
+void SheetScene::undo(Vim::N n)
 {
+    n = qMin(int(n), 10);
     undoStack.undo();
 }
 
-void SheetScene::redo()
+void SheetScene::redo(Vim::N n)
 {
+    n = qMin(int(n), 10);
     undoStack.redo();
 }
 
@@ -210,6 +212,21 @@ void SheetScene::selectPrimitive()
     foreach (auto *obj, items())
         if (!dynamic_cast<GCompositeObject*>(obj))
             obj->setSelected(true);
+}
+
+void SheetScene::insertLine()
+{
+    startOperation(new LineInsertOperation(this));
+}
+
+void SheetScene::insertRect()
+{
+    startOperation(new RectInsertOperation(this));
+}
+
+void SheetScene::insertText()
+{
+    startOperation(new TextInsertOperation(this));
 }
 
 QPointF SheetScene::snap(const QPointF &pt) const
@@ -434,6 +451,8 @@ bool SheetScene::processVimAction(const Vim::Action &action)
     else if_eq_do("right", 					cursorRight)
     else if_eq_do("grid-increase",			gridIncrease)
     else if_eq_do("grid-decrease", 			gridDecrease)
+    else if_eq_do("undo",					undo)
+    else if_eq_do("redo",					redo)
     else if (action == "select-texts")		selectTexts();
     else if (action == "select-primitive")	selectPrimitive();
     else return false;

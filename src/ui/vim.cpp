@@ -36,6 +36,8 @@ static QMap<QString, QString> actionMap = {
     {"g+", "grid-increase"},
     {"g-", "grid-decrease"},
     {"i", "insert"},
+    {"u", "undo"},
+    {"<C-r>", "redo"},
     // Util
     {"st", "select-texts"},
     {"sp", "select-primitive"},
