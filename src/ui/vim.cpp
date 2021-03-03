@@ -12,6 +12,9 @@ namespace
 bool enabled = false;
 
 static QMap<QString, QString> actionMap = {
+    // General
+    {"<C-n>", "next-entry"},
+    {"<C-p>", "prev-entry"},
     // Sheet scene
     {"h", "left"},
     {"j", "down"},
@@ -56,15 +59,28 @@ void appendNumber(int digit)
     count = count * 10 + digit;
 }
 
-void updateStroke(const QKeyEvent &event)
+QString keyToString(const QKeyEvent &event)
 {
-    QString text = event.text();
+    QString text = "";
+    if (event.modifiers() == Qt::CTRL)
+        text = "<C-" + QKeySequence(event.key()).toString().toLower() + ">";
+    else
+        text = event.text();
+
+    return text;
+}
+
+void updateStroke(const QKeyEvent &event, bool allowCount)
+{
+    QString text = keyToString(event);
     if (text.isEmpty())
         return;
     // fullStroke contains every key press
     if (_gettingNumber)
     {
-        if (QRegExp("[1-9]").exactMatch(text)
+        if (!allowCount)
+            _gettingNumber = false;
+        else if (QRegExp("[1-9]").exactMatch(text)
                 || (count > 0 && text == "0")) // The user pressed a number
         {
             if (count < 99999)
@@ -138,20 +154,26 @@ Vim::Count Vim::n()
 }
 
 void Vim::registerKeyPress(QKeyEvent *event,
-                           std::function<bool(const Vim::Action &)> callback)
+                           std::function<bool(const Vim::Action &)> callback,
+                           bool allowCount)
 {
+    // TODO remove this?
+    if (event->key() == Qt::Key_Control || event->key() == Qt::Key_Shift)
+        return;
     // TODO bug This will update stroke twice if the child item does not
     // accept the event
     // Actually this seems to not be necessary -- do some testing
     QString fullStroke_old = fullStroke, bareStroke_old = bareStroke;
     int count_old = count;
-    updateStroke(*event);
-    event->accept();
+    updateStroke(*event, allowCount);
     for (auto it = actionMap.begin(); it != actionMap.end(); ++it)
     {
         if (it.key() == bareStroke)
         { // The input stroke matches a binding
+            // Reset it here because callback can potentionally block execution
+            MainWindow::getInstance()->setVimStatus("");
             Action action(it.value(), count);
+            event->accept();
             if (!callback(action))
             { // Caller does not want the event
                 fullStroke = std::move(fullStroke_old);
@@ -164,6 +186,7 @@ void Vim::registerKeyPress(QKeyEvent *event,
         }
         else if (it.key().startsWith(bareStroke))
         {
+            event->accept();
             MainWindow::getInstance()->setVimStatus(fullStroke);
             return;
         }

@@ -6,6 +6,7 @@
 
 #include <QEvent>
 #include <QKeyEvent>
+#include <QAbstractItemView>
 
 InsertCompleter::InsertCompleter(QWidget *parent) :
     QDialog(parent, Qt::SplashScreen),
@@ -21,6 +22,8 @@ InsertCompleter::InsertCompleter(QWidget *parent) :
     completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
     ui->edit->setCompleter(completer);
 
+    setFocusProxy(ui->edit);
+
     connect(completer, static_cast<void (QCompleter::*)(const QModelIndex&)>(&QCompleter::activated), this, &InsertCompleter::onActivated);
 }
 
@@ -29,14 +32,26 @@ InsertCompleter::~InsertCompleter()
     delete ui;
 }
 
-void InsertCompleter::setFocus(Qt::FocusReason reason)
+void InsertCompleter::setVisible(bool visible)
 {
-    ui->edit->clear();
-    ui->edit->setFocus(reason);
+    QDialog::setVisible(visible);
+    if (visible)
+    {
+        ui->edit->clear();
+        connect(qApp, &QApplication::focusChanged, this, &InsertCompleter::onFocusChanged);
+    }
+    else
+        disconnect(qApp, &QApplication::focusChanged, this, &InsertCompleter::onFocusChanged);
+    // TODO Show popup right at the start.
+    // This should be trivial with completer->complete()
+    // but for some reason once you type in the first character
+    // the popup disappears.
+    // completer->complete();
 }
 
 void InsertCompleter::onActivated(const QModelIndex &index)
 {
+    // Start an insert operation for the selected object type
     auto *completionModel = static_cast<QAbstractProxyModel*>(completer->completionModel());
     QModelIndex ind = completionModel->mapToSource(index);
     auto *databaseItem = static_cast<DatabaseItem*>(ind.internalPointer());
@@ -44,13 +59,13 @@ void InsertCompleter::onActivated(const QModelIndex &index)
     emit insertionRequested(databaseItem->getObject());
 }
 
-// EVENTS
-
-void InsertCompleter::focusOutEvent(QFocusEvent *event)
+void InsertCompleter::onFocusChanged(QWidget *a, QWidget *b)
 {
-    // TODO rm maybe
-    Q_UNUSED(event)
+    if (a == ui->edit && b != completer->popup())
+        hide();
 }
+
+// EVENTS
 
 void InsertCompleter::keyPressEvent(QKeyEvent *event)
 {

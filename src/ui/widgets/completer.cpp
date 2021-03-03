@@ -2,6 +2,8 @@
 
 // TODO rm
 #include <QModelIndex>
+#include <QAbstractItemView>
+#include <QApplication>
 #include <iostream>
 
 #include "model/header.h"
@@ -31,9 +33,7 @@ CompleterProxyModel *Completer::model()
     return static_cast<CompleterProxyModel*>(QCompleter::model());
 }
 
-/***************
- * PROXY MODEL *
- ***************/
+////////////////////////////////////////////////////////////////////////////////
 
 // HELPER FUNCTIONS
 
@@ -140,4 +140,43 @@ QVariant CompleterProxyModel::data(const QModelIndex &index, int role) const
 Database *CompleterProxyModel::sourceModel() const
 {
     return static_cast<Database*>(QAbstractProxyModel::sourceModel());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+CompleterEdit::CompleterEdit(QWidget *parent)
+    : QLineEdit(parent) { }
+
+void CompleterEdit::keyPressEvent(QKeyEvent *event)
+{
+    // Preliminary ignore -- if the vim stroke is accepted, the event will also be
+    // accepted and the QLineEdit behavior will be overriden.
+    event->ignore();
+
+    Vim::registerKeyPress(event, [this] (const Vim::Action &action) {
+        return processVimAction(action);
+    }, false);
+    // If the vim stroke is accepted, do not let QLineEdit process the event
+    if (!event->isAccepted())
+        QLineEdit::keyPressEvent(event);
+}
+
+bool CompleterEdit::processVimAction(const Vim::Action &action)
+{
+    if (action == "next-entry")
+    {
+        auto *p = completer()->popup();
+        int curr = p->currentIndex().row(),
+                n = p->model()->rowCount();
+        p->setCurrentIndex(p->model()->index((curr + 1) % n, 0));
+    }
+    else if (action == "prev-entry")
+    {
+        auto *p = completer()->popup();
+        int curr = p->currentIndex().row(),
+                n = p->model()->rowCount();
+        p->setCurrentIndex(p->model()->index((n + curr - 1) % n, 0));
+    }
+    else return false;
+    return true;
 }

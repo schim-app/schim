@@ -17,7 +17,6 @@ public:
     SheetSettings(MainWindow *parent, int sheetId = 0);
     ~SheetSettings();
 
-    void setSheetId(int id);
     SheetScene *scene() const;
 
 private slots:

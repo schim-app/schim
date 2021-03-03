@@ -17,8 +17,7 @@ SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     connect(ui->variableEditor, &VariableEditor::changed, this, &SheetSettings::onChanged);
 
     // Initialize widgets with sheet data
-    auto *sheet = parent->getSheet();
-
+    auto *sheet = parent->getTab(sheetId)->scene()->getSheet();
 
     ui->editSheetTitle->setText(sheet->getTitle());
     ui->editSheetTitle->setFocus();
@@ -30,7 +29,7 @@ SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     else
         originalHeader = "";
 
-    ui->variableEditor->setVariables(parent->getSheet()->getLocalVariables());
+    ui->variableEditor->setVariables(sheet->getLocalVariables());
 
     ui->cbShowGrid->setChecked(scene()->isGridEnabled());
     ui->cbSnapGrid->setChecked(scene()->isSnapEnabled());
@@ -43,14 +42,9 @@ SheetSettings::~SheetSettings()
     delete ui;
 }
 
-void SheetSettings::setSheetId(int id)
-{
-    sheetId = id;
-}
-
 SheetScene *SheetSettings::scene() const
 {
-    return parent->getTab()->scene();
+    return parent->getTab(sheetId)->scene();
 }
 
 void SheetSettings::onChanged()

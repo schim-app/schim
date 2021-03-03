@@ -196,6 +196,7 @@ void MainWindow::openProject()
     try
     {
         openProjectFromFile(filename);
+        if (getTab()) scene()->setFocus();
     }
     catch (std::exception &e)
     {
@@ -328,6 +329,7 @@ bool MainWindow::processVimAction(const Vim::Action &action)
     else if_eq_do("new-sheet-before",		newSheetBefore)
     else if_eq_do("new-sheet-after",		newSheetAfter)
     else if_eq_do("sheet-append",			appendSheet)
+    else if_eq_do("sheet-settings",			openSheetSettings)
     else return false;
     return true;
 }
@@ -360,6 +362,13 @@ void MainWindow::setupActions()
             this, [this]() { if (getTab()) scene()->insertRect(); });
     connect(ui->actionInsertText, &QAction::triggered,
             this, [this]() { if (getTab()) scene()->insertText(); });
+    // SheetView
+    connect(ui->actionZoomIn, &QAction::triggered,
+            this, [this]() { if (getTab()) getTab()->zoomIn(); });
+    connect(ui->actionZoomOut, &QAction::triggered,
+            this, [this]() { if (getTab()) getTab()->zoomOut(); });
+    connect(ui->actionZoomReset, &QAction::triggered,
+            this, [this]() { if (getTab()) getTab()->resetZoom(); });
 }
 
 void MainWindow::populateWithProject()

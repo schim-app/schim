@@ -52,7 +52,8 @@ Count n();
 void addBinding(const QString &sequence, const QString &action);
 void addBindings(const QMap<QString, QString> &map);
 void registerKeyPress(QKeyEvent *event,
-                      std::function<bool(const Action &action)> callback);
+                      std::function<bool(const Action &action)> callback,
+                      bool allowCount = true);
 void resetStroke();
 
 QString getStatusText();

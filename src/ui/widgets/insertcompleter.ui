@@ -66,7 +66,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QLineEdit" name="edit">
+    <widget class="CompleterEdit" name="edit">
      <property name="minimumSize">
       <size>
        <width>350</width>
@@ -77,6 +77,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CompleterEdit</class>
+   <extends>QLineEdit</extends>
+   <header>ui/widgets/completer.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

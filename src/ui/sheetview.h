@@ -39,6 +39,7 @@ public:
     void scrollDown(Vim::N n = 0);
     void scrollLeft(Vim::N n = 0);
     void scrollRight(Vim::N n = 0);
+    void insert();
 
     // GETTERS
     SheetScene *scene();
@@ -73,7 +74,6 @@ private:
     void processRubberBandDrag(QMouseEvent *event);
     float zoom() const;
     void updateBackground();
-    void insertTriggered();
 
 private:
 

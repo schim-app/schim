@@ -98,6 +98,19 @@ void SheetView::scrollRight(Vim::N n)
     viewport()->update();
 }
 
+void SheetView::insert()
+{
+    if (!insertCompleter)
+    {
+        insertCompleter = new InsertCompleter(this);
+        connect(insertCompleter, &InsertCompleter::insertionRequested,
+                this, &SheetView::onInsertionRequested);
+    }
+    insertCompleter->move(QCursor::pos());
+    insertCompleter->setFocus();
+    insertCompleter->show();
+}
+
 // GETTERS
 
 SheetScene *SheetView::scene()
@@ -116,7 +129,7 @@ bool SheetView::processVimAction(const Vim::Action &action)
     else if_eq_do("scroll-down",	scrollDown)
     else if_eq_do("scroll-up",		scrollUp)
     else if_eq_do("scroll-right",	scrollRight)
-    else if (action == "insert")	insertTriggered();
+    else if (action == "insert")	insert();
     else return false;
     return true;
 }
@@ -320,6 +333,7 @@ void SheetView::init()
     // TODO Don't know if this is the optimal setting, but Minimal mode doesn't work properly
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
     setAcceptDrops(true);
+    setFocusPolicy(Qt::ClickFocus);
 }
 
 void SheetView::recalculateBaselineZoom()
@@ -364,18 +378,4 @@ void SheetView::updateBackground()
     auto brush = QBrush(QColor(0, 0, 0, 48), Qt::Dense4Pattern);
     brush.setTransform(QTransform().scale(10 / zoom(), 10 / zoom()));
     setBackgroundBrush(brush);
-}
-
-void SheetView::insertTriggered()
-{
-    // TODO how to provide the result to the scene -- signal/slot?
-    if (!insertCompleter)
-    {
-        insertCompleter = new InsertCompleter(this);
-        connect(insertCompleter, &InsertCompleter::insertionRequested,
-                this, &SheetView::onInsertionRequested);
-    }
-    insertCompleter->move(QCursor::pos());
-    insertCompleter->setFocus();
-    insertCompleter->show();
 }

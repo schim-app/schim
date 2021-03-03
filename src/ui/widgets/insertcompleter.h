@@ -3,6 +3,7 @@
 
 #include "completer.h"
 #include "model/object.h"
+#include "ui/vim.h"
 
 #include <QDialog>
 
@@ -18,7 +19,7 @@ public:
     InsertCompleter(QWidget *parent);
     ~InsertCompleter();
 
-    void setFocus(Qt::FocusReason reason = {});
+    void setVisible(bool visible) override;
 
 signals:
     /**
@@ -36,11 +37,10 @@ private slots:
      * @param index Index of the selected entry in the `completionModel()`.
      */
     void onActivated(const QModelIndex &index);
+    void onFocusChanged(QWidget *a, QWidget *b);
 
 private:
     // EVENTS
-    void focusOutEvent(QFocusEvent *event) override;
-    // TODO remove this once vim-mode is setup properly
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;

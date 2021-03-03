@@ -2,9 +2,33 @@
 #define COMPLETER_H
 
 #include "fileio/database.h"
+#include "ui/vim.h"
 
 #include <QCompleter>
+#include <QLineEdit>
 #include <QSortFilterProxyModel>
+
+class Completer;
+
+/**
+ * @brief Derived line edit to use with the completer.
+ *
+ * @note This class exists only so that we can implement
+ * vim bindings for the line edit used with `Completer`.
+ * We would have simply installed an eventFilter to a normal
+ * `QLineEdit`, but it doesn't receive events while the
+ * completer popup is shown.
+ */
+class CompleterEdit : public QLineEdit
+{
+public:
+    CompleterEdit(QWidget *parent = nullptr);
+
+private:
+    // EVENTS
+    void keyPressEvent(QKeyEvent *event);
+    bool processVimAction(const Vim::Action &action);
+};
 
 class CompleterProxyModel : public QAbstractProxyModel
 {
