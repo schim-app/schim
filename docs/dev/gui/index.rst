@@ -91,3 +91,53 @@ The following classes are derived from :ref:`GObject`:
 .. _QGraphicsView: https://doc.qt.io/qt-5/qgraphicsview.html
 .. _QGraphicsScene: https://doc.qt.io/qt-5/qgraphicsscene.html
 .. _QGraphicsItem: https://doc.qt.io/qt-5/qgraphicsitem.html
+
+Vim mode
+========
+
+Vim mode is implemented in `src/ui/vim.h` and `src/ui/vim.cpp`.
+
+.. todo:: Add more details.
+
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygennamespace:: Vim
+         :outline:
+
+   .. tab:: Details
+
+      .. doxygennamespace:: Vim
+         :no-link:
+* `Full reference <../../doxygen/namespaceVim.html>`_
+     ..
+
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Vim::Count
+         :members:
+         :outline:
+
+   .. tab:: Details
+
+      .. doxygenclass:: Vim::Count
+         :members:
+         :no-link:
+
+.. tabs::
+
+   .. tab:: Outline
+
+      .. doxygenclass:: Vim::Action
+         :members:
+         :outline:
+
+   .. tab:: Details
+
+      .. doxygenclass:: Vim::Action
+         :members:
+         :no-link:
+

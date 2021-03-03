@@ -164,11 +164,6 @@ Vim::Count Vim::Action::getCount() const
     return count == 0 ? 1 : count;
 }
 
-bool Vim::Action::hasCount() const
-{
-    return count != 0;
-}
-
 bool Vim::Action::operator==(const QString &cmd) const
 {
     return getCommand() == cmd;
@@ -178,7 +173,12 @@ bool Vim::Action::operator==(const QString &cmd) const
 
 void Vim::enable(bool enable)
 {
-    enabled = enable;
+    ::enabled = enable;
+}
+
+bool Vim::enabled()
+{
+    return ::enabled;
 }
 
 Vim::Count Vim::n()
@@ -193,37 +193,40 @@ void Vim::registerKeyPress(QKeyEvent *event,
     // TODO remove this?
     if (event->key() == Qt::Key_Control || event->key() == Qt::Key_Shift)
         return;
-    // TODO bug This will update stroke twice if the child item does not
-    // accept the event
-    // Actually this seems to not be necessary -- do some testing
     QString fullStroke_old = fullStroke, bareStroke_old = bareStroke;
     int count_old = count;
+    // Update the status with the key sequence obtained from `event`
     updateStroke(*event, allowCount);
     for (auto it = actionMap.begin(); it != actionMap.end(); ++it)
     {
-        if (it.key() == bareStroke)
-        { // The input stroke matches a binding
+        if (it.key() == bareStroke) // The input stroke matches a binding
+        {
             // Reset it here because callback can potentionally block execution
             MainWindow::getInstance()->setVimStatus("");
             Action action(it.value(), count);
-            event->accept();
             if (!callback(action))
             { // Caller does not want the event
+                // Undo any changes
                 fullStroke = std::move(fullStroke_old);
                 bareStroke = std::move(bareStroke_old);
                 count = count_old;
+                // This widget does not want the event - ignore the event
+                // to let parent widgets process this
                 event->ignore();
-                return;
+                return; // We do not want to resetStroke just yet
             }
+            else event->accept();
             break;
         }
         else if (it.key().startsWith(bareStroke))
         {
-            event->accept();
             MainWindow::getInstance()->setVimStatus(fullStroke);
+            // Vim status has been updated, don't let parent widgets do the same
+            event->accept();
             return;
         }
     }
+    // The key sequence is wholly unrecognized -- discard it
     resetStroke();
     MainWindow::getInstance()->setVimStatus(fullStroke);
 }

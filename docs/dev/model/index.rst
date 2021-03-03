@@ -30,6 +30,7 @@ configured parameters.
       .. doxygenclass:: Project
          :no-link:
          :undoc-members:
+
 * `Full reference <../../doxygen/classProject.html>`_
      ..
 
@@ -48,6 +49,7 @@ Sheet
       .. doxygenclass:: Sheet
          :no-link:
          :undoc-members:
+
 * `Full reference <../../doxygen/classSheet.html>`_
      ..
 
@@ -79,6 +81,7 @@ All objects are derived from the base class Object.
       .. doxygenclass:: Object
          :no-link:
          :undoc-members:
+
 * `Full reference <../../doxygen/classObject.html>`_
      ..
 
@@ -113,6 +116,7 @@ inherits :ref:`Object`.
       .. doxygenclass:: CompositeObject
          :no-link:
          :undoc-members:
+
 * `Full reference <../../doxygen/classCompositeObject.html>`_
      ..
 
