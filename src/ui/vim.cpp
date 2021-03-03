@@ -54,6 +54,33 @@ static QString bareStroke;
 static int count = 0;
 bool _gettingNumber = true;
 
+#ifdef Q_OS_WIN32
+#	include <windows.h>
+#else
+#	include <X11/XKBlib.h>
+#	undef KeyPress
+#	undef KeyRelease
+#	undef FocusIn
+#	undef FocusOut
+#endif
+
+// TODO test on windows
+bool checkCapsLock()
+{
+#ifdef Q_OS_WIN32
+    return GetKeyState(VK_CAPITAL) == 1;
+#else // X11
+    Display *d = XOpenDisplay((char*)0);
+    if (d)
+    {
+        unsigned n;
+        XkbGetIndicatorState(d, XkbUseCoreKbd, &n);
+        return (n & 0x01) == 1;
+    }
+    return false;
+#endif
+}
+
 void appendNumber(int digit)
 {
     count = count * 10 + digit;
@@ -62,8 +89,13 @@ void appendNumber(int digit)
 QString keyToString(const QKeyEvent &event)
 {
     QString text = "";
-    if (event.modifiers() == Qt::CTRL)
-        text = "<C-" + QKeySequence(event.key()).toString().toLower() + ">";
+    if (event.modifiers() & Qt::CTRL)
+    {
+        QString seqText = QKeySequence(event.key()).toString();
+        text = "<C-" +
+                (checkCapsLock() != (event.modifiers() & Qt::SHIFT) ? seqText : seqText.toLower())
+                + ">";
+    }
     else
         text = event.text();
 
@@ -103,6 +135,7 @@ void updateStroke(const QKeyEvent &event, bool allowCount)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
 Vim::Count::Count(int count)
     : count(count) { }
 

@@ -100,3 +100,6 @@ target_link_libraries(schim
     Qt5::Help
     dxflib
 )
+if (NOT WIN32)
+    target_link_libraries(schim -lX11)
+endif()
