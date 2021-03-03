@@ -315,8 +315,9 @@ void MainWindow::toggleDeveloperHints()
 
 void MainWindow::onTabCloseRequested(int index)
 {
+    auto *tab = getTab(index);
     ui->tabView->removeTab(index);
-    delete ui->tabView->widget(index);
+    delete tab;
 }
 
 bool MainWindow::processVimAction(const Vim::Action &action)

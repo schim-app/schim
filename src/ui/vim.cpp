@@ -235,7 +235,8 @@ void Vim::addBinding(const QString &sequence, const QString &action)
 
 void Vim::addBindings(const QMap<QString, QString> &map)
 {
-    actionMap.insert(map);
+    for (auto it = map.begin(); it != map.end(); ++it)
+        actionMap.insert(it.key(), it.value());
 }
 
 void Vim::resetStroke()
