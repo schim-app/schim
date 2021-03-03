@@ -1,6 +1,6 @@
-#include "mainwindow.h"
 #include "sheetscene.h"
 
+#include "mainwindow.h"
 #include "objects/gobject.h"
 #include "ui/objects/gline.h"
 #include "ui/objects/gheader.h"
@@ -146,36 +146,48 @@ void SheetScene::command(QUndoCommand *command)
     undoStack.push(command);
 }
 
-void SheetScene::cursorLeft()
+void SheetScene::cursorLeft(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos - QPointF{gridX, 0}))
+                constrainToContentArea(forcedSnap(cursorPos - QPointF{n * gridX, 0}))
                 );
-    emit cursorChanged();
+    emit cursorMoved();
 }
 
-void SheetScene::cursorDown()
+void SheetScene::cursorDown(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos + QPointF{0, gridY}))
+                constrainToContentArea(forcedSnap(cursorPos + QPointF{0, n * gridY}))
                 );
-    emit cursorChanged();
+    emit cursorMoved();
 }
 
-void SheetScene::cursorUp()
+void SheetScene::cursorUp(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos - QPointF{0, gridY}))
+                constrainToContentArea(forcedSnap(cursorPos - QPointF{0, n * gridY}))
                 );
-    emit cursorChanged();
+    emit cursorMoved();
 }
 
-void SheetScene::cursorRight()
+void SheetScene::cursorRight(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos + QPointF{gridX, 0}))
+                constrainToContentArea(forcedSnap(cursorPos + QPointF{n * gridX, 0}))
                 );
-    emit cursorChanged();
+    emit cursorMoved();
+}
+
+void SheetScene::gridIncrease(Vim::N n)
+{
+    setGridSize(getGridSize() + QSizeF{double(n), double(n)});
+    update();
+}
+
+void SheetScene::gridDecrease(Vim::N n)
+{
+    setGridSize(getGridSize() - QSizeF{double(n), double(n)});
+    update();
 }
 
 void SheetScene::startOperation(Operation *op)
@@ -184,6 +196,20 @@ void SheetScene::startOperation(Operation *op)
         operation->cancel();
     operation = op;
     connect(operation, &Operation::finished, this, &SheetScene::onOperationFinished);
+}
+
+void SheetScene::selectTexts()
+{
+    foreach (auto *obj, items())
+        if (dynamic_cast<GText*>(obj))
+            obj->setSelected(true);
+}
+
+void SheetScene::selectPrimitive()
+{
+    foreach (auto *obj, items())
+        if (!dynamic_cast<GCompositeObject*>(obj))
+            obj->setSelected(true);
 }
 
 QPointF SheetScene::snap(const QPointF &pt) const
@@ -307,10 +333,13 @@ void SheetScene::reload()
 
 void SheetScene::keyPressEvent(QKeyEvent *event)
 {
-    // Should be first to allow children to accept the event
+    // Let children process this event as needed, and potentially accept it
     QGraphicsScene::keyPressEvent(event);
-
     if (event->isAccepted()) return;
+
+    Vim::registerKeyPress(event, [this](const Vim::Action &action) {
+        return processVimAction(action);
+    });
 
     if (event->key() == Qt::Key_Escape)
     {
@@ -393,6 +422,22 @@ void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
             insertComponentOrHeader(obj);
         }
     }
+}
+
+bool SheetScene::processVimAction(const Vim::Action &action)
+{
+#define if_eq_do(name, act) if (action == name) { act(Vim::n()); }
+
+         if_eq_do("left",               	cursorLeft)
+    else if_eq_do("down",					cursorDown)
+    else if_eq_do("up",						cursorUp)
+    else if_eq_do("right", 					cursorRight)
+    else if_eq_do("grid-increase",			gridIncrease)
+    else if_eq_do("grid-decrease", 			gridDecrease)
+    else if (action == "select-texts")		selectTexts();
+    else if (action == "select-primitive")	selectPrimitive();
+    else return false;
+    return true;
 }
 
 // SLOTS

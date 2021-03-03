@@ -16,12 +16,18 @@
     <height>0</height>
    </size>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Schim</string>
   </property>
   <property name="windowIcon">
    <iconset>
     <normaloff>../../res/img/icon.svg</normaloff>../../res/img/icon.svg</iconset>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="toolTip">

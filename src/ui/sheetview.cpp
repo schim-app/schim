@@ -15,6 +15,7 @@
 #include <QCompleter>
 #include <QtMath>
 #include <QGraphicsSceneEvent>
+#include <QScrollBar>
 
 #include <QDebug>
 
@@ -30,15 +31,7 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     updateBackground();
 
     connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
-    connect(scene(), &SheetScene::cursorChanged, this, &SheetView::onCursorChanged);
-
-    // Create actions
-    // TODO change this when vim becomes disable-able
-    QAction *actionInsert = new QAction;
-    actionInsert->setShortcut({Qt::Key_I});
-
-    addAction(actionInsert);
-    connect(actionInsert, &QAction::triggered, this, &SheetView::insertTriggered);
+    connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorChanged);
 
     setWhatsThis("This is a sheet view. This is where you draw your schematics"
                  "on a sheet of paper.");
@@ -77,11 +70,55 @@ void SheetView::zoomOut(float step)
     setZoom(userZoom / step);
 }
 
+void SheetView::scrollUp(Vim::N n)
+{
+    auto *bar = verticalScrollBar();
+    bar->setValue(bar->value() - n * bar->singleStep());
+    viewport()->update();
+}
+
+void SheetView::scrollDown(Vim::N n)
+{
+    auto *bar = verticalScrollBar();
+    bar->setValue(bar->value() + n * bar->singleStep());
+    viewport()->update();
+}
+
+void SheetView::scrollLeft(Vim::N n)
+{
+    auto *bar = horizontalScrollBar();
+    bar->setValue(bar->value() - n * bar->singleStep());
+    viewport()->update();
+}
+
+void SheetView::scrollRight(Vim::N n)
+{
+    auto *bar = horizontalScrollBar();
+    bar->setValue(bar->value() + n * bar->singleStep());
+    viewport()->update();
+}
+
 // GETTERS
 
 SheetScene *SheetView::scene()
 {
     return (SheetScene*) QGraphicsView::scene();
+}
+
+bool SheetView::processVimAction(const Vim::Action &action)
+{
+#define if_eq_do(name, act) if (action == name) { act(Vim::n()); }
+
+    if_eq_do("zoom-in",				[this](Vim::N n){vimdo(n) zoomIn();})
+    else if_eq_do("zoom-out",	 	[this](Vim::N n){vimdo(n) zoomOut();})
+    else if_eq_do("zoom-set",		[this](Vim::N n){if (n.raw() == 0) resetZoom(); else setZoom(n / 100.);})
+    else if_eq_do("scroll-left",	scrollLeft)
+    else if_eq_do("scroll-down",	scrollDown)
+    else if_eq_do("scroll-up",		scrollUp)
+    else if_eq_do("scroll-right",	scrollRight)
+    else if (action == "insert")	insertTriggered();
+    else return false;
+    return true;
 }
 
 // EVENTS
@@ -146,6 +183,16 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void SheetView::keyPressEvent(QKeyEvent *event)
+{
+    QGraphicsView::keyPressEvent(event);
+    if (event->isAccepted()) return;
+
+    Vim::registerKeyPress(event, [this](const Vim::Action &action) {
+        return processVimAction(action);
+    });
+}
+
 void SheetView::dropEvent(QDropEvent *event)
 {
     setFocus();
@@ -200,7 +247,7 @@ void SheetView::onCursorChanged()
 {
     auto pos = scene()->getSnappedCursorPos();
 
-    // We do not wont to trigger a mouseMoveEvent this time
+    // We do not want to trigger a mouseMoveEvent this time
     setMouseTracking(false);
     cursor().setPos(mapToGlobal(mapFromScene(pos)));
     qApp->processEvents();

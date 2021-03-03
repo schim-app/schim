@@ -2,6 +2,7 @@
 #define SHEETSCENE_H
 
 #include "model/sheet.h"
+#include "ui/vim.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
@@ -56,11 +57,15 @@ public:
     void undo();
     void redo();
     void command(QUndoCommand *command);
-    void cursorLeft();
-    void cursorDown();
-    void cursorUp();
-    void cursorRight();
+    void cursorLeft(Vim::N n = 0);
+    void cursorDown(Vim::N n = 0);
+    void cursorUp(Vim::N n = 0);
+    void cursorRight(Vim::N n = 0);
+    void gridIncrease(Vim::N n = 0);
+    void gridDecrease(Vim::N n = 0);
     void startOperation(Operation *op);
+    void selectTexts();
+    void selectPrimitive();
     /**
      * @brief Return the point on the grid that is closest to `pt`.
      *
@@ -99,7 +104,7 @@ public:
     void reload();
 
 signals:
-    void cursorChanged();
+    void cursorMoved();
 
 private:
 
@@ -116,6 +121,8 @@ private:
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
+
+    bool processVimAction(const Vim::Action &action);
 
 private slots:
     // SLOTS

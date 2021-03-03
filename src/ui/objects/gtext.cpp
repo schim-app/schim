@@ -236,11 +236,7 @@ void GDisplayText::keyPressEvent(QKeyEvent *event)
             return;
         }
         else if (event->modifiers() == Qt::SHIFT)
-        {
             event->setModifiers({});
-            QGraphicsTextItem::keyPressEvent(event);
-            return;
-        }
     }
     QGraphicsTextItem::keyPressEvent(event);
 }

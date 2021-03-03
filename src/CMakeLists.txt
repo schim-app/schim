@@ -50,6 +50,7 @@ add_executable(schim
     model/variable.cpp 
     ui/commands.cpp 
     ui/mainwindow.cpp 
+    ui/vim.cpp
     ui/objects/gcomponent.cpp
     ui/objects/gcompositeobject.cpp 
     ui/objects/gheader.cpp 
@@ -61,7 +62,6 @@ add_executable(schim
     ui/operations.cpp 
     ui/sheetscene.cpp 
     ui/sheetview.cpp 
-    ui/vimlike.cpp 
     ui/widgets/completer.cpp
     ui/widgets/insertcompleter.cpp
     ui/widgets/componentlist.cpp 

@@ -4,6 +4,11 @@
 #include <QVariant>
 #include <QColor>
 
+#ifdef QT_DEBUG
+// For debugging purposes
+#include <iostream>
+#endif
+
 #include "fileio/database.h"
 
 // TODO colorSelected is obsolete -- give it some time then remove

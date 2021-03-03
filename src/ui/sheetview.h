@@ -34,15 +34,23 @@ public:
     void zoomIn(float step = 1.2);
     void zoomOut(float step = 1.2);
 
+    // ACTIONS
+    void scrollUp(Vim::N n = 0);
+    void scrollDown(Vim::N n = 0);
+    void scrollLeft(Vim::N n = 0);
+    void scrollRight(Vim::N n = 0);
+
     // GETTERS
     SheetScene *scene();
 
 private:
+    bool processVimAction(const Vim::Action &action);
 
     // EVENTS
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     void dropEvent(QDropEvent *event) override;
     void leaveEvent(QEvent *event) override;
     void enterEvent(QEvent *event) override;
@@ -78,6 +86,7 @@ private:
     /// Helper attributes for event processing
     QPoint _panStartPos, _selectStartPos;
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;
+
 };
 
 #endif // SHEETVIEW_H

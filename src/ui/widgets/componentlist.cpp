@@ -30,6 +30,7 @@ ComponentList::ComponentList(QWidget *parent)
 
     setModel(globalDatabase); // TODO create this database elsewhere
 }
+
 Database *ComponentList::model()
 {
     return static_cast<Database*>(QTreeView::model());

@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tabView->clear();
 
-    ui->vimKeyStatus->setText("");
+    setVimStatus("");
     ui->statusbar->hide();
 
     setupActions();
@@ -42,9 +42,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/***********
- * Getters *
- ***********/
+// GETTERS
 
 QTabWidget *MainWindow::getTabView() const
 {
@@ -84,101 +82,99 @@ MainWindow *MainWindow::getInstance()
     return instance;
 }
 
-/***********
- * Setters *
- ***********/
+// SETTERS
 
 void MainWindow::setTabId(int id)
 {
     ui->tabView->setCurrentIndex(id);
 }
 
-/********************
- * Events and slots *
- ********************/
+void MainWindow::setVimStatus(const QString &status)
+{
+    ui->vimKeyStatus->setText(status);
+}
+
+// EVENTS
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    // Try to interpret input as a vim number
-    if (vimEnabled)
-        vimNumberFromKeyEvent(event);
+    Vim::registerKeyPress(event, [this](const Vim::Action &action) {
+        processVimAction(action);
+        return true; // Top-level parent
+    });
 }
 
-void MainWindow::anyActionTriggered()
+// ACTION PROCESSING
+
+void MainWindow::nextTab(Vim::N n)
 {
-    resetVimStatus();
+    setTabId(getTabId() + n);
 }
 
-/*********************
- * Action processing *
- *********************/
-
-void MainWindow::nextTab()
+void MainWindow::prevTab(Vim::N n)
 {
-    vimNumberConstrain(100);
-    vimdo setTabId(getTabId() + 1);
+    setTabId(getTabId() - n);
 }
 
-void MainWindow::prevTab()
+void MainWindow::appendSheet(Vim::N n)
 {
-    vimNumberConstrain(100);
-    vimdo setTabId(getTabId() - 1);
+    if (!activeProject)
+        return;
+
+    n = qMin(int(n), 50);
+    vimdo(n) appendSheet();
 }
 
 void MainWindow::appendSheet()
 {
-    if (!activeProject)
-        return;
-
-    vimNumberConstrain(50);
-    vimdo {
-        Sheet *sheet = new Sheet;
-        activeProject->addSheet(sheet);
-        ui->tabView->addTab(new SheetView(sheet, ui->tabView), "New sheet");
-    }
+    // TODO remove when sourting out setupActions
+    Sheet *sheet = new Sheet;
+    activeProject->addSheet(sheet);
+    ui->tabView->addTab(new SheetView(sheet, ui->tabView), "New sheet");
 }
 
-void MainWindow::newSheetBefore()
+void MainWindow::newSheetBefore(Vim::N n)
 {
     if (!activeProject)
         return;
 
-    vimNumberConstrain(50);
-    vimdo {
+    n = qMin(int(n), 50);
+    vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId(), sheet);
         ui->tabView->insertTab(getTabId(), new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
-void MainWindow::newSheetAfter()
+void MainWindow::newSheetAfter(Vim::N n)
 {
     if (!activeProject)
         return;
 
-    vimNumberConstrain(50);
-    vimdo {
+    n = qMin(int(n), 50);
+    vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId() + 1, sheet);
         ui->tabView->insertTab(getTabId() + 1, new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
-void MainWindow::closeTab()
+// TODO raw number
+void MainWindow::closeTab(Vim::N n)
 {
-    if (_vimNumber == 0)
-        _vimNumber = getTabId() + 1;
-    ui->tabView->removeTab(vimNumber() - 1);
+    if (n.raw() == 0)
+        n = getTabId() + 1;
+    ui->tabView->removeTab(n - 1);
 }
 
-void MainWindow::openSheetSettings()
+void MainWindow::openSheetSettings(Vim::N n)
 {
-    if (_vimNumber == 0)
-        _vimNumber = getTabId() + 1;
+    if (n.raw() == 0)
+        n = getTabId() + 1;
 
-    if (vimNumber() > ui->tabView->count())
+    if (n > ui->tabView->count())
         return;
-    SheetSettings settings(this, vimNumber() - 1);
+    SheetSettings settings(this, n - 1);
     settings.exec();
 }
 
@@ -277,77 +273,58 @@ void MainWindow::print()
     }
 }
 
-void MainWindow::zoomIn()
-{
-    vimdo if (getTab()) getTab()->zoomIn();
-}
-
-void MainWindow::zoomOut()
-{
-    vimdo if (getTab()) getTab()->zoomOut();
-}
-
-void MainWindow::setZoom()
+void MainWindow::scrollUp(Vim::N n)
 {
     if (getTab() == nullptr) return;
-    if (_vimNumber == 0)
-        getTab()->resetZoom();
-    else
-        getTab()->setZoom(vimNumber() / 100.);
-}
-
-void MainWindow::scrollUp()
-{
-    if (getTab() == nullptr) return;
-    vimdo {
+    vimdo(n) {
         auto *bar = getTab()->verticalScrollBar();
         bar->setValue(bar->value() - bar->singleStep());
     }
     getTab()->viewport()->update();
 }
 
-void MainWindow::scrollDown()
+void MainWindow::scrollDown(Vim::N n)
 {
     if (getTab() == nullptr) return;
-    vimdo {
+    vimdo(n) {
         auto *bar = getTab()->verticalScrollBar();
         bar->setValue(bar->value() + bar->singleStep());
     }
     getTab()->viewport()->update();
 }
 
-void MainWindow::scrollLeft()
+void MainWindow::scrollLeft(Vim::N n)
 {
     if (getTab() == nullptr) return;
-    vimdo {
+    vimdo(n) {
         auto *bar = getTab()->horizontalScrollBar();
         bar->setValue(bar->value() - bar->singleStep());
     }
     getTab()->viewport()->update();
 }
 
-void MainWindow::scrollRight()
+void MainWindow::scrollRight(Vim::N n)
 {
     if (getTab() == nullptr) return;
-    vimdo {
+    vimdo(n) {
         auto *bar = getTab()->horizontalScrollBar();
         bar->setValue(bar->value() + bar->singleStep());
     }
     getTab()->viewport()->update();
 }
 
-void MainWindow::undoInSheet()
+void MainWindow::undoInSheet(Vim::N n)
 {
-    vimNumberConstrain(10);
+    n = qMin(int(n), 10);
     if (getTab())
-        vimdo scene()->undo();
+        vimdo(n) scene()->undo();
 }
 
-void MainWindow::redoInSheet()
+void MainWindow::redoInSheet(Vim::N n)
 {
-    vimNumberConstrain(10);
+    n = qMin(int(n), 10);
     if (getTab())
-        vimdo scene()->redo();
+        vimdo(n) scene()->redo();
 }
 
 void MainWindow::insertLine()
@@ -371,67 +348,13 @@ void MainWindow::insertText()
 void MainWindow::increaseGridSize()
 {
     if (getTab())
-    {
-        scene()->setGridSize(scene()->getGridSize() + QSizeF{1, 1});
-        scene()->update();
-    }
+        scene()->gridIncrease();
 }
 
 void MainWindow::decreaseGridSize()
 {
     if (getTab())
-    {
-        scene()->setGridSize(scene()->getGridSize() - QSizeF{1, 1});
-        scene()->update();
-    }
-}
-
-void MainWindow::showAllTexts()
-{
-    if (getTab())
-    {
-        foreach (auto *obj, scene()->items())
-            if (dynamic_cast<GText*>(obj))
-                obj->setSelected(true);
-    }
-}
-
-void MainWindow::showAllPrimitives()
-{
-    if (getTab())
-    {
-        foreach (auto *obj, scene()->items())
-            if (!dynamic_cast<GCompositeObject*>(obj))
-                obj->setSelected(true);
-    }
-}
-
-void MainWindow::cursorLeft()
-{
-    vimNumberConstrain(1000);
-    if (getTab())
-        vimdo scene()->cursorLeft();
-}
-
-void MainWindow::cursorDown()
-{
-    vimNumberConstrain(1000);
-    if (getTab())
-        vimdo scene()->cursorDown();
-}
-
-void MainWindow::cursorUp()
-{
-    vimNumberConstrain(1000);
-    if (getTab())
-        vimdo scene()->cursorUp();
-}
-
-void MainWindow::cursorRight()
-{
-    vimNumberConstrain(1000);
-    if (getTab())
-        vimdo scene()->cursorRight();
+        scene()->gridDecrease();
 }
 
 void MainWindow::showHelp()
@@ -485,109 +408,42 @@ void MainWindow::onTabCloseRequested(int index)
     delete tab;
 }
 
-/**********************
- * Vim-specific stuff *
- **********************/
-
-void MainWindow::resetVimStatus()
+bool MainWindow::processVimAction(const Vim::Action &action)
 {
-    _vimNumber = 0;
-    ui->vimKeyStatus->setText("");
+#define if_eq_do(name, act) if (action == name) { act(Vim::n()); }
+
+         if_eq_do("tab-next",				nextTab)
+    else if_eq_do("tab-prev",				prevTab)
+    else if_eq_do("tab-close",				closeTab)
+    else if_eq_do("new-sheet-before",		newSheetBefore)
+    else if_eq_do("new-sheet-after",		newSheetAfter)
+    else if_eq_do("sheet-append",			appendSheet)
+    else return false;
+    return true;
 }
 
-void MainWindow::vimNumberFromKeyEvent(QKeyEvent *event)
-{
-    bool convertSuccess = true;
-    // Try to convert the key name to an integer
-    int number = QKeySequence(event->key()).toString().toInt(&convertSuccess);
-
-    if (convertSuccess && (_vimNumber != 0 || number != 0) && event->modifiers() == 0)
-    { // No modifiers => A number was entered instead of another character
-        _vimNumber = _vimNumber * 10 + number;
-        ui->vimKeyStatus->setText(QString::number(_vimNumber));
-    }
-
-    if (event->key() == Qt::Key_Escape)
-        resetVimStatus();
-}
-
-int MainWindow::vimNumber()
-{
-    return qMax(_vimNumber, 1);
-}
-
-void MainWindow::vimNumberConstrain(int min, int max)
-{
-    _vimNumber = qMax(min, qMin(_vimNumber, max));
-}
-
-void MainWindow::vimNumberConstrain(int max)
-{
-    _vimNumber = qMin(_vimNumber, max);
-}
-
-/*****************
- * Miscellaneous *
- *****************/
+// MISCELLANEOUS
 
 void MainWindow::setupActions()
 {
     // Actions that are already defined in the ui file are added to the bottom
     additionalActions = decltype(additionalActions) {
-        { new QAction("Prev tab", this), {}, {Qt::SHIFT + Qt::Key_J}, &MainWindow::prevTab },
-        { new QAction("Next tab", this), {},  {Qt::SHIFT + Qt::Key_K}, &MainWindow::nextTab },
-        { new QAction("New sheet before", this), {},  {Qt::Key_G, Qt::Key_I}, &MainWindow::newSheetBefore },
-        { new QAction("New sheet after", this), {},  {Qt::Key_G, Qt::Key_A}, &MainWindow::newSheetAfter },
-        { new QAction("Close tab", this), {},  {Qt::Key_G, Qt::Key_D}, &MainWindow::closeTab },
-        { new QAction("Sheet settings", this), {},  {Qt::CTRL + Qt::Key_G}, &MainWindow::openSheetSettings },
-        { new QAction("Zoom in", this), {Qt::CTRL + Qt::Key_Plus}, {Qt::Key_Z, Qt::Key_I}, &MainWindow::zoomIn},
-        { new QAction("Zoom out", this), {Qt::CTRL + Qt::Key_Minus}, {Qt::Key_Z, Qt::Key_O}, &MainWindow::zoomOut},
-        { new QAction("Reset zoom", this), {Qt::CTRL + Qt::Key_0}, {Qt::Key_Z, Qt::Key_Z}, &MainWindow::setZoom},
-        { new QAction("Scroll up", this), {}, {Qt::CTRL + Qt::Key_K}, &MainWindow::scrollUp},
-        { new QAction("Scroll down", this), {}, {Qt::CTRL + Qt::Key_J}, &MainWindow::scrollDown},
-        { new QAction("Scroll left", this), {}, {Qt::CTRL + Qt::Key_H}, &MainWindow::scrollLeft},
-        { new QAction("Scroll right", this), {}, {Qt::CTRL + Qt::Key_L}, &MainWindow::scrollRight},
-        { new QAction("Increase grid", this), {}, {Qt::Key_G, Qt::Key_Plus}, &MainWindow::increaseGridSize},
-        { new QAction("Decrease grid", this), {}, {Qt::Key_G, Qt::Key_Minus}, &MainWindow::decreaseGridSize},
-        { new QAction("Show all texts", this), {}, {Qt::Key_S, Qt::Key_T}, &MainWindow::showAllTexts},
-        { new QAction("Show all primitives", this), {}, {Qt::Key_S, Qt::Key_P}, &MainWindow::showAllPrimitives},
-        { new QAction("Move cursor left", this), {}, {Qt::Key_H}, &MainWindow::cursorLeft},
-        { new QAction("Move cursor down", this), {}, {Qt::Key_J}, &MainWindow::cursorDown},
-        { new QAction("Move cursor up", this), {}, {Qt::Key_K}, &MainWindow::cursorUp},
-        { new QAction("Move cursor right", this), {}, {Qt::Key_L}, &MainWindow::cursorRight},
         { ui->actionHelp, {}, {}, &MainWindow::showHelp },
         { ui->actionNew, {},  {}, &MainWindow::newProject },
         { ui->actionOpen, {},  {}, &MainWindow::openProject },
         { ui->actionSave, {}, {}, &MainWindow::save },
         { ui->actionSaveAs, {}, {}, &MainWindow::saveAs },
         { ui->actionPrint, {}, {}, &MainWindow::print },
-        { ui->actionNewSheet, {},  {Qt::Key_G, Qt::SHIFT + Qt::Key_A}, &MainWindow::appendSheet },
+        { ui->actionNewSheet, {},  {}, &MainWindow::appendSheet },
         { ui->actionInsertLine, {}, {}, &MainWindow::insertLine },
         { ui->actionInsertRect, {}, {}, &MainWindow::insertRect },
         { ui->actionInsertText, {}, {}, &MainWindow::insertText },
-        { ui->actionUndoInSheet, {}, {Qt::Key_U}, &MainWindow::undoInSheet },
-        { ui->actionRedoInSheet, {}, {Qt::CTRL + Qt::Key_R}, &MainWindow::redoInSheet },
         { ui->actionScreenshot, {}, {}, &MainWindow::takeScreenshot },
-        { ui->actionDeveloperHints, {}, {}, &MainWindow::toggleDeveloperHints }
+        { ui->actionDeveloperHints, {}, {}, &MainWindow::toggleDeveloperHints },
     };
-    if (vimEnabled)
-        foreach (auto action, additionalActions)
-        {
-            auto qaction = std::get<0>(action); // Alias
-            addAction(qaction);
-
-            auto shortcuts = qaction->shortcuts();
-            // Add an additional keybinding to the action
-            shortcuts.append(std::get<1>(action));
-            // Add the vim keybinding as a shortcut to the action
-            shortcuts.append(std::get<2>(action));
-            qaction->setShortcuts(shortcuts);
-            if (std::get<3>(action) != nullptr)
-                connect(qaction, &QAction::triggered, this, std::get<3>(action));
-            // Connect the action's triggered signal to a universal slot
-            // -- has to be connected AFTER the command-specific slot
-            connect(qaction, &QAction::triggered, this, &MainWindow::anyActionTriggered);
-        }
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newProject);
+    //connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::);
+    //connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::);
 }
 
 void MainWindow::populateWithProject()
