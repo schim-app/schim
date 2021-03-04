@@ -32,7 +32,7 @@ breathe_projects = { "Schim": "_build/doxygen/xml/" }
 breathe_default_project = "Schim"
 # Stop breathe from ignoring main.cpp
 breathe_implementation_filename_extensions = []
-breathe_default_members = ('members')
+breathe_default_members = ('members',)
 
 primary_domain = 'cpp'
 highlight_language = 'cpp'

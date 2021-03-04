@@ -112,32 +112,3 @@ Vim mode is implemented in `src/ui/vim.h` and `src/ui/vim.cpp`.
          :no-link:
 * `Full reference <../../doxygen/namespaceVim.html>`_
      ..
-
-.. tabs::
-
-   .. tab:: Outline
-
-      .. doxygenclass:: Vim::Count
-         :members:
-         :outline:
-
-   .. tab:: Details
-
-      .. doxygenclass:: Vim::Count
-         :members:
-         :no-link:
-
-.. tabs::
-
-   .. tab:: Outline
-
-      .. doxygenclass:: Vim::Action
-         :members:
-         :outline:
-
-   .. tab:: Details
-
-      .. doxygenclass:: Vim::Action
-         :members:
-         :no-link:
-
