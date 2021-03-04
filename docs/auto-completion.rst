@@ -1,3 +1,5 @@
+.. _auto_completion:
+
 Component auto-completion
 =========================
 

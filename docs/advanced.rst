@@ -1,4 +1,16 @@
-============
+===============
+Advanced topics
+===============
+
+.. toctree::
+   
+Configuration files
+===================
+
+.. toctree::
+
+.. todo:: Fill this up
+
 File formats
 ============
 
@@ -15,7 +27,7 @@ to/imported from DXF (.dxf) and exported to the following formats:
 .. _manual_xml:
 
 XML
-===
+---
 
 A project file may look like the following:
 
@@ -28,7 +40,7 @@ is specified using the ``<header>`` tag. If no header is specified, the sheet
 will use the default header.
 
 The ``from`` attribute
-----------------------
+**********************
 
 Any tag can use this attribute to take its content from another file. The tag
 can also specify additional objects to include. For example, the following

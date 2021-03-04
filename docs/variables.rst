@@ -1,3 +1,5 @@
+.. _manual_variables:
+
 Variables
 =========
 

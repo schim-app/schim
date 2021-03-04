@@ -9,12 +9,11 @@ Command Line Interface
    .. toctree::
       :maxdepth: 1
 
-      ../man/schim.rst
-      ../man/schim-editor.rst
-      ../man/schim-export.rst
-      ../man/schim-report.rst
-      ../man/schim-set.rst
-      ../man/schim-alias.rst
+      man/schim.rst
+      man/schim-editor.rst
+      man/schim-export.rst
+      man/schim-report.rst
+      man/schim-set.rst
 
 .. TODO we get a warning here because ../_intermediate/man/ does not exist
    although none of the conditions (not ReadTheDocs and not qthelp) are
@@ -25,9 +24,8 @@ Command Line Interface
    .. toctree::
       :maxdepth: 1
 
-      ../_intermediate/man/schim.rst
-      ../_intermediate/man/schim-editor.rst
-      ../_intermediate/man/schim-export.rst
-      ../_intermediate/man/schim-report.rst
-      ../_intermediate/man/schim-set.rst
-      ../_intermediate/man/schim-alias.rst
+      _intermediate/man/schim.rst
+      _intermediate/man/schim-editor.rst
+      _intermediate/man/schim-export.rst
+      _intermediate/man/schim-report.rst
+      _intermediate/man/schim-set.rst

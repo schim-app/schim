@@ -88,11 +88,11 @@ uninstall:
 		"${INSTALL_DIR}/${SHARE_DIR}" \
 		"${INSTALL_DIR}/${MAN_DIR}"
 
-ifeq (${MAKECMDGOALS},deploy)
-    INSTALL_DIR = "${BUILD_DIR}"/dest # Used with deploy target
+ifeq (${MAKECMDGOALS},package)
+    INSTALL_DIR = "${BUILD_DIR}"/dest # Used with package target
 endif
 
-deploy: install
+package: install
 	@echo "Removing previous archive..."
 	@rm -rf _build/schim-"${VERSION}"-"${DEPLOY_TARGET}".tar.gz 
 	@echo "Creating tar archive..."

@@ -2,53 +2,42 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
-BUILDDIR      = _build
-
-# Should be /bin/bash for ReadTheDocs
-SHELL = '/bin/bash'
+BUILDDIR      ?= _build
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@${SPHINXBUILD} -M help "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS} ${O}
 
-.PHONY: help Makefile man html qthelp pdf latex
+.PHONY: help man html qthelp pdf latex
 
 ################################################################################
 #                       Targets that build documentation                       #
 ################################################################################
 
-all: man html qthelp pdf prepare-man graphs
+all: man html qthelp pdf
 
-html: prepare-man doxygen
-	@echo "Generate directory tree file."
-	@scripts/gen-tree.sh
+html: prepare-man
+	mkdir -p "${BUILDDIR}"/html
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
-	@"${MAKE}" graphs
 
 latex:
-	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
+	echo BUILDDIR IS ${BUILDDIR}
+	mkdir -p "${BUILDDIR}"/latex
+	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
 
-# TODO Build man here?
 qthelp:
-	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/manual" "${BUILDDIR}" ${SPHINXOPTS}
-	cd _build/qthelp && qhelpgenerator Schim.qhcp
+	mkdir -p "${BUILDDIR}"/pdf
+	@${SPHINXBUILD} -M $@ "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
+	cd "${BUILDDIR}"/qthelp && qhelpgenerator Schim.qhcp
 
-# Build manpages using Sphinx, configured in the man/ directory
+# Build manpages using Sphinx, using its own man/conf.py
 man:
 ifneq (${OS},Windows_NT)
 	@${SPHINXBUILD} -M $@ "${SOURCEDIR}/man" "${BUILDDIR}" ${SPHINXOPTS}
 endif
 
-pdf: latex
-	cd _build/latex/ && pdflatex -interaction=nonstopmode schim.tex
-
-################################################################################
-#                            Intermediate targets                              #
-################################################################################
-
-doxygen:
-	@mkdir -p _build/{html/doxygen,doxygen/xml}
-	@doxygen
+pdf:
+	@${SPHINXBUILD} -M latexpdf "${SOURCEDIR}" "${BUILDDIR}" ${SPHINXOPTS}
 
 # Tweak manpage sources for inclusion in the HTML version of the docs.
 # A NAME section containing the description is added to each file from man/.
@@ -61,20 +50,9 @@ prepare-man: man
 		scripts/prepare-man.sh "$$file" _intermediate/man; \
 	done
 
-graphs:
-	@echo "Creating DOT graphs..."
-	@PREFIX="$$(pwd)"; \
-	shopt -s globstar nullglob; \
-	for f in $$(find manual/ dev/ -name "*.dot" -type f); do \
-	    DEST="_build/html/$${f/.dot/}.svg"; \
-	    mkdir -p "$$(dirname "$$DEST")" && \
-	    dot -Tsvg "$$f" -o "$$DEST"; \
-	done
-	@echo "Done creating graphs."
-
 ################################################################################
 
 clean:
-	rm -rf _build/
+	rm -rf "${BUILDDIR}"
 	rm -rf _intermediate/
 
