@@ -1,7 +1,6 @@
 #include "variable.h"
 
-Variable::Variable() { }
-
+// CONSTRUCTORS
 Variable::Variable(const QStringList &names, const QString &value)
     : names(names), value(value)
 { }
@@ -9,6 +8,8 @@ Variable::Variable(const QStringList &names, const QString &value)
 Variable::Variable(const QStringList &names, const QString &value, const QString &description)
     : names(names), value(value), description(description)
 { }
+
+// GETTERS
 
 QString Variable::getTrueName() const
 {
@@ -19,6 +20,8 @@ QStringList Variable::getAliases() const
 {
     return names.mid(1);
 }
+
+// STATIC
 
 QString Variable::allowedPatterns()
 {
@@ -70,7 +73,7 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
             QRegExp pat(allowedPatterns());
             pat.indexIn(captured[0]);
             str.replace(captured[0],
-                    Variable::find(variableSet, pat.capturedTexts()[0]).value);
+                    Variable::find(variableSet, pat.capturedTexts().at(0)).value);
         }
     }
 
@@ -78,6 +81,8 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
 
     return str;
 }
+
+// OPERATORS
 
 bool Variable::operator==(const Variable &var) const
 {

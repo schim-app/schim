@@ -47,7 +47,7 @@ app: qthelp
 	mkdir -p dest/bin \
 		"dest/${ICON_DIR}/apps" \
 		"dest/${SHARE_DIR}/symb"; \
-	cp schim dest/bin/
+	mv schim dest/bin/
 	@# Create launcher and copy resources
 	@echo -e "Copying resources to destination..."
 	@cp misc/schim.sh "${BUILD_DIR}/"; \

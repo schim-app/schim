@@ -6,6 +6,8 @@
 
 ---
 
+<img src="https://img.shields.io/readthedocs/schim"/>
+
 Welcome to the official Schim repository.
 
 <h3 style="font-weight:normal" align="center"> Schim = <i><b>SCH</b>ematic <b>IM</b>proved</i> </h3>
@@ -28,9 +30,9 @@ Schim is available on **Linux** and **Windows**.
 
 ## Documentation
 
-Schim comes with a very comprehensive user manual and developer documentation.
-Both can be found [here](https://schim.rtfd.io). For more detail on how the
-documentation is maintained, have a look at the [README](docs/README.md).
+Schim comes with a very comprehensive user manual and documentation for
+developers. Both can be found [here](https://schim.rtfd.io). The documentation
+is actively maintained [here](https://github.com/schim-app/schim-doc).
 
 ## Installing
 
@@ -62,7 +64,7 @@ git clone --recurse-submodules 'https://github.com/HarisGusic/schim'
 
 * [Python](https://python.org) >= 3.7
 * [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html) >= 3.0.0 for help
-* qt5-assistant TODO
+* qt5-assistant
 
 ### Linux
 

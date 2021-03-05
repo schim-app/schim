@@ -5,6 +5,7 @@
 
 #include "model/project.h"
 
+/// @brief Write `project` to the file `filename`.
 void pdfWriteProject(const Project *project, const QString &filename);
 
 #endif // PDF_H

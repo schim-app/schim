@@ -29,7 +29,7 @@ QPainterPath GLine::shape() const
 
     // TODO improve this later; Namely, the handle size
     // should be invariant to the scene transformations
-    float radius = get()->linewidth;
+    float radius = get()->getLinewidth();
     float angle = get()->angle() * M_PI / 180, sin = -qSin(angle), cos = qCos(angle);
     QPointF ortho = {-radius * sin, radius * cos},
             coll = {radius * cos, radius * sin};
@@ -51,7 +51,7 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     GObject::paint(painter, option, widget);
     auto pen = painter->pen();
     // We are dividing line width by 2 to compensate for antialiasing
-    pen.setWidthF(get()->linewidth / 2);
+    pen.setWidthF(get()->getLinewidth() / 2);
     pen.setCosmetic(cosmetic);
     if (cosmetic)
         pen.setWidthF(1.5);

@@ -1,34 +1,21 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define VERSION "@PROJECT_VERSION@"
+#define SHARE_DIR "../share/schim"
+#define QT_HELP SHARE_DIR "/Schim.qhc"
+
 #include <QVariant>
 #include <QColor>
 
-#ifdef QT_DEBUG
-// For debugging purposes
-#include <iostream>
-#endif
-
 #include "fileio/database.h"
 
-// TODO colorSelected is obsolete -- give it some time then remove
-static QColor colorHover{0, 255, 0}, colorSelected{255, 0, 0};
+/// The global database of components
 extern Database *globalDatabase;
 
-#define SHARE_DIR "../share/schim"
+static QString currentProjectPath = "", userSymbolPath = "~/.local/share/schim/symb";
 
-#ifdef QT_DEBUG
-#define QT_HELP "../../docs/_build/qthelp/Schim.qhc"
-static QString systemSymbolPath = "../../res/symb", systemMacroPath = "../../macros";
-#else
-#define QT_HELP SHARE_DIR "/Schim.qhc"
 static QString systemSymbolPath = "../share/schim/symb", systemMacroPath = "macros";
-#endif
-
-#define VERSION "@PROJECT_VERSION@"
-
-// TODO depends on OS
-static QString currentProjectPath = "", userSymbolPath = "../../res/symb";
 
 /**
  * Change the value of the setting with the specified key.
@@ -41,6 +28,11 @@ void changeSetting(const QString &key, const QString &value, bool sync = true);
  */
 QVariant getSetting(const QString &key, const QString &defaultValue);
 
+/**
+ * Take a loose `path` and return a file path.
+ * @param path A loose path, e.g. a component name, path relative to
+ * installation directory, real path, etc.
+ */
 QString resolvePath(const QString &path);
 
 /**

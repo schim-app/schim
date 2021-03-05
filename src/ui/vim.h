@@ -127,13 +127,14 @@ void addBindings(const QMap<QString, QString> &map);
  * When a widget receives a KeyPress event, it should call this function if
  * vim-like behavior is desired. The event will be processed, the current vim
  * key sequence will be updated and it will be shown in the vim status indicator
- * of the main window. If the sequence matches a binding (see `Vim::addBinding`)
- * callback will be called with an appropriate `Vim::Action`.
+ * of the main window. If the sequence matches a binding callback will be called
+ * with an appropriate `Vim::Action`.
  *
  * @note If vim-mode is not enabled, this function does nothing.
  * @note If `allowCount` is `false`, treat numbers as normal key sequences.
  *
  * @see `Vim::Action`
+ * @see `Vim::addBinding`
  *
  * ### Implementation details
  *

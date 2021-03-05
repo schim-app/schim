@@ -1,8 +1,6 @@
 #include "component.h"
 
-Component::Component()
-    : CompositeObject()
-{ }
+// CONSTRUCTORS
 
 Component::Component(QSharedPointer<Device> device)
     : CompositeObject(), device(device) { }
@@ -18,6 +16,8 @@ Object *Component::clone() const
     return new Component(*this);
 }
 
+// MISCELLANEOUS
+
 Component *Component::absorb(CompositeObject *obj)
 {
     Component *retVal = new Component();
@@ -26,6 +26,8 @@ Component *Component::absorb(CompositeObject *obj)
     delete obj;
     return retVal;
 }
+
+// OPERATORS
 
 bool Component::operator==(const Component &obj) const
 {

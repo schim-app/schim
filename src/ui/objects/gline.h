@@ -11,26 +11,23 @@
 class GLine : public GObject
 {
 public:
+    // CONSTRUCTORS
     GLine(Line *obj = new Line);
 
     // GETTERS
-
     Line *get();
     const Line *get() const;
 
-    // OVERRIDEN QGraphicsItem METHODS
-
+    // OVERRIDE QGraphicsObject
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
 
-    // FOR EDITING THE OBJECT
-
+    // OBJECT EDITING
     void reload() override;
     void apply() override;
     void handleChanged(GObjectHandle *handle) override;
     void showHandles(bool show = true) override;
-
 };
 
 #endif // GLINE_H

@@ -19,6 +19,7 @@ class SheetScene : public QGraphicsScene
     Q_OBJECT
 
 public:
+    // CONSTRUCTORS
     /**
      * @brief Create a scene based on the specified sheet.
      *

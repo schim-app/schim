@@ -88,7 +88,7 @@ void CompositeObject::setValue(const QString &name, const QString &value)
 void CompositeObject::setLocalVariables(const VariableSet &vars)
 {
     variables.clear();
-    for (auto var : vars)
+    for (const auto &var : vars)
         if (var.getTrueName() != "")
             variables.append(var);
 }
@@ -112,16 +112,16 @@ void CompositeObject::addVariable(const Variable &variable)
 void CompositeObject::append(Object *object)
 {
     QList::append(object);
-    object->parent = this;
-    object->sheet = sheet;
+    object->setParent(this);
+    object->setSheet(sheet);
 }
 
 void CompositeObject::append(const QList<Object *> &list)
 {
     for (auto *obj : list)
     {
-        obj->parent = this;
-        obj->sheet = sheet;
+        obj->setParent(this);
+        obj->setSheet(sheet);
     }
     QList::append(list);
 }

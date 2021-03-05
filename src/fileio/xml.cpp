@@ -1,6 +1,7 @@
 #include "xml.h"
 
 #include "global.h"
+#include "model/project.h"
 #include "model/component.h"
 
 #include <QFile>
@@ -551,7 +552,6 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
             stream.readNext();
             if (stream.isStartElement())
             {
-                QString str = stream.name().toString();
                 if (stream.name() == "var")
                     obj->addVariable(xmlParseVariable(stream));
                 else if (stream.name() == "dxf")

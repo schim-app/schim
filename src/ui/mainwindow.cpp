@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "global.h"
+#include "model/project.h"
 #include "fileio/xml.h"
 #include "fileio/pdf.h"
 #include "ui/objects/gline.h"
@@ -18,6 +19,8 @@
 #include <QDebug>
 
 MainWindow* MainWindow::instance{};
+
+// CONSTRUCTORS
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -40,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+MainWindow *MainWindow::getInstance()
+{
+    return instance;
 }
 
 // GETTERS
@@ -75,11 +83,6 @@ Sheet *MainWindow::getSheet(int index)
 QString MainWindow::getFileName() const
 {
     return filename;
-}
-
-MainWindow *MainWindow::getInstance()
-{
-    return instance;
 }
 
 // SETTERS

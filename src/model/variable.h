@@ -11,8 +11,7 @@ typedef QList<Variable> VariableSet;
 /**
  * @brief A model representation of a variable.
  *
- * Every variable has three fields: `names`, a `value` and a
- * `description`.
+ * Every variable has three fields: `names`, a `value` and a `description`.
  *
  * The StringList `names` is used to identify the variable in a string. Each
  * string in `names` is an alias for the variable, and must match
@@ -24,22 +23,28 @@ typedef QList<Variable> VariableSet;
  */
 struct Variable
 {
-    /** Contains all names that can be used to identify this variable, separated
-     * by a comma. */
+    // PUBLIC ATTRIBUTES
+    /**
+     * @brief Contains all names that can be used to identify this variable,
+     * separated by a comma.
+     */
     QStringList names;
     QString value, description;
 
-    Variable();
+    // CONSTRUCTORS
+    Variable() = default;
     Variable(const QStringList &names, const QString &value = "");
     Variable(const QStringList &names, const QString &value, const QString
             &description);
 
+    // GETTERS
     QString getTrueName() const;
     QStringList getAliases() const;
 
-    /** @brief Return the regex pattern that represents a valid variable name. */
+    // STATIC
+    /// @brief Return the regex pattern that represents a valid variable name.
     static QString allowedPatterns();
-    /** @brief Find a variable named `name` inside `list` and return it. */
+    /// @brief Find a variable named `name` inside `list` and return it.
     static Variable find(const VariableSet &list, QString name);
     /**
      * @brief Substitute all variables in `str` with their values.
@@ -54,6 +59,7 @@ struct Variable
      */
     static QString substitute(QString str, const VariableSet &variableSet);
 
+    // OPERATORS
     bool operator==(const Variable &var) const;
 };
 

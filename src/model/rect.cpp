@@ -1,5 +1,7 @@
 #include "rect.h"
 
+// CONSTRUCTORS
+
 Rect::Rect() { }
 
 Rect::Rect(qreal x, qreal y, qreal width, qreal height)
@@ -16,6 +18,8 @@ Object *Rect::clone() const
     return new Rect(*this);
 }
 
+// GETTERS
+
 QPointF Rect::getPos() const
 {
     return topLeft();
@@ -25,6 +29,8 @@ float Rect::getLinewidth() const
 {
     return linewidth;
 }
+
+// SETTERS
 
 void Rect::setPos(const QPointF &pos)
 {
@@ -36,6 +42,7 @@ void Rect::setLinewidth(float lw)
     linewidth = lw;
 }
 
+// SET/GET PROPERTY
 void Rect::setProperty(const QString &name, const QString &value)
 {
     float val;
@@ -60,7 +67,6 @@ void Rect::setProperty(const QString &name, const QString &value)
     // else
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for rectangle");
 }
-
 QString Rect::getProperty(const QString &name) const
 {
     if (name == "x") return QString::number(left());
@@ -71,6 +77,8 @@ QString Rect::getProperty(const QString &name) const
     // else
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for rectangle");
 }
+
+// OPERATORS
 
 bool Rect::operator==(const Rect &obj) const
 {

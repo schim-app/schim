@@ -12,15 +12,15 @@
 class GHeader : public GCompositeObject
 {
 public:
+    // CONSTRUCTORS
     GHeader(Header *obj);
 
     // GETTERS
-
     Header *get();
     const Header *get() const;
 
+protected:
     // EVENTS
-
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 };
 

@@ -4,6 +4,8 @@
 #include "global.h"
 #include "fileio/xml.h"
 
+// CONSTRUCTORS
+
 Sheet::Sheet(bool defaultHeader)
 {
     if (defaultHeader)
@@ -19,6 +21,8 @@ Sheet::~Sheet()
     qDeleteAll(objects);
     delete header;
 }
+
+// GETTERS
 
 float Sheet::getWidth() const
 {
@@ -77,6 +81,8 @@ VariableSet Sheet::getVariables() const
     return vars;
 }
 
+// SETTERS
+
 void Sheet::setWidth(float width)
 {
     this->width = width;
@@ -112,7 +118,7 @@ void Sheet::setHeader(Header *header, bool destroy)
 void Sheet::setLocalVariables(const VariableSet &vars)
 {
     variables.clear();
-    for (auto var : vars)
+    for (const auto &var : vars)
         if (var.getTrueName() != "")
             variables.append(var);
 }

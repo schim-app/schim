@@ -29,8 +29,8 @@ public:
      * @brief Return the value of the variable with the specified name.
      *
      * @param name The name of the variable.
-     * @param exists `true` is written to this variable if the variable is found,
-     * and `false` otherwise.
+     * @param exists `true` is written to this variable if the variable is
+     * found, and `false` otherwise.
      */
     QString getValue(const QString &name, bool *exists = nullptr) const;
     VariableSet getVariables() const;

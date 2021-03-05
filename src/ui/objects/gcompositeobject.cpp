@@ -4,8 +4,12 @@
 
 #include "model/text.h"
 
+// CONSTRUCTORS
+
 GCompositeObject::GCompositeObject(CompositeObject *obj)
     : GObject(obj) { }
+
+// GETTERS
 
 CompositeObject *GCompositeObject::get()
 {
@@ -16,6 +20,40 @@ const CompositeObject *GCompositeObject::get() const
 {
     return (CompositeObject*) obj;
 }
+
+// OVERRIDE QGraphicsObject
+
+QPainterPath GCompositeObject::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    return path;
+}
+
+// SETTERS
+
+void GCompositeObject::setCosmetic(bool cosmetic)
+{
+    GObject::setCosmetic(cosmetic);
+    for (auto *item : childItems())
+        static_cast<GObject*>(item)->setCosmetic(cosmetic);
+}
+
+// MISCELLANEOUS
+
+void GCompositeObject::apply()
+{
+    get()->setPos(pos());
+}
+
+void GCompositeObject::reload()
+{
+    setPos(get()->getPos());
+    for (auto *child : childItems())
+        static_cast<GObject*>(child)->reload();
+}
+
+// EVENTS
 
 QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
@@ -33,30 +71,4 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
         return GObject::itemChange(change, value);
 
     return value;
-}
-
-QPainterPath GCompositeObject::shape() const
-{
-    QPainterPath path;
-    path.addRect(boundingRect());
-    return path;
-}
-
-void GCompositeObject::setCosmetic(bool cosmetic)
-{
-    GObject::setCosmetic(cosmetic);
-    for (auto *item : childItems())
-        static_cast<GObject*>(item)->setCosmetic(cosmetic);
-}
-
-void GCompositeObject::apply()
-{
-    get()->setPos(pos());
-}
-
-void GCompositeObject::reload()
-{
-    setPos(get()->getPos());
-    for (auto *child : childItems())
-        static_cast<GObject*>(child)->reload();
 }

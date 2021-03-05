@@ -2,12 +2,16 @@
 
 #include "ui/sheetscene.h"
 
+// CONSTRUCTORS
+
 GHeader::GHeader(Header *obj)
     : GCompositeObject(obj)
 {
     setFlags({});
     setAcceptHoverEvents(false);
 }
+
+// GETTERS
 
 Header *GHeader::get()
 {
@@ -18,6 +22,8 @@ const Header *GHeader::get() const
 {
     return (Header*) obj;
 }
+
+// EVENTS
 
 QVariant GHeader::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {

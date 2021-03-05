@@ -47,7 +47,6 @@ QModelIndex CompleterProxyModel::mapToSource(const QModelIndex &proxy) const
     int row = 0;
     QModelIndex foundIndex = {};
     sourceModel()->iterateLeaves({}, [&](const QModelIndex &ind) {
-        QString str = ind.data().toString();
         if (!static_cast<DatabaseItem*>(ind.internalPointer())->isDir())
         {
             if (proxy.row() == row)

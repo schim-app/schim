@@ -10,25 +10,28 @@
 class Text : public Object, public QPointF
 {
 public:
+    // CONSTRUCTORS
+    /// @brief Usual way to construct a text object.
     Text(const QString &text = "");
-    /** @brief Copy constructor */
+    /// @brief Copy constructor
     Text(const Text &text);
     Object *clone() const override;
 
-    void setPos(const QPointF &pos) override;
-    void setText(const QString &text);
-    void setTextHeight(float height);
-    void setFont(const QString &name);
-
+    // GETTERS
     QPointF getPos() const override;
     QString getText() const;
     QString getDisplayText(const VariableSet &variableList) const;
     QString getDisplayText() const;
     float getTextHeight() const;
     QString getFont() const;
-
-    void setProperty(const QString &name, const QString &value) override;
     QString getProperty(const QString &name) const override;
+
+    // SETTERS
+    void setPos(const QPointF &pos) override;
+    void setText(const QString &text);
+    void setTextHeight(float height);
+    void setFont(const QString &name);
+    void setProperty(const QString &name, const QString &value) override;
 
     // OPERATORS
     bool operator==(const Text &obj) const;
@@ -37,8 +40,6 @@ public:
 private:
     QString text, font = "Sans Serif";
     float textHeight = 4;
-
-    friend class GText;
 };
 
 #endif // TEXT_H

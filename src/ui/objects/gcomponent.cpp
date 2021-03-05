@@ -11,9 +11,13 @@
 #include "model/text.h"
 #include "ui/operations.h"
 
+// CONSTRUCTORS
+
 GComponent::GComponent(Component *obj)
     : GCompositeObject(obj)
 { }
+
+// GETTERS
 
 Component *GComponent::get()
 {
@@ -24,6 +28,8 @@ const Component *GComponent::get() const
 {
     return (Component*) obj;
 }
+
+// USER ACTIONS
 
 void GComponent::showContextMenu()
 {
@@ -36,6 +42,8 @@ void GComponent::showContextMenu()
     QObject::connect(&addText, &QAction::triggered, this, &GComponent::addText);
     contextMenu.exec(QCursor::pos());
 }
+
+// EVENTS
 
 void GComponent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {

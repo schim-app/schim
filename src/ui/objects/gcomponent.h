@@ -6,25 +6,28 @@
 
 #include <QObject>
 
-class TextInsertOperation; //TODO tm
 class GComponent : public GCompositeObject
 {
     Q_OBJECT
 public:
+    // CONSTRUCTORS
     GComponent(Component *obj);
 
+    // GETTERS
     Component *get();
     const Component *get() const;
 
+    // USER ACTIONS
     void showContextMenu();
 
+private:
     // EVENTS
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 public slots:
+    // SLOTS
     void edit();
     void addText();
 

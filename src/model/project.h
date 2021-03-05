@@ -7,19 +7,18 @@
 #include <QString>
 
 /**
- * @brief A project is essentially a list of sheets, along with some project properties.
+ * @brief A project is essentially a list of sheets, along with some project
+ * properties.
  *
  * This class should always take care of the destruction of sheets.
  */
 class Project
 {
-    QString title{"Untitled Project"};
-
 public:
-    /** @brief Construct an empty project with default properties. */
-    Project();
+    // CONSTRUCTORS
+    /// @brief Construct an empty project with default properties.
+    Project() = default;
     Project(const QList<Sheet*> &sheets);
-
     ~Project();
 
     // GETTERS
@@ -34,10 +33,13 @@ public:
     void addSheet(Sheet *sheet);
     void removeSheet(Sheet *sheet);
 
+    // MISCELLANEOUS
     QList<Sheet *>::iterator begin();
     QList<Sheet *>::iterator end();
 
 private:
+    // ATTRIBUTES
+    QString title{"Untitled Project"};
     VariableSet variables;
     QList<Sheet *> sheets;
 };

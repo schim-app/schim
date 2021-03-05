@@ -68,7 +68,7 @@ public:
      * Each item is displayed only with a preview icon and a name.
      */
     QVariant data(const QModelIndex &index, int role) const override;
-    /** @brief Update the database from the file system. */
+    /// @brief Update the database from the file system.
     void update();
     /**
      * @brief Iterate through all leaves of the database tree.
@@ -83,15 +83,16 @@ public:
 
     // BOILERPLATE
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-    QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = {}) const
+        override;
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = {}) const override;
     int columnCount(const QModelIndex &parent = {}) const override;
 
 private:
 
-    // HELPER METHODS
-    /** @brief Recursively add all subdirectories and subfiles of `parent`. */
+    // HELPERS
+    /// @brief Recursively add all subdirectories and subfiles of `parent`.
     void iterate(const QString &dir, DatabaseItem *parent);
 
     // ATTRIBUTES

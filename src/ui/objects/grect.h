@@ -13,22 +13,19 @@
 class GRect : public GObject
 {
 public:
+    // CONSTRUCTORS
     GRect(Rect *obj = new Rect);
 
-public:
     // GETTERS
-
     Rect *get();
     const Rect *get() const;
 
-    // OVERRIDDEN QGraphicsItem METHODS
-
+    // OVERRIDDE QGraphicsItem
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QPainterPath shape() const override;
 
-    // FOR EDITING THE OBJECT
-
+    // OBJECT EDITING
     /** @copybrief GObject::reload */
     void reload() override;
     /** @copybrief GObject::apply */

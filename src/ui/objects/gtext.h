@@ -36,7 +36,10 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     /** @see GText::mousePressEvent */
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-    /** On double left click: enable editing, change to IBeam cursor and hide cursor guides. */
+    /**
+     * On double left click: enable editing, change to IBeam cursor and hide
+     * cursor guides.
+     */
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     /** Hide cursor guides. */
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
@@ -58,6 +61,7 @@ private slots:
     void onFocusOut();
 
 private:
+    // ATTRIBUTES
     GDisplayText *displayItem;
     bool editMode = false;
 };
@@ -71,7 +75,7 @@ public:
     void focusOutEvent(QFocusEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
 
     // CUSTOM METHODS
     /** Cast the scene to a `SheetScene*`. */
@@ -83,6 +87,7 @@ signals:
     void focusOut();
 
 private:
+    // ATTRIBUTES
     bool editMode = false;
     friend class GText;
 };

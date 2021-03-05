@@ -70,17 +70,14 @@ GObject *GObject::getOldestParent()
         return this;
 }
 
-GCompositeObject *GObject::parentItem()
+// SETTERS
+
+void GObject::setCosmetic(bool cosmetic)
 {
-    return (GCompositeObject *) QGraphicsItem::parentItem();
+    this->cosmetic = cosmetic;
 }
 
-SheetScene *GObject::scene()
-{
-    return (SheetScene*) QGraphicsItem::scene();
-}
-
-// OVERRIDEN METHODS
+// OVERRIDE
 
 QRectF GObject::boundingRect() const
 {
@@ -104,6 +101,16 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     painter->setPen(pen);
 }
 
+GCompositeObject *GObject::parentItem()
+{
+    return (GCompositeObject *) QGraphicsItem::parentItem();
+}
+
+SheetScene *GObject::scene()
+{
+    return (SheetScene*) QGraphicsItem::scene();
+}
+
 // FOR EDITING THE OBJECT
 
 void GObject::reload() { }
@@ -123,13 +130,6 @@ void GObject::showHandles(bool show)
 }
 
 void GObject::handleChanged(GObjectHandle *) { }
-
-// SETTERS
-
-void GObject::setCosmetic(bool cosmetic)
-{
-    this->cosmetic = cosmetic;
-}
 
 // STATIC
 
@@ -152,13 +152,6 @@ GObject *GObject::assign(Object *obj)
 
 // EVENTS
 
-void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->buttons() == Qt::LeftButton)
-        scene()->setSnapCursorGuides(true);
-    QGraphicsItem::mouseMoveEvent(event);
-}
-
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     QGraphicsItem::hoverEnterEvent(event);
@@ -174,6 +167,13 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsItem::hoverLeaveEvent(event);
     if (flags() & ItemIsSelectable)
         hovered = false;
+}
+
+void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() == Qt::LeftButton)
+        scene()->setSnapCursorGuides(true);
+    QGraphicsItem::mouseMoveEvent(event);
 }
 
 void GObject::keyPressEvent(QKeyEvent *event)
@@ -231,7 +231,7 @@ GObjectHandle::GObjectHandle(GObject *obj)
     _pen.setJoinStyle(Qt::MiterJoin);
     _pen.setColor(qApp->palette().color(QPalette::Highlight));
     setPen(_pen);
-    setBrush(colorSelected);
+    setBrush(qApp->palette().color(QPalette::Highlight));
 
 }
 

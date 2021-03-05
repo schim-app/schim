@@ -1,20 +1,21 @@
 #include "line.h"
 
+// CONSTRUCTORS
+
 Line::Line() { }
 
 Line::Line(qreal x1, qreal y1, qreal x2, qreal y2)
     : QLineF(x1, y1, x2, y2) {}
 
 Line::Line(const Line &line)
-    : Object(line), QLineF(line)
-{
-    linewidth = line.linewidth;
-}
+    : Object(line), QLineF(line), linewidth(line.linewidth) {}
 
 Object *Line::clone() const
 {
     return new Line(*this);
 }
+
+// GETTERS
 
 float Line::getLinewidth() const
 {
@@ -26,6 +27,8 @@ QPointF Line::getPos() const
     return p1();
 }
 
+// SETTERS
+
 void Line::setLinewidth(float w)
 {
     linewidth = w;
@@ -36,6 +39,7 @@ void Line::setPos(const QPointF &pos)
     setP1(pos);
 }
 
+// SET/GET PROPERTY
 void Line::setProperty(const QString &name, const QString &value)
 {
     float val;
@@ -61,7 +65,6 @@ void Line::setProperty(const QString &name, const QString &value)
     // else
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for line");
 }
-
 QString Line::getProperty(const QString &name) const
 {
     if (name == "x1") return QString::number(p1().x());
@@ -72,6 +75,8 @@ QString Line::getProperty(const QString &name) const
     // else
     throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for line");
 }
+
+// OPERATORS
 
 bool Line::operator==(const Line &obj) const
 {

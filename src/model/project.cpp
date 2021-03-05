@@ -1,8 +1,6 @@
 #include "project.h"
 
-Project::Project()
-{
-}
+// CONSTRUCTORS
 
 Project::Project(const QList<Sheet *> &sheets)
 {
@@ -12,6 +10,8 @@ Project::~Project()
 {
     qDeleteAll(getSheets());
 }
+
+// GETTERS
 
 QString Project::getTitle() const
 {
@@ -38,6 +38,8 @@ QList<Sheet *> Project::getSheets() const
     return sheets;
 }
 
+// SETTERS
+
 void Project::setTitle(const QString &title)
 {
     this->title = title;
@@ -54,6 +56,8 @@ void Project::removeSheet(Sheet *sheet)
     sheet->setProject(nullptr);
     sheets.append(sheet);
 }
+
+// MISCELLANEOUS
 
 QList<Sheet *>::iterator Project::begin()
 {

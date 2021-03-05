@@ -22,42 +22,43 @@ CompositeObject *xmlParseCompositeObject(const QString &filename);
 CompositeObject *xmlParseFromDxf(const QString &filename);
 Header *xmlParseHeader(const QString &filename);
 /**
- * @brief Get the index name of the element that is defined by the specified XML file.
+ * @brief Get the index name of the element that is defined by the specified XML
+ * file.
  *
  * The name is used to create an index of all symbols that are defined.
  */
 QString xmlPeekName(const QString &filename);
 
-/** Parse the XML file into a project */
+/// Parse the XML file into a project
 void xmlWriteProject(Project *project, const QString &filename);
 
-/** Parse a sheet from the specified XML stream */
+/// Parse a sheet from the specified XML stream
 Sheet *xmlParseSheet(QXmlStreamReader &stream);
 void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream);
 
-/** Parse an object whose type is as yet undetermined */
+/// Parse an object whose type is as yet undetermined
 Object *xmlParseObject(QXmlStreamReader &stream);
 void xmlWriteObject(Object *obj, QXmlStreamWriter &stream);
 
-/** Parse a line object */
+/// Parse a line object
 Line *xmlParseLine(QXmlStreamReader &stream);
 void xmlWriteLine(Line *line, QXmlStreamWriter &stream);
 
-/** Parse a rect object */
+/// Parse a rect object
 Rect *xmlParseRect(QXmlStreamReader &stream);
 void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream);
 
-/** Parse a text object */
+/// Parse a text object
 Text *xmlParseText(QXmlStreamReader &stream);
 void xmlWriteText(Text *text, QXmlStreamWriter &stream);
 
-/** Parse a custom object */
+/// Parse a custom object
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream);
 CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream);
 
 LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream);
 
-/** Parse a sheet header */
+/// Parse a sheet header
 Header *xmlParseHeader(QXmlStreamReader &stream);
 void xmlWriteHeader(Header *header, QXmlStreamWriter &stream);
 

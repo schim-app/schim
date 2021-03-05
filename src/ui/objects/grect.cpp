@@ -1,7 +1,6 @@
 #include "grect.h"
 
 #include <QPainter>
-#include <QRegion>
 #include <QPointF>
 
 GRect::GRect(Rect *obj)
@@ -19,12 +18,12 @@ const Rect *GRect::get() const
     return (Rect*) obj;
 }
 
-// OVERRIDDEN QGraphicsItem METHODS
+// OVERRIDDE QGraphicsItem
 
 QRectF GRect::boundingRect() const
 {
     // TODO Why is get() sometimes null here??
-    float infl = get()->linewidth; // Inflation
+    float infl = get()->getLinewidth(); // Inflation
     if (get())
     {
         auto x = get()->marginsAdded({infl, infl, infl, infl});
@@ -40,7 +39,7 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     GObject::paint(painter, option, widget);
 
     auto pen = painter->pen();
-    pen.setWidthF(get()->linewidth / 2);
+    pen.setWidthF(get()->getLinewidth() / 2);
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setCosmetic(cosmetic);
     if (cosmetic)
@@ -52,7 +51,7 @@ void GRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 QPainterPath GRect::shape() const
 {
-    float infl = get()->linewidth;
+    float infl = get()->getLinewidth();
     QRectF baseRect = get()->translated(-get()->getPos());
     // For some reason when I use margins{Added, Removed} with the same
     // argument, the hover area is not the same inside and outside the rectangle.
@@ -68,7 +67,7 @@ QPainterPath GRect::shape() const
     return path;
 }
 
-// FOR EDITING THE OBJECT
+// OBJECT EDITING
 
 void GRect::reload()
 {

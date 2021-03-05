@@ -10,12 +10,13 @@ class Device;
 class Component : public CompositeObject
 {
 public:
-    Component();
+    // CONSTRUCTORS
+    Component() = default;
     Component(QSharedPointer<Device> device);
     Component(const Component &obj);
-
     Object *clone() const override;
 
+    // MISCELLANEOUS
     /** @brief Steal everything from `obj` and delete it. */
     static Component *absorb(CompositeObject *obj);
 

@@ -29,7 +29,7 @@ void pdfWriteProject(const Project *project, const QString &filename)
             printer.setPageOrientation(QPageLayout::Landscape);
             printer.newPage();
         }
-        SheetScene *scene = new SheetScene((project->getSheets())[i]);
+        SheetScene *scene = new SheetScene((project->getSheets()).at(i));
         scene->render(&painter);
     }
 }

@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QList>
-#include <QLineEdit>
 
 #include "model/project.h"
 
@@ -17,14 +16,19 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+/**
+ * @brief The main application window.
+ *
+ * @note This is a singleton class.
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
-
+    // CONSTRUCTORS
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    static MainWindow *getInstance();
 
     // GETTERS
     /** Return the tab widget */
@@ -43,8 +47,6 @@ public:
      */
     Sheet *getSheet(int index = -1);
     QString getFileName() const;
-
-    static MainWindow *getInstance();
 
     // SETTERS
     void setTabId(int id);
@@ -77,19 +79,20 @@ public:
     void openProjectFromFile(const QString &filename);
 
 private slots:
+    // SLOTS
     void onTabCloseRequested(int index);
 
-private: // Private methods
-
+private:
+    // HELPERS
     bool processVimAction(const Vim::Action &action);
-
     void setupActions();
-    /** Populate the window with a new active project. */
+    /// Populate the window with a new active project.
     void populateWithProject();
-    /** Remove all tabs and destroy corresponding widgets. */
+    /// Remove all tabs and destroy corresponding widgets.
     void clearTabs();
 
-private: // Private members
+private:
+    // ATTRIBUTES
     Ui::MainWindow *ui;
     int _vimNumber = 0;
     Project *activeProject = nullptr;

@@ -8,25 +8,34 @@
 class GCompositeObject : public GObject
 {
 public:
+    // CONSTRUCTORS
     GCompositeObject(CompositeObject *obj);
 
+    // GETTERS
     CompositeObject *get();
     const CompositeObject *get() const;
 
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
-    QPainterPath shape() const override;
-
+    // SETTERS
     /**
      * @copydoc GObject
      *
      * For correct behavior, call this method only after the object has been
-     * added to a scene. This will ensure that it is applied to all children
-     * of the object
+     * added to a scene. This will ensure that it is applied to all children of
+     * the object.
      */
     void setCosmetic(bool cosmetic) override;
 
+    // OVERRIDE QGraphicsObject
+    QPainterPath shape() const override;
+
+    // MISCELLANEOUS
     void apply() override;
     void reload() override;
+
+protected:
+    // EVENTS
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change,
+                        const QVariant &value) override;
 
 };
 

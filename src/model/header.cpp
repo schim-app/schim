@@ -2,7 +2,7 @@
 
 #include "line.h"
 
-Header::Header() { }
+// CONSTRUCTORS
 
 Header::Header(CompositeObject &&obj)
     : Header()
@@ -20,35 +20,28 @@ Header::Header(CompositeObject *obj)
 }
 
 Header::Header(const Header &obj)
-    : CompositeObject(obj)
-{
-    contentArea = obj.contentArea;
-}
+    : CompositeObject(obj), contentArea(obj.contentArea) { }
 
 Header *Header::clone() const
 {
     return new Header(*this);
 }
 
-void Header::update()
+// GETTERS
+
+QRectF Header::getContentArea() const
 {
-    clear();
+    return contentArea;
 }
 
-void Header::init()
-{
-
-}
+// SETTERS
 
 void Header::setContentArea(const QRectF &rect)
 {
     contentArea = rect;
 }
 
-QRectF Header::getContentArea() const
-{
-    return contentArea;
-}
+// OPERATORS
 
 bool Header::operator==(const Header &obj) const
 {
@@ -63,9 +56,4 @@ bool Header::operator==(const Header &obj) const
 bool Header::operator!=(const Header &obj) const
 {
     return !(*this == obj);
-}
-
-void Header::clear()
-{
-
 }
