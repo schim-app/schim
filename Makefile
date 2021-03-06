@@ -33,7 +33,7 @@ CMAKE_BUILD = cmake --build ./ -j ${JOBS}
 
 # This target will create a directory tree under ${BUILD_DIR}/dest
 # that can be moved to /usr/ or /usr/local using `make install`
-app: qthelp
+app:# qthelp
 	@if [ -z "$$(ls src/dxflib/)" ]; then { \
 	echo -e "\e[0;31m" \
 	        "ERROR: Directory src/dxflib is empty." \
@@ -81,6 +81,7 @@ install: app man
 	@cp -r "${BUILD_DIR}"/dest/** "${INSTALL_DIR}" 2>/dev/null || true
 	@cp docs/_build/man/*.1* "${INSTALL_DIR}/${MAN_DIR}"
 	@cp -r res/examples "${INSTALL_DIR}/${SHARE_DIR}"
+	@cp -r res/*.conf "${INSTALL_DIR}/${SHARE_DIR}/"
 
 uninstall:
 	rm -rf \

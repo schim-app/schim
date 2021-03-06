@@ -58,6 +58,7 @@ public:
     // EVENTS
     bool eventFilter(QObject *obj, QEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
     // ACTION PROCESSING
     void nextTab(Vim::N n = 1);
@@ -97,16 +98,18 @@ private:
      * If the menu doesn't exist, it will be created.
      */
     QMenu *getPopupMenu();
-    /// Remove all tabs and destroy corresponding widgets.
+    /// Remove all tabs and destroy the corresponding widgets.
     void clearTabs();
     void showMenubarPermanently(bool show);
+    void restoreSettings();
+    void saveSettings();
 
 private:
     // ATTRIBUTES
     Ui::MainWindow *ui;
     Project *activeProject = nullptr;
     QString filename;
-    bool menubarShownPermanently = true;
+    bool menuBarShownPermanently = true;
     /// @see getPopupMenu()
     QMenu *popupMenu{};
 

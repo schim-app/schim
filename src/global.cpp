@@ -9,23 +9,29 @@
 Database *globalDatabase = nullptr;
 
 /**
- * Dynamically allocate a QSettings object and return a pointer to it.
+ * @brief Dynamically allocate a QSettings object and return a pointer to it.
+ *
  * This function automatically determines if the key is volatile and
  * returns the appropriate settings file.
+ *
+ * @see For more information look at User Manual - Advanced topics -
+ * Configuration files or the manpage schim-config.
  */
 QSettings *getSettings(const QString &key)
 {
     if (
             key == "default_path" ||
             key == "print_path" ||
-            key == "screenshot_path"
+            key == "screenshot_path" ||
+            key == ("GUI/geometry") ||
+            key == ("GUI/windowstate")
             )
         return new QSettings("schim", "volatile");
     else
         return new QSettings("schim", "schim");
 }
 
-void changeSetting(const QString &key, const QString &value, bool sync)
+void changeSetting(const QString &key, const QVariant &value, bool sync)
 {
     auto *settings = getSettings(key);
 
@@ -37,7 +43,7 @@ void changeSetting(const QString &key, const QString &value, bool sync)
     delete settings;
 }
 
-QVariant getSetting(const QString &key, const QString &defaultValue)
+QVariant getSetting(const QString &key, const QVariant &defaultValue)
 {
     auto *settings = getSettings(key);
 

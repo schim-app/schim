@@ -35,8 +35,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Singleton instance
     instance = this;
 
-    // Create widgets and menus...
+    // This should be called first
     ui->setupUi(this);
+    restoreSettings();
+
+    // Create remaining widgets and menus...
     ui->menuView->addMenu(getPopupMenu());
     setupActions(); // Menu actions
     setupIcons(); // Action icons
@@ -44,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Setup initial contents of widgets
     ui->tabView->clear();
     setVimStatus("");
-    ui->statusbar->hide();
+    ui->statusBar->hide();
 
     // Override tab close requests
     connect(ui->tabView, &QTabWidget::tabCloseRequested,
@@ -55,6 +58,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete popupMenu;
+    delete globalDatabase;
 }
 
 MainWindow *MainWindow::getInstance()
@@ -109,6 +113,8 @@ void MainWindow::setVimStatus(const QString &status)
     ui->vimKeyStatus->setText(status);
 }
 
+// OVERRIDEN
+
 QMenu *MainWindow::createPopupMenu()
 {
     QMenu *menu = QMainWindow::createPopupMenu();
@@ -121,29 +127,31 @@ QMenu *MainWindow::createPopupMenu()
 
     // Populate menu
     menu->addSeparator();
-    QAction *hideTabs = menu->addAction("Show tabs");
-    QAction *menubar = menu->addAction("Show menu bar permanently");
+    QAction *showTabs = menu->addAction("Show tabs");
+    QAction *menuBar = menu->addAction("Show menu bar permanently");
 
     // Actions initialization
-    hideTabs->setCheckable(true);
-    hideTabs->setChecked(ui->tabView->tabBar()->isVisible());
-    menubar->setToolTip("Do not display sheets as tabs");
-    menubar->setCheckable(true);
-    menubar->setChecked(menubarShownPermanently);
-    menubar->setToolTip("Show/hide the menu bar "
+    showTabs->setCheckable(true);
+    showTabs->setChecked(ui->tabView->tabBar()->isVisible());
+    menuBar->setToolTip("Do not display sheets as tabs");
+    menuBar->setCheckable(true);
+    menuBar->setChecked(menuBarShownPermanently);
+    menuBar->setToolTip("Show/hide the menu bar "
                         "(hold Alt to temporarily show it)");
     // Connections
-    connect(hideTabs, &QAction::triggered, menu, [this, hideTabs]() {
-        ui->tabView->tabBar()->setVisible(hideTabs->isChecked());
-        hideTabs->setChecked(hideTabs->isChecked());
+    connect(showTabs, &QAction::triggered, menu, [this, showTabs]() {
+        ui->tabView->tabBar()->setVisible(showTabs->isChecked());
+        showTabs->setChecked(showTabs->isChecked());
     });
-    connect(menubar, &QAction::triggered, menu, [this, menubar]() {
-        showMenubarPermanently(menubar->isChecked());
-        menubar->setChecked(menubarShownPermanently);
+    connect(menuBar, &QAction::triggered, menu, [this, menuBar]() {
+        showMenubarPermanently(menuBar->isChecked());
+        menuBar->setChecked(menuBarShownPermanently);
     });
 
     return menu;
 }
+
+// EVENTS
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
@@ -151,25 +159,23 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     // 1. If the user holds Alt, show the menu bar while he/she is holding it
     // 2. If the user presses a mouse button in any widget, hide the menu bar
     // TODO this is not complete, but it's not a priority to fix this. Problems:
-    // 1. Menu actions don't work when the menubar is hidden
-    // 2. When a menu is active, hiding the menubar doesn't hide the menu popup
+    // 1. Menu actions don't work when the menuBar is hidden
+    // 2. When a menu is active, hiding the menuBar doesn't hide the menu popup
     // 3. This implementation is embarrassingly inelegant either way, please help.
-    if (!menubarShownPermanently)
+    if (!menuBarShownPermanently)
     {
-        if (obj != ui->menubar
+        if (obj != ui->menuBar
                 && event->type() == QEvent::MouseButtonPress)
-            ui->menubar->hide();
+            ui->menuBar->hide();
         else if (event->type() == QEvent::KeyPress
                 && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
-            ui->menubar->show();
+            ui->menuBar->show();
         else if (event->type() == QEvent::KeyRelease
                 && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
-            ui->menubar->hide();
+            ui->menuBar->hide();
     }
     return QMainWindow::eventFilter(obj, event);
 }
-
-// EVENTS
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -178,6 +184,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return true; // Top-level parent should return true
     });
     return QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+    saveSettings();
 }
 
 // ACTION PROCESSING
@@ -214,7 +225,8 @@ void MainWindow::newSheetBefore(Vim::N n)
     vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId(), sheet);
-        ui->tabView->insertTab(getTabId(), new SheetView(sheet, ui->tabView), "New sheet");
+        ui->tabView->insertTab(getTabId(),
+                new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
@@ -227,7 +239,8 @@ void MainWindow::newSheetAfter(Vim::N n)
     vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId() + 1, sheet);
-        ui->tabView->insertTab(getTabId() + 1, new SheetView(sheet, ui->tabView), "New sheet");
+        ui->tabView->insertTab(getTabId() + 1,
+                new SheetView(sheet, ui->tabView), "New sheet");
     }
 }
 
@@ -386,18 +399,42 @@ void MainWindow::takeScreenshot()
 
 void MainWindow::toggleDeveloperHints()
 {
-    ui->statusbar->setVisible(ui->statusbar->isHidden());
+    ui->statusBar->setVisible(ui->statusBar->isHidden());
 }
 
 void MainWindow::showMenubarPermanently(bool show)
 {
-    menubarShownPermanently = show;
-    ui->menubar->setVisible(show);
+    menuBarShownPermanently = show;
+    ui->menuBar->setVisible(show);
     if (!show)
         // TODO add
         qApp->installEventFilter(this);
     else
         qApp->removeEventFilter(this);
+}
+
+void MainWindow::restoreSettings()
+{
+    // Volatile settings
+    restoreGeometry(getSetting("GUI/geometry", {}).toByteArray());
+    restoreState(getSetting("GUI/windowState", {}).toByteArray());
+
+    // Normal settings
+    ui->toolBar->setVisible(getSetting("GUI/toolBar", true).toBool());
+    showMenubarPermanently(getSetting("GUI/menuBar", true).toBool());
+    ui->tabView->tabBar()->setVisible(getSetting("GUI/showTabs", true).toBool());
+}
+
+void MainWindow::saveSettings()
+{
+    // Volatile settings
+    changeSetting("GUI/geometry", saveGeometry(), false);
+    changeSetting("GUI/windowState", saveState(), true);
+
+    // Normal settings
+    changeSetting("GUI/toolBar", ui->toolBar->isVisible(), false);
+    changeSetting("GUI/menuBar", menuBarShownPermanently, false);
+    changeSetting("GUI/showTabs", ui->tabView->tabBar()->isVisible(), true);
 }
 
 void MainWindow::onTabCloseRequested(int index)
@@ -438,11 +475,15 @@ void MainWindow::setupActions()
     connect(ui->actionRedoInSheet, &QAction::triggered,
             [this]() { if (getTab()) scene()->redo(); });
     // Sheet
-    connect(ui->actionNewSheet, &QAction::triggered, this, &MainWindow::newSheetAfter);
+    connect(ui->actionNewSheet, &QAction::triggered,
+            this, &MainWindow::newSheetAfter);
     // Help
-    connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::showHelp);
-    connect(ui->actionScreenshot, &QAction::triggered, this, &MainWindow::takeScreenshot);
-    connect(ui->actionDeveloperHints, &QAction::triggered, this, &MainWindow::toggleDeveloperHints);
+    connect(ui->actionHelp, &QAction::triggered,
+            this, &MainWindow::showHelp);
+    connect(ui->actionScreenshot, &QAction::triggered,
+            this, &MainWindow::takeScreenshot);
+    connect(ui->actionDeveloperHints, &QAction::triggered,
+            this, &MainWindow::toggleDeveloperHints);
     // Toolbar
     connect(ui->actionInsertLine, &QAction::triggered,
             this, [this]() { if (getTab()) scene()->insertLine(); });
@@ -523,6 +564,7 @@ void MainWindow::openProjectFromFile(const QString &filename)
     this->filename = filename;
     changeSetting("default_path", filename);
 
-    setWindowTitle(QString("Schim - ") + activeProject->getTitle() + " (" + filename + ")");
+    setWindowTitle(QString("Schim - ") + activeProject->getTitle()
+            + " (" + filename + ")");
     populateWithProject();
 }
