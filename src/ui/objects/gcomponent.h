@@ -20,16 +20,14 @@ public:
     // USER ACTIONS
     void showContextMenu();
 
+private slots:
+    void onContextEdit();
+
 private:
     // EVENTS
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-
-public slots:
-    // SLOTS
-    void edit();
-    void addText();
 
 private:
     Operation *operation;

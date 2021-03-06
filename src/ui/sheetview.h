@@ -11,7 +11,7 @@ class MainWindow;
 
 class SheetView : public QGraphicsView
 {
-
+    Q_OBJECT
 public:
     /**
      * @brief This constructor is only used so that the MainWindow ui can be generated properly.
@@ -25,7 +25,6 @@ public:
      * This is the constructor that implements common functionality.
      */
     SheetView(Sheet *sheet, QWidget *parent = nullptr);
-
     ~SheetView();
 
     // SETTERS
@@ -39,7 +38,9 @@ public:
     void scrollDown(Vim::N n = 0);
     void scrollLeft(Vim::N n = 0);
     void scrollRight(Vim::N n = 0);
-    void insert();
+    void showContextMenu();
+public slots:
+    void insertPopup();
 
     // GETTERS
     SheetScene *scene();
@@ -61,7 +62,7 @@ private:
 private slots:
     // SLOTS
     void onRubberBandChanged(QRect rect, QPointF, QPointF);
-    void onCursorChanged();
+    void onCursorMoved();
     void onInsertionRequested(Object *obj);
 
 private:

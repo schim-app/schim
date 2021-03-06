@@ -38,9 +38,21 @@ void GComponent::showContextMenu()
     QAction addText("Add text");
     contextMenu.addAction(&edit);
     contextMenu.addAction(&addText);
-    QObject::connect(&edit, &QAction::triggered, this, &GComponent::edit);
-    QObject::connect(&addText, &QAction::triggered, this, &GComponent::addText);
+    // Connections
+    QObject::connect(&edit, &QAction::triggered,
+                     this, &GComponent::onContextEdit);
+    QObject::connect(&addText, &QAction::triggered, this, [this]() {
+        GText *obj = new GText; // Create new graphical text object
+        TextInsertOperation *op = new TextInsertOperation(scene(), obj);
+        obj->setParentItem(this); // The operation must know this text has a parent
+        scene()->startOperation(op);
+    });
     contextMenu.exec(QCursor::pos());
+}
+
+void GComponent::onContextEdit()
+{
+    ComponentSettings(this, MainWindow::getInstance()).exec();
 }
 
 // EVENTS
@@ -57,7 +69,7 @@ void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     GCompositeObject::mouseDoubleClickEvent(event);
     if (event->buttons() == Qt::LeftButton)
-        edit();
+        onContextEdit();
 }
 
 QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -76,20 +88,4 @@ QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value
     }
 
     return GCompositeObject::itemChange(change, value);
-}
-
-// SLOTS
-
-void GComponent::edit()
-{
-    ComponentSettings editor(this, MainWindow::getInstance());
-    editor.exec();
-}
-
-void GComponent::addText()
-{
-    GText *obj = new GText; // Create new graphical text object
-    TextInsertOperation *op = new TextInsertOperation(scene(), obj);
-    obj->setParentItem(this); // The operation must know this text has a parent
-    scene()->startOperation(op);
 }

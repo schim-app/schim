@@ -1,0 +1,11 @@
+#ifndef SYMBOLS_H
+#define SYMBOLS_H
+
+#include <QCoreApplication>
+
+#define VERSION "@PROJECT_VERSION@"
+#define SHARE_DIR qApp->applicationDirPath() + "/../share/schim"
+#define ICON_DIR qApp->applicationDirPath() + "/../share/icons/hicolor/scalable"
+#define QT_HELP SHARE_DIR "/Schim.qhc"
+
+#endif // SYMBOLS_H

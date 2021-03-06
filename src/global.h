@@ -1,9 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define VERSION "@PROJECT_VERSION@"
-#define SHARE_DIR "../share/schim"
-#define QT_HELP SHARE_DIR "/Schim.qhc"
+#include "symbols.h"
 
 #include <QVariant>
 #include <QColor>

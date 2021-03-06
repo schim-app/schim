@@ -73,6 +73,9 @@
        <height>0</height>
       </size>
      </property>
+     <property name="placeholderText">
+      <string>Type the name of what you want to insert...</string>
+     </property>
     </widget>
    </item>
   </layout>

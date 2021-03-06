@@ -16,8 +16,11 @@
     <height>0</height>
    </size>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="focusPolicy">
-   <enum>Qt::ClickFocus</enum>
+   <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Schim</string>
@@ -36,6 +39,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabView">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="toolTip">
        <string/>
       </property>
@@ -77,6 +83,18 @@
       </property>
       <item>
        <widget class="QLabel" name="vimKeyStatus">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16</height>
+         </size>
+        </property>
         <property name="text">
          <string>VIM key status (text changes dynamically)</string>
         </property>
@@ -103,6 +121,7 @@
      <bool>true</bool>
     </property>
     <addaction name="actionNewSheet"/>
+    <addaction name="actionSheetSettings"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -116,6 +135,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionPrint"/>
+    <addaction name="actionProjectSettings"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -126,6 +146,7 @@
     </property>
     <addaction name="actionUndoInSheet"/>
     <addaction name="actionRedoInSheet"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -161,7 +182,13 @@
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Toolbar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>12</width>
+     <height>12</height>
+    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -174,6 +201,9 @@
    <addaction name="actionInsertText"/>
   </widget>
   <widget class="QDockWidget" name="dockSymbols">
+   <property name="windowTitle">
+    <string>Components</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
@@ -204,7 +234,7 @@
   </widget>
   <action name="actionNewSheet">
    <property name="text">
-    <string>New sheet</string>
+    <string>&amp;New sheet</string>
    </property>
    <property name="toolTip">
     <string>Insert a new sheet at the end</string>
@@ -230,6 +260,10 @@
    </property>
   </action>
   <action name="actionInsertLine">
+   <property name="icon">
+    <iconset theme="../../../../res/img/ui/rect.svg">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
    <property name="text">
     <string>Line</string>
    </property>
@@ -276,6 +310,10 @@
    </property>
   </action>
   <action name="actionInsertRect">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/ui/rect.svg</normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/ui/rect.svg</iconset>
+   </property>
    <property name="text">
     <string>Rect</string>
    </property>
@@ -348,6 +386,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+0</string>
+   </property>
+  </action>
+  <action name="actionSheetSettings">
+   <property name="text">
+    <string>Sheet &amp;settings</string>
+   </property>
+  </action>
+  <action name="actionProjectSettings">
+   <property name="text">
+    <string>P&amp;roject settings (TODO)</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences... (TODO)</string>
    </property>
   </action>
  </widget>

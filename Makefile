@@ -45,13 +45,14 @@ app: qthelp
 	@echo -e "Copying binary to destination..."
 	@cd "${BUILD_DIR}"; \
 	mkdir -p dest/bin \
-		"dest/${ICON_DIR}/apps" \
+		"dest/${ICON_DIR}"/{apps,actions} \
 		"dest/${SHARE_DIR}/symb"; \
 	mv schim dest/bin/
 	@# Create launcher and copy resources
 	@echo -e "Copying resources to destination..."
 	@cp misc/schim.sh "${BUILD_DIR}/"; \
 	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"; \
+	cp res/img/actions/*.svg "${BUILD_DIR}/dest/${ICON_DIR}/actions/" 
 	cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"
 ifeq (${OS},Windows_NT)
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe

@@ -86,6 +86,7 @@ private:
     // HELPERS
     bool processVimAction(const Vim::Action &action);
     void setupActions();
+    void setupIcons();
     /// Populate the window with a new active project.
     void populateWithProject();
     /// Remove all tabs and destroy corresponding widgets.

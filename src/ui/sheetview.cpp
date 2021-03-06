@@ -19,6 +19,8 @@
 
 #include <QDebug>
 
+// CONSTRUCTORS
+
 SheetView::SheetView(Sheet *sheet, QWidget *parent)
     : QGraphicsView(parent)
 {
@@ -31,7 +33,7 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     updateBackground();
 
     connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
-    connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorChanged);
+    connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorMoved);
 
     setWhatsThis("This is a sheet view. This is where you draw your schematics"
                  "on a sheet of paper.");
@@ -98,7 +100,27 @@ void SheetView::scrollRight(Vim::N n)
     viewport()->update();
 }
 
-void SheetView::insert()
+void SheetView::showContextMenu()
+{
+    QMenu contextMenu(MainWindow::getInstance());
+    QAction insert("Insert...");
+    QAction settings("Sheet settings");
+    QAction editHeader("Edit header (TODO)");
+    contextMenu.addAction(&insert);
+    contextMenu.addAction(&settings);
+    contextMenu.addAction(&editHeader);
+    //Connections
+    connect(&insert, &QAction::triggered, this, &SheetView::insertPopup);
+    connect(&settings, &QAction::triggered, this, []() {
+        MainWindow::getInstance()->openSheetSettings();
+    });
+    connect(&settings, &QAction::triggered, this, []() {
+        // TODO
+    });
+    contextMenu.exec(QCursor::pos());
+}
+
+void SheetView::insertPopup()
 {
     if (!insertCompleter)
     {
@@ -129,7 +151,7 @@ bool SheetView::processVimAction(const Vim::Action &action)
     else if_eq_do("scroll-down",	scrollDown)
     else if_eq_do("scroll-up",		scrollUp)
     else if_eq_do("scroll-right",	scrollRight)
-    else if (action == "insert")	insert();
+    else if (action == "insert")	insertPopup();
     else return false;
     return true;
 }
@@ -149,8 +171,16 @@ void SheetView::mousePressEvent(QMouseEvent *event)
     {
         setDragMode(DragMode::ScrollHandDrag);
         _panStartPos = event->pos();
-
         return;
+    }
+    else if (event->buttons() == Qt::RightButton)
+    { // Show context menu
+        event->ignore();
+        QGraphicsView::mousePressEvent(event);
+        if (event->isAccepted())
+            return;
+        else
+            showContextMenu();
     }
 
     QGraphicsView::mousePressEvent(event);
@@ -256,7 +286,7 @@ void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
     _rubberBandDragging = true;
 }
 
-void SheetView::onCursorChanged()
+void SheetView::onCursorMoved()
 {
     auto pos = scene()->getSnappedCursorPos();
 

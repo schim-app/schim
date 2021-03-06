@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-configure_file(global.h.in global.h @ONLY)
+configure_file(symbols.h.in symbols.h @ONLY)
 
 find_package(Qt5 5.10 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
 

@@ -14,6 +14,12 @@
 #include <QScrollBar>
 #include <QProcess> // For QtAssistant help
 
+// For changing action icon color based on theme.
+#include <QGraphicsColorizeEffect>
+#include <QGraphicsItem>
+#include <QSvgRenderer>
+#include <QPainter>
+
 // TODO rm
 #include <QSvgGenerator>
 #include <QDebug>
@@ -33,9 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->hide();
 
     setupActions();
+    setupIcons();
 
     // Override tab close requests
-    connect(ui->tabView, &QTabWidget::tabCloseRequested, this, &MainWindow::onTabCloseRequested);
+    connect(ui->tabView, &QTabWidget::tabCloseRequested,
+            this, &MainWindow::onTabCloseRequested);
 
     instance = this;
 }
@@ -277,7 +285,7 @@ void MainWindow::showHelp()
     // TODO make attribute of MainWindow, take care of destruction, etc.
     QProcess *process = new QProcess;
     process->start(QLatin1String("assistant"),
-                   QStringList{"-collectionFile", qApp->applicationDirPath() + "/" QT_HELP});
+                   QStringList{"-collectionFile", QT_HELP});
 }
 
 void MainWindow::takeScreenshot()
@@ -285,7 +293,7 @@ void MainWindow::takeScreenshot()
     QString filename = QFileDialog::getSaveFileName(
                 this, "Open project file...",
                 getSetting("screenshot_path", QDir::homePath() + "/screenshot.png").toString(),
-                "Images (*.jpg *.png *.bmp);;SVG Images (*.svg);;All Files (*)"
+                "Images (*.jpg *.png *.bmp *.svg);;All Files (*)"
             );
     // TODO add filters later
     if (filename == "")
@@ -338,7 +346,7 @@ bool MainWindow::processVimAction(const Vim::Action &action)
     return true;
 }
 
-// MISCELLANEOUS
+// HELPERS
 
 void MainWindow::setupActions()
 {
@@ -373,6 +381,39 @@ void MainWindow::setupActions()
             this, [this]() { if (getTab()) getTab()->zoomOut(); });
     connect(ui->actionZoomReset, &QAction::triggered,
             this, [this]() { if (getTab()) getTab()->resetZoom(); });
+}
+
+QIcon svgColorChange(const QString &filename)
+{
+    // Open the svg file containing the icon
+    QFile file(filename);
+    if (!file.open(QFile::ReadOnly))
+        return QIcon(filename);
+
+    // Tweak the color to suit the application theme
+    QString color = qApp->palette().color(QPalette::Text).name();
+    QString modified =
+            QString(file.readAll())
+            .replace("\"#000000\"", "\"" + color + "\"")
+            .replace("\"#000\"", "\"" + color + "\"");
+
+    // Render the SVG and return an icon
+    QSvgRenderer rr(modified.toUtf8());
+    QImage image(12, 12, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    painter.setOpacity(0.6);
+    rr.render(&painter);
+    return QIcon(QPixmap::fromImage(image));
+}
+
+void MainWindow::setupIcons()
+{
+// TODO use this one #define PREFIX ICON_DIR "/actions/schim-"
+#define PREFIX ICON_DIR "/actions/"
+    ui->actionInsertRect->setIcon(svgColorChange(PREFIX "rect.svg"));
+    ui->actionInsertLine->setIcon(svgColorChange(PREFIX "line.svg"));
+#undef PREFIX
 }
 
 void MainWindow::populateWithProject()
