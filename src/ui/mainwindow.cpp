@@ -45,12 +45,12 @@ MainWindow::MainWindow(QWidget *parent)
     setupIcons(); // Action icons
 
     // Setup initial contents of widgets
-    ui->tabView->clear();
+    ui->tabWidget->clear();
     setVimStatus("");
     ui->statusBar->hide();
 
     // Override tab close requests
-    connect(ui->tabView, &QTabWidget::tabCloseRequested,
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested,
             this, &MainWindow::onTabCloseRequested);
 }
 
@@ -70,20 +70,20 @@ MainWindow *MainWindow::getInstance()
 
 QTabWidget *MainWindow::getTabView() const
 {
-    return ui->tabView;
+    return ui->tabWidget;
 }
 
 int MainWindow::getTabId() const
 {
-    return ui->tabView->currentIndex();
+    return ui->tabWidget->currentIndex();
 }
 
 SheetView *MainWindow::getTab(int index)
 {
     if (index == -1)
-        return (SheetView*) ui->tabView->currentWidget();
+        return (SheetView*) ui->tabWidget->currentWidget();
     else
-        return (SheetView*) ui->tabView->widget(index);
+        return (SheetView*) ui->tabWidget->widget(index);
 }
 
 SheetScene *MainWindow::scene()
@@ -105,7 +105,7 @@ QString MainWindow::getFileName() const
 
 void MainWindow::setTabId(int id)
 {
-    ui->tabView->setCurrentIndex(id);
+    ui->tabWidget->setCurrentIndex(id);
 }
 
 void MainWindow::setVimStatus(const QString &status)
@@ -132,7 +132,7 @@ QMenu *MainWindow::createPopupMenu()
 
     // Actions initialization
     showTabs->setCheckable(true);
-    showTabs->setChecked(ui->tabView->tabBar()->isVisible());
+    showTabs->setChecked(ui->tabWidget->tabBar()->isVisible());
     menuBar->setToolTip("Do not display sheets as tabs");
     menuBar->setCheckable(true);
     menuBar->setChecked(menuBarShownPermanently);
@@ -140,7 +140,7 @@ QMenu *MainWindow::createPopupMenu()
                         "(hold Alt to temporarily show it)");
     // Connections
     connect(showTabs, &QAction::triggered, menu, [this, showTabs]() {
-        ui->tabView->tabBar()->setVisible(showTabs->isChecked());
+        ui->tabWidget->tabBar()->setVisible(showTabs->isChecked());
         showTabs->setChecked(showTabs->isChecked());
     });
     connect(menuBar, &QAction::triggered, menu, [this, menuBar]() {
@@ -212,7 +212,7 @@ void MainWindow::appendSheet(Vim::N n)
     vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->addSheet(sheet);
-        ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
+        ui->tabWidget->addTab(new SheetView(sheet, ui->tabWidget), sheet->getTitle());
     }
 }
 
@@ -225,8 +225,8 @@ void MainWindow::newSheetBefore(Vim::N n)
     vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId(), sheet);
-        ui->tabView->insertTab(getTabId(),
-                new SheetView(sheet, ui->tabView), "New sheet");
+        ui->tabWidget->insertTab(getTabId(),
+                new SheetView(sheet, ui->tabWidget), "New sheet");
     }
 }
 
@@ -239,8 +239,8 @@ void MainWindow::newSheetAfter(Vim::N n)
     vimdo(n) {
         Sheet *sheet = new Sheet;
         activeProject->getSheets().insert(getTabId() + 1, sheet);
-        ui->tabView->insertTab(getTabId() + 1,
-                new SheetView(sheet, ui->tabView), "New sheet");
+        ui->tabWidget->insertTab(getTabId() + 1,
+                new SheetView(sheet, ui->tabWidget), "New sheet");
     }
 }
 
@@ -256,7 +256,7 @@ void MainWindow::openSheetSettings(Vim::N n)
     if (n.raw() == 0)
         n = getTabId() + 1;
 
-    if (n > ui->tabView->count())
+    if (n > ui->tabWidget->count())
         return;
     SheetSettings settings(this, n - 1);
     settings.exec();
@@ -422,7 +422,7 @@ void MainWindow::restoreSettings()
     // Normal settings
     ui->toolBar->setVisible(getSetting("GUI/toolBar", true).toBool());
     showMenubarPermanently(getSetting("GUI/menuBar", true).toBool());
-    ui->tabView->tabBar()->setVisible(getSetting("GUI/showTabs", true).toBool());
+    ui->tabWidget->tabBar()->setVisible(getSetting("GUI/showTabs", true).toBool());
 }
 
 void MainWindow::saveSettings()
@@ -434,13 +434,13 @@ void MainWindow::saveSettings()
     // Normal settings
     changeSetting("GUI/toolBar", ui->toolBar->isVisible(), false);
     changeSetting("GUI/menuBar", menuBarShownPermanently, false);
-    changeSetting("GUI/showTabs", ui->tabView->tabBar()->isVisible(), true);
+    changeSetting("GUI/showTabs", ui->tabWidget->tabBar()->isVisible(), true);
 }
 
 void MainWindow::onTabCloseRequested(int index)
 {
     auto *tab = getTab(index);
-    ui->tabView->removeTab(index);
+    ui->tabWidget->removeTab(index);
     delete tab;
 }
 
@@ -469,6 +469,7 @@ void MainWindow::setupActions()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::print);
+    connect(ui->actionExit, &QAction::triggered, this, [this](){ close(); });
     // Edit
     connect(ui->actionUndoInSheet, &QAction::triggered, this,
             [this]() { if (getTab()) scene()->undo(); });
@@ -520,25 +521,26 @@ QIcon svgColorChange(const QString &filename)
     QImage image(12, 12, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter painter(&image);
-    painter.setOpacity(0.6);
+    painter.setOpacity(0.5);
     rr.render(&painter);
     return QIcon(QPixmap::fromImage(image));
 }
 
 void MainWindow::setupIcons()
 {
-// TODO use this one #define PREFIX ICON_DIR "/actions/schim-"
-#define PREFIX ICON_DIR "/actions/"
-    ui->actionInsertRect->setIcon(svgColorChange(PREFIX "rect.svg"));
-    ui->actionInsertLine->setIcon(svgColorChange(PREFIX "line.svg"));
+// TODO maybe use this one #define PREFIX ICON_DIR "/actions/schim-"
+#define __ACTIONS ICON_DIR "/actions/"
+    ui->actionInsertRect->setIcon(svgColorChange(__ACTIONS "rect.svg"));
+    ui->actionInsertLine->setIcon(svgColorChange(__ACTIONS "line.svg"));
 #undef PREFIX
+    ui->actionAboutSchim->setIcon(QIcon(ICON_DIR "/apps/schim.svg"));
 }
 
 void MainWindow::populateWithProject()
 {
-    ui->tabView->clear();
+    ui->tabWidget->clear();
     for (Sheet *sheet : *activeProject) //TODO changing for to foreach makes the program crash
-        ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
+        ui->tabWidget->addTab(new SheetView(sheet, ui->tabWidget), sheet->getTitle());
     // The tooltip is only useful before the user ever opens a sheet.
     ui->centralwidget->setToolTip("");
 }
@@ -552,9 +554,9 @@ QMenu *MainWindow::getPopupMenu()
 
 void MainWindow::clearTabs()
 {
-    for (int i = 0; i < ui->tabView->count(); ++i)
-        delete ui->tabView->widget(i);
-    ui->tabView->clear();
+    for (int i = 0; i < ui->tabWidget->count(); ++i)
+        delete ui->tabWidget->widget(i);
+    ui->tabWidget->clear();
 }
 
 void MainWindow::openProjectFromFile(const QString &filename)
