@@ -22,7 +22,7 @@
 
 // TODO rm
 #include <QSvgGenerator>
-#include <QDebug>
+#include <iostream>
 
 MainWindow* MainWindow::instance{};
 
@@ -32,25 +32,29 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    ui->tabView->clear();
+    // Singleton instance
+    instance = this;
 
+    // Create widgets and menus...
+    ui->setupUi(this);
+    ui->menuView->addMenu(getPopupMenu());
+    setupActions(); // Menu actions
+    setupIcons(); // Action icons
+
+    // Setup initial contents of widgets
+    ui->tabView->clear();
     setVimStatus("");
     ui->statusbar->hide();
-
-    setupActions();
-    setupIcons();
 
     // Override tab close requests
     connect(ui->tabView, &QTabWidget::tabCloseRequested,
             this, &MainWindow::onTabCloseRequested);
-
-    instance = this;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete popupMenu;
 }
 
 MainWindow *MainWindow::getInstance()
@@ -105,14 +109,75 @@ void MainWindow::setVimStatus(const QString &status)
     ui->vimKeyStatus->setText(status);
 }
 
+QMenu *MainWindow::createPopupMenu()
+{
+    QMenu *menu = QMainWindow::createPopupMenu();
+    if (menu == nullptr) menu = new QMenu;
+
+    // Setup menu
+    menu->setParent(this);
+    menu->setToolTipsVisible(true);
+    menu->setTitle("Widgets");
+
+    // Populate menu
+    menu->addSeparator();
+    QAction *hideTabs = menu->addAction("Show tabs");
+    QAction *menubar = menu->addAction("Show menu bar permanently");
+
+    // Actions initialization
+    hideTabs->setCheckable(true);
+    hideTabs->setChecked(ui->tabView->tabBar()->isVisible());
+    menubar->setToolTip("Do not display sheets as tabs");
+    menubar->setCheckable(true);
+    menubar->setChecked(menubarShownPermanently);
+    menubar->setToolTip("Show/hide the menu bar "
+                        "(hold Alt to temporarily show it)");
+    // Connections
+    connect(hideTabs, &QAction::triggered, menu, [this, hideTabs]() {
+        ui->tabView->tabBar()->setVisible(hideTabs->isChecked());
+        hideTabs->setChecked(hideTabs->isChecked());
+    });
+    connect(menubar, &QAction::triggered, menu, [this, menubar]() {
+        showMenubarPermanently(menubar->isChecked());
+        menubar->setChecked(menubarShownPermanently);
+    });
+
+    return menu;
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    // If the menu bar is shown only temporarily:
+    // 1. If the user holds Alt, show the menu bar while he/she is holding it
+    // 2. If the user presses a mouse button in any widget, hide the menu bar
+    // TODO this is not complete, but it's not a priority to fix this. Problems:
+    // 1. Menu actions don't work when the menubar is hidden
+    // 2. When a menu is active, hiding the menubar doesn't hide the menu popup
+    // 3. This implementation is embarrassingly inelegant either way, please help.
+    if (!menubarShownPermanently)
+    {
+        if (obj != ui->menubar
+                && event->type() == QEvent::MouseButtonPress)
+            ui->menubar->hide();
+        else if (event->type() == QEvent::KeyPress
+                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
+            ui->menubar->show();
+        else if (event->type() == QEvent::KeyRelease
+                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
+            ui->menubar->hide();
+    }
+    return QMainWindow::eventFilter(obj, event);
+}
+
 // EVENTS
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     Vim::registerKeyPress(event, [this](const Vim::Action &action) {
         processVimAction(action);
-        return true; // Top-level parent
+        return true; // Top-level parent should return true
     });
+    return QMainWindow::keyPressEvent(event);
 }
 
 // ACTION PROCESSING
@@ -324,6 +389,17 @@ void MainWindow::toggleDeveloperHints()
     ui->statusbar->setVisible(ui->statusbar->isHidden());
 }
 
+void MainWindow::showMenubarPermanently(bool show)
+{
+    menubarShownPermanently = show;
+    ui->menubar->setVisible(show);
+    if (!show)
+        // TODO add
+        qApp->installEventFilter(this);
+    else
+        qApp->removeEventFilter(this);
+}
+
 void MainWindow::onTabCloseRequested(int index)
 {
     auto *tab = getTab(index);
@@ -383,6 +459,7 @@ void MainWindow::setupActions()
             this, [this]() { if (getTab()) getTab()->resetZoom(); });
 }
 
+// Local helper function
 QIcon svgColorChange(const QString &filename)
 {
     // Open the svg file containing the icon
@@ -423,6 +500,13 @@ void MainWindow::populateWithProject()
         ui->tabView->addTab(new SheetView(sheet, ui->tabView), sheet->getTitle());
     // The tooltip is only useful before the user ever opens a sheet.
     ui->centralwidget->setToolTip("");
+}
+
+QMenu *MainWindow::getPopupMenu()
+{
+    if (popupMenu == nullptr)
+        popupMenu = createPopupMenu();
+    return popupMenu;
 }
 
 void MainWindow::clearTabs()

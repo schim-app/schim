@@ -52,7 +52,11 @@ public:
     void setTabId(int id);
     void setVimStatus(const QString &status);
 
+    // OVERRIDEN
+    QMenu *createPopupMenu() override;
+
     // EVENTS
+    bool eventFilter(QObject *obj, QEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
     // ACTION PROCESSING
@@ -75,7 +79,6 @@ public:
     void showHelp();
     void takeScreenshot();
     void toggleDeveloperHints();
-
     void openProjectFromFile(const QString &filename);
 
 private slots:
@@ -89,15 +92,23 @@ private:
     void setupIcons();
     /// Populate the window with a new active project.
     void populateWithProject();
+    /**
+     * @brief Get the popup menu shown when right clicking a tool bar.
+     * If the menu doesn't exist, it will be created.
+     */
+    QMenu *getPopupMenu();
     /// Remove all tabs and destroy corresponding widgets.
     void clearTabs();
+    void showMenubarPermanently(bool show);
 
 private:
     // ATTRIBUTES
     Ui::MainWindow *ui;
-    int _vimNumber = 0;
     Project *activeProject = nullptr;
     QString filename;
+    bool menubarShownPermanently = true;
+    /// @see getPopupMenu()
+    QMenu *popupMenu{};
 
     static MainWindow *instance;
 };

@@ -74,9 +74,8 @@ QImage DatabaseItem::getIcon() const
     if (icon != nullptr) // An up-to-date icon has already been generated
         return *icon;
 
-    // If the icon is not generated
-
     if (object == nullptr)
+        // The object is not a component, but a directory
         return {};
 
     // Create a scene that we will use to generate the icon

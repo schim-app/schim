@@ -113,6 +113,12 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Ignored">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <widget class="QMenu" name="menuSheet">
     <property name="title">
      <string>&amp;Sheet</string>
@@ -159,7 +165,7 @@
     <addaction name="actionScreenshot"/>
     <addaction name="actionDeveloperHints"/>
    </widget>
-   <widget class="QMenu" name="menu_View">
+   <widget class="QMenu" name="menuView">
     <property name="title">
      <string>&amp;View</string>
     </property>
@@ -175,7 +181,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menu_View"/>
+   <addaction name="menuView"/>
    <addaction name="menuSheet"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -348,6 +354,9 @@
   <action name="actionScreenshot">
    <property name="text">
     <string>&amp;Screenshot</string>
+   </property>
+   <property name="toolTip">
+    <string>Take a screenshot of the entire application window</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
