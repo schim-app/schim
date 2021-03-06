@@ -23,6 +23,8 @@ static QMap<QString, QString> actionMap = {
     // MainWindow
     {"K", "tab-next"},
     {"J", "tab-prev"},
+    {"g0", "tab-first"},
+    {"g$", "tab-last"},
     {"gd", "tab-close"},
     {"gi", "new-sheet-before"},
     {"ga", "new-sheet-after"},
@@ -190,6 +192,7 @@ void Vim::registerKeyPress(QKeyEvent *event,
                            std::function<bool(const Vim::Action &)> callback,
                            bool allowCount)
 {
+    if (!::enabled) return;
     // TODO remove this?
     if (event->key() == Qt::Key_Control || event->key() == Qt::Key_Shift)
         return;

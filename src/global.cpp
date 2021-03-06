@@ -20,11 +20,11 @@ Database *globalDatabase = nullptr;
 QSettings *getSettings(const QString &key)
 {
     if (
-            key == "default_path" ||
-            key == "print_path" ||
-            key == "screenshot_path" ||
+            key == "defaultPath" ||
+            key == "printPath" ||
+            key == "screenshotPath" ||
             key == ("GUI/geometry") ||
-            key == ("GUI/windowstate")
+            key == ("GUI/windowState")
             )
         return new QSettings("schim", "volatile");
     else

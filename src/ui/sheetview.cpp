@@ -104,8 +104,8 @@ void SheetView::showContextMenu()
 {
     QMenu contextMenu(MainWindow::getInstance());
     QAction insert("Insert...");
-    QAction settings("Sheet settings");
-    QAction editHeader("Edit header (TODO)");
+    QAction settings("Sheet settings...");
+    QAction editHeader("Edit header... (TODO)");
     contextMenu.addAction(&insert);
     contextMenu.addAction(&settings);
     contextMenu.addAction(&editHeader);

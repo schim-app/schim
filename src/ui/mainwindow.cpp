@@ -423,6 +423,10 @@ void MainWindow::restoreSettings()
     ui->toolBar->setVisible(getSetting("GUI/toolBar", true).toBool());
     showMenubarPermanently(getSetting("GUI/menuBar", true).toBool());
     ui->tabWidget->tabBar()->setVisible(getSetting("GUI/showTabs", true).toBool());
+
+    // Vim-mode
+    // TODO move this code to the place where vim mode is changed. Same in saveSettings
+    Vim::enable(getSetting("UI/enableVimMode", false).toBool());
 }
 
 void MainWindow::saveSettings()
@@ -434,7 +438,9 @@ void MainWindow::saveSettings()
     // Normal settings
     changeSetting("GUI/toolBar", ui->toolBar->isVisible(), false);
     changeSetting("GUI/menuBar", menuBarShownPermanently, false);
-    changeSetting("GUI/showTabs", ui->tabWidget->tabBar()->isVisible(), true);
+    changeSetting("GUI/showTabs", ui->tabWidget->tabBar()->isVisible(), false);
+    // Vim-mode
+    changeSetting("UI/enableVimMode", Vim::enabled(), true);
 }
 
 void MainWindow::onTabCloseRequested(int index)
@@ -450,6 +456,8 @@ bool MainWindow::processVimAction(const Vim::Action &action)
 
          if_eq_do("tab-next",				nextTab)
     else if_eq_do("tab-prev",				prevTab)
+    else if (action == "tab-first")			setTabId(0);
+    else if (action == "tab-last")			setTabId(ui->tabWidget->count() - 1);
     else if_eq_do("tab-close",				closeTab)
     else if_eq_do("new-sheet-before",		newSheetBefore)
     else if_eq_do("new-sheet-after",		newSheetAfter)
