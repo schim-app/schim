@@ -1,0 +1,6 @@
+<RCC>
+    <qresource>
+        <file>img/github-dark.svg</file>
+        <file>img/github-light.svg</file>
+    </qresource>
+</RCC>

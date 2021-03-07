@@ -1,18 +1,22 @@
-<p align="center">
+
+<div align="center">
     <img alt="schim logo" src="res/img/icon.svg" width="80px" />
-    <h1 align="center">Schim</h1>
-    <h3 align="center">A schematic editor for the modern computer user</h3>
-</p>
+    <h1>Schim</h1>
+    <h3>A schematic editor for the modern computer user</h3>
+</div>
 
 ---
 
-<img src="https://img.shields.io/readthedocs/schim"/>
+[![Docs](https://img.shields.io/readthedocs/schim?color=blue&label=ReadTheDocs)](https://schim.rtfd.io)
+[![License](https://img.shields.io/badge/license-GPL%203-blueviolet)](https://github.com/schim-app/schim/blob/master/LICENSE)
 
 Welcome to the official Schim repository.
 
-<h3 style="font-weight:normal" align="center"> Schim = <i><b>SCH</b>ematic <b>IM</b>proved</i> </h3>
+<div align="center">
+<h3 style="font-weight:normal"> Schim = <i><b>SCH</b>ematic <b>IM</b>proved</i> </h3>
+</div>
 
-**Schim** is a tool used to create electrical schematics, mainly for industrial
+Schim is a tool used to create electrical schematics, mainly for industrial
 applications. It aspires to become the standard open source tool for this
 purpose.
 
@@ -30,9 +34,9 @@ Schim is available on **Linux** and **Windows**.
 
 ## Documentation
 
-Schim comes with a very comprehensive user manual and documentation for
-developers. Both can be found [here](https://schim.rtfd.io). The documentation
-is actively maintained [here](https://github.com/schim-app/schim-doc).
+Schim comes with a very comprehensive user manual and developer documentation.
+Both can be found [here](https://schim.rtfd.io). The documentation is actively
+maintained [here](https://github.com/schim-app/schim-doc).
 
 ## Installing
 
@@ -95,8 +99,6 @@ case, the application can be run as:
 cd <DIR>/bin/;
 ./schim
 ```
-*Note*: `make install` will deploy the application, including the help files
-and man pages.
 
 ## Contributing
 TODO

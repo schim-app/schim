@@ -8,6 +8,7 @@
 #include "ui/objects/gline.h"
 #include "ui/objects/gcompositeobject.h"
 #include "ui/operations.h"
+#include "ui/windows/about.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -493,6 +494,8 @@ void MainWindow::setupActions()
             this, &MainWindow::takeScreenshot);
     connect(ui->actionDeveloperHints, &QAction::triggered,
             this, &MainWindow::toggleDeveloperHints);
+    connect(ui->actionAbout, &QAction::triggered,
+            this, [this]() {About(this).exec();});
     // Toolbar
     connect(ui->actionInsertLine, &QAction::triggered,
             this, [this]() { if (getTab()) scene()->insertLine(); });
@@ -536,12 +539,14 @@ QIcon svgColorChange(const QString &filename)
 
 void MainWindow::setupIcons()
 {
+    // Window icon
+    setWindowIcon(QIcon(ICON_DIR "/apps/schim.svg"));
 // TODO maybe use this one #define PREFIX ICON_DIR "/actions/schim-"
 #define __ACTIONS ICON_DIR "/actions/"
     ui->actionInsertRect->setIcon(svgColorChange(__ACTIONS "rect.svg"));
     ui->actionInsertLine->setIcon(svgColorChange(__ACTIONS "line.svg"));
 #undef PREFIX
-    ui->actionAboutSchim->setIcon(QIcon(ICON_DIR "/apps/schim.svg"));
+    ui->actionAbout->setIcon(QIcon(ICON_DIR "/apps/schim.svg"));
 }
 
 void MainWindow::populateWithProject()

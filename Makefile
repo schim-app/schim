@@ -10,6 +10,7 @@ BUILD_DIR 	   = _build/$(shell [ "${TYPE}" = Release ] && echo release || echo d
 ICON_DIR       = share/icons/hicolor/scalable
 SHARE_DIR      = share/schim
 MAN_DIR	       = share/man/man1
+DOC_DIR	       = share/doc
 
 JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).*_\2_p')
 
@@ -46,17 +47,21 @@ app:# qthelp
 	@cd "${BUILD_DIR}"; \
 	mkdir -p dest/bin \
 		"dest/${ICON_DIR}"/{apps,actions} \
-		"dest/${SHARE_DIR}/symb"; \
-	mv schim dest/bin/
+		"dest/${SHARE_DIR}/symb" \
+		"dest/${DOC_DIR}"; \
+		mv schim dest/bin/
 	@# Create launcher and copy resources
 	@echo -e "Copying resources to destination..."
-	@cp misc/schim.sh "${BUILD_DIR}/"; \
-	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"; \
+	@cp misc/schim.sh "${BUILD_DIR}/"
+	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"
 	cp res/img/actions/*.svg "${BUILD_DIR}/dest/${ICON_DIR}/actions/" 
 	cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"
+	cp res/ATTRIBUTION.md "${BUILD_DIR}/dest/${DOC_DIR}/"
 ifeq (${OS},Windows_NT)
+	@echo "Bundling required libraries..."
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe
 endif
+	@echo "Done."
 
 qthelp:
 	mkdir -p "${BUILD_DIR}/dest/${SHARE_DIR}"

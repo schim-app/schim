@@ -69,6 +69,7 @@ add_executable(schim
     ui/windows/componentsettings.cpp 
     ui/windows/sheetsettings.cpp 
     ui/windows/textsettings.cpp
+    ui/windows/about.cpp
     cli/cli_common.cpp
     cli/cli_export.cpp
 ### FORMS ###
@@ -78,6 +79,8 @@ add_executable(schim
     ui/windows/componentsettings.ui 
     ui/windows/sheetsettings.ui 
     ui/windows/textsettings.ui
+### RESOURCES ###
+    ../res/resources.qrc
 )
 if (WIN32)
     target_link_options(schim PRIVATE -mwindows)

@@ -175,7 +175,7 @@
     <addaction name="actionHelp"/>
     <addaction name="actionScreenshot"/>
     <addaction name="actionDeveloperHints"/>
-    <addaction name="actionAboutSchim"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -370,7 +370,8 @@
   </action>
   <action name="actionInsertText">
    <property name="icon">
-    <iconset theme="insert-text"/>
+    <iconset theme="insert-text">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Text</string>
@@ -492,7 +493,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionAboutSchim">
+  <action name="actionAbout">
    <property name="icon">
     <iconset>
      <normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/icon.svg</normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/icon.svg</iconset>
