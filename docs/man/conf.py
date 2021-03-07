@@ -17,4 +17,4 @@ for f in glob.glob('schim*.rst'):
         __get_description(f[:-4]), # description
         'Haris Gušić <harisgusic.dev@gmail.com>', # author
         1, # section
-    )) 
+    ))

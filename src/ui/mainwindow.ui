@@ -499,7 +499,7 @@
      <normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/icon.svg</normaloff>../../../../../../run/media/haris/D/my-data/projects/schim/res/img/icon.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;About Schim... (TODO)</string>
+    <string>&amp;About Schim</string>
    </property>
   </action>
   <action name="actionInsertImage">

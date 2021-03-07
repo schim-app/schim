@@ -8,7 +8,7 @@
 ---
 
 [![Docs](https://img.shields.io/readthedocs/schim?color=blue&label=ReadTheDocs)](https://schim.rtfd.io)
-[![License](https://img.shields.io/badge/license-GPL%203-blueviolet)](https://github.com/schim-app/schim/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-GPL%203-blueviolet)](./LICENSE)
 
 Welcome to the official Schim repository.
 
