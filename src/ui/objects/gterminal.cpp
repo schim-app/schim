@@ -3,11 +3,13 @@
 #include <iostream>
 #include <QtMath>
 #include "ui/objects/gcompositeobject.h"
+#include <QApplication>
+#include <QBrush>
 
 GTerminal::GTerminal(Terminal *obj)
     : GObject(obj)
 {
-    setFlags(ItemIsSelectable);
+    setFlags({});
 }
 
 Terminal *GTerminal::get()
@@ -60,4 +62,14 @@ QVariant GTerminal::itemChange(QGraphicsItem::GraphicsItemChange change,
                                const QVariant &value)
 {
     return GObject::itemChange(change, value);
+}
+
+GTerminal::GConnectionSuggester::GConnectionSuggester(
+        const Terminal::Prong &p1,
+        const Terminal::Prong &p2)
+{
+    setPos(p1.getTerminal()->getParent()->getPos());
+    // TODO use in a smarter way later
+    setLine({p1.getTerminal()->getPos(), p2.getTerminal()->getPos()});
+    setPen(QPen(qApp->palette().color(QPalette::Text), 0.3, Qt::DashLine));
 }

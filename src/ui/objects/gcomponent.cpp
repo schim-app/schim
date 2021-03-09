@@ -76,21 +76,20 @@ void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void GComponent::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
+    // TODO The hover event is not a 100% reliable way to determine if the mouse
+    // is over the object. And mouseMoveEvent doesn't fire even when mouse
+    // tracking is enabled in the view.
     for (auto *child : childItems())
-    {
         if (dynamic_cast<GTerminal*>(child))
             child->show();
-    }
     GCompositeObject::hoverEnterEvent(event);
 }
 
 void GComponent::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     for (auto *child : childItems())
-    {
         if (dynamic_cast<GTerminal*>(child))
             child->hide();
-    }
     GCompositeObject::hoverLeaveEvent(event);
 }
 

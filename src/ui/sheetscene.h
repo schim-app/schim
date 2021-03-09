@@ -2,16 +2,22 @@
 #define SHEETSCENE_H
 
 #include "model/sheet.h"
+#include "model/component.h"
+#include "model/terminal.h"
+
 #include "ui/vim.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QUndoStack>
+#include <QList>
+#include <QPair>
 
 class SheetView;
 class QMouseEvent;
 class GObject;
 class GHeader;
+class GComponent;
 class Operation;
 
 class SheetScene : public QGraphicsScene
@@ -70,6 +76,7 @@ public:
     void insertLine();
     void insertRect();
     void insertText();
+    void suggestConnections(GComponent *component);
     /**
      * @brief Return the point on the grid that is closest to `pt`.
      *
@@ -110,12 +117,18 @@ public:
 signals:
     void cursorMoved();
 
+private slots:
+    void onSelectionChanged();
+
 private:
 
     // HELPERS
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
     void insertComponentOrHeader(Object *obj);
+    QList<QPair<Terminal::Prong, Terminal::Prong>>
+        getConnectionSuggestions(GComponent *component);
+    void registerConnectionSuggestion(Terminal::Prong a, Terminal::Prong b);
 
     // OVERRIDDEN METHODS
     void keyPressEvent(QKeyEvent *event) override;
@@ -143,6 +156,7 @@ private:
 
     // A white sheet of paper
     QGraphicsRectItem *pageBackgroundItem;
+    //QList<GTerminal::GConnectionSuggester*> _suggesters;
 
     // The scene operation that is currently active
     Operation *operation{};
@@ -159,5 +173,6 @@ private:
     // FRIENDS
     friend class GObject;
 };
+
 
 #endif // SHEETSCENE_H

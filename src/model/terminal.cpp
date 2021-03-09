@@ -1,23 +1,24 @@
 #include "terminal.h"
 
+#include <QtMath>
+
 Terminal::Terminal()
     : Object()
 {
 }
 
-QList<Terminal::Prong> &Terminal::getProngs()
+QList<Terminal::Prong> Terminal::getProngs() const
 {
-    return prongs;
+    QList<Prong> retVal;
+    retVal.reserve(prongs.size());
+    for (auto p : prongs)
+        retVal.append(Prong(p, const_cast<Terminal*>(this)));
+    return retVal;
 }
 
-void Terminal::addProng(const Terminal::Prong &prong)
+void Terminal::addProng(float prong)
 {
     prongs.append(prong);
-}
-
-int Terminal::convenience(const Terminal &terminal)
-{
-    return 0; // TODO impl
 }
 
 // OBJECT INTERFACE
@@ -40,8 +41,8 @@ void Terminal::setPos(const QPointF &pos)
     this->pos = pos;
 }
 
-Terminal::Prong::Prong(float angle)
-    : angle(angle)
+Terminal::Prong::Prong(float angle, Terminal *terminal)
+    : angle(angle), terminal(terminal)
 {
 
 }
@@ -54,4 +55,9 @@ float Terminal::Prong::getAngle() const
 void Terminal::Prong::setAngle(float angle)
 {
     this->angle = angle;
+}
+
+Terminal *Terminal::Prong::getTerminal() const
+{
+    return terminal;
 }

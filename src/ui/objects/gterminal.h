@@ -8,6 +8,8 @@
 class GTerminal : public GObject
 {
 public:
+    class GConnectionSuggester;
+
     GTerminal(Terminal *obj);
 
     // GETTERS
@@ -21,9 +23,13 @@ protected:
     // QGraphicsItem INTERFACE
     QRectF boundingRect() const override;
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
-
-    // QGraphicsItem interface
     QVariant itemChange(GraphicsItemChange, const QVariant &) override;
+};
+
+class GTerminal::GConnectionSuggester : public QGraphicsLineItem
+{
+public:
+    GConnectionSuggester(const Terminal::Prong &p1, const Terminal::Prong &p2);
 };
 
 #endif // GTERMINAL_H

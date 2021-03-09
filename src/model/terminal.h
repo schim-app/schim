@@ -19,18 +19,10 @@ public:
     Terminal();
 
     // GETTERS
-    QList<Prong> &getProngs();
+    QList<Prong> getProngs() const;
 
     // SETTERS
-    void addProng(const Prong &prong);
-
-    /**
-     * @brief How convenient would it be to connect this terminal to `terminal`.
-     *
-     * A physical measure we have introduced that is used to determine if a
-     * connection should be suggested between this terminal and `terminal`.
-     */
-    int convenience(const Terminal &terminal);
+    void addProng(float prong);
 
     // OBJECT INTERFACE
     Object *clone() const;
@@ -39,7 +31,7 @@ public:
 
 private:
     // ATTRIBUTES
-    QList<Prong> prongs;
+    QList<float> prongs;
     QPointF pos;
 };
 
@@ -51,13 +43,15 @@ public:
         Simple, Wide
     };
 
-    Prong(float angle);
+    Prong(float angle, Terminal *terminal);
 
     float getAngle() const;
     void setAngle(float angle);
+    Terminal *getTerminal() const;
 
 protected:
     float angle = 0;
+    Terminal *terminal{};
 };
 
 class Terminal::WideProng

@@ -371,7 +371,7 @@ Terminal *xmlParseTerminal(QXmlStreamReader &stream)
         // TODO exceptions!!
         if_attr("prongAngles") {
             for (const auto &val : attr.value().toString().split(','))
-                terminal->addProng({val.toFloat()});
+                terminal->addProng(val.toFloat());
         }
         else if_attr("x") pos.setX(attr.value().toFloat());
         else if_attr("y") pos.setY(attr.value().toFloat());

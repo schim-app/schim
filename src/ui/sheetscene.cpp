@@ -1,12 +1,13 @@
 #include "sheetscene.h"
 
+#include "global.h"
 #include "mainwindow.h"
 #include "objects/gobject.h"
+#include "objects/gcomponent.h"
 #include "ui/objects/gline.h"
 #include "ui/objects/gheader.h"
 #include "ui/commands.h"
 #include "ui/operations.h"
-#include "global.h"
 #include "ui/widgets/componentlist.h"
 
 #include <QAction>
@@ -27,8 +28,10 @@ SheetScene::SheetScene(Sheet *sheet)
 {
     if (sheet == nullptr) return;
 
+    // In default theme: white background with dark border (sheet background)
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()},
-                                 {qApp->palette().color(QPalette::Text), 0}, qApp->palette().color(QPalette::Base));
+                     {qApp->palette().color(QPalette::Text), 0},
+                     qApp->palette().color(QPalette::Base));
 
     // Add the sheet header, if it is defined
     if (sheet->getHeader())
@@ -37,6 +40,9 @@ SheetScene::SheetScene(Sheet *sheet)
     // Populate the scene with the sheet contents
     for (auto *obj : *sheet)
         addItem(GObject::assign(obj));
+
+    connect(this, &SheetScene::selectionChanged,
+            this, &SheetScene::onSelectionChanged);
 }
 
 SheetScene::SheetScene()
@@ -229,6 +235,14 @@ void SheetScene::insertText()
     startOperation(new TextInsertOperation(this));
 }
 
+void SheetScene::suggestConnections(GComponent *component)
+{
+    auto suggestions = getConnectionSuggestions(
+                static_cast<GComponent*>(component));
+    for (auto s : suggestions)
+        registerConnectionSuggestion(s.first, s.second);
+}
+
 QPointF SheetScene::snap(const QPointF &pt) const
 {
     if (!snapEnabled || sheet == nullptr)
@@ -324,19 +338,62 @@ void SheetScene::applyCursorMovement(const QPointF &pt)
 
 void SheetScene::insertComponentOrHeader(Object *obj)
 {
-    Header *hdr;
-    if ((hdr = dynamic_cast<Header*>(obj->clone())))
+    Header *hdr = dynamic_cast<Header*>(obj->clone());
+    if (hdr)
         // Replace the current sheet header with this one
         tryChangeHeader(hdr);
     else // Start scene operation
         startOperation(new ComponentInsertOperation(this, obj->clone()));
 }
 
+// Local helpers
+bool are_compatible(Terminal::Prong p1, Terminal::Prong p2)
+{
+    float angDiff = p1.getAngle() - p2.getAngle();
+    float n_360 = qAbs(angDiff - 180) / 360;
+    return n_360 - qRound(n_360) < 1e-4;
+}
+
+QList<QPair<Terminal::Prong, Terminal::Prong>>
+    SheetScene::getConnectionSuggestions(GComponent *component)
+{
+    Component *c = component->get();
+    QList<QPair<Terminal::Prong, Terminal::Prong>> list;
+    // Iterate through all other terminals
+    for (auto *obj : getSheet()->getObjects())
+    {
+        // We only want components - skip unwanted objects
+        if (!dynamic_cast<Component*>(obj)) continue;
+        if (obj == c) continue;
+        auto *c2 = static_cast<Component*>(obj);
+        // The following loop can be viewed as a single loop through a nested structure
+        // Iterate through ALL prongs in t1 and t2
+        for (auto *t1 : c->getTerminals())
+            for (auto *t2 : c2->getTerminals())
+                for (auto p1 : t1->getProngs())
+                    for (auto p2 : t2->getProngs())
+                        // We are looping over p1 and p2
+                        if (are_compatible(p1, p2))
+                            list.append({p1, p2});
+    }
+    return list;
+}
+
+void SheetScene::registerConnectionSuggestion(Terminal::Prong a, Terminal::Prong b)
+{
+    /* TODO uncomment
+    auto *t1 = a.getTerminal(), *t2 = b.getTerminal();
+    auto *suggester = new GTerminal::GConnectionSuggester(a, b);
+    addItem(suggester);
+    _suggesters.append(suggester);
+    */
+}
+
 // OVERRIDDEN
 
 GObject *SheetScene::itemAt(const QPointF &pt, const QTransform &deviceTransform)
 {
-    return static_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
+    return dynamic_cast<GObject*>(QGraphicsScene::itemAt(pt, deviceTransform));
 }
 
 void SheetScene::reload()
@@ -344,6 +401,26 @@ void SheetScene::reload()
     for (auto *obj : items())
         if (dynamic_cast<GObject *>(obj))
             static_cast<GObject *>(obj)->reload();
+}
+
+// SLOTS
+
+void SheetScene::onSelectionChanged()
+{
+    /* TODO uncomment
+    // Clear any previous connection suggestions
+    for (auto *s : _suggesters)
+    {
+        removeItem(s);
+        delete s;
+    }
+    _suggesters.clear();
+
+    // Add potential connection suggestions
+    auto selected = selectedItems();
+    if (selected.size() == 1 && dynamic_cast<GComponent*>(selected[0]))
+        suggestConnections((GComponent*) selected[0]);
+        */
 }
 
 // EVENTS
