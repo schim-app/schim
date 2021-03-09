@@ -2,22 +2,24 @@
 
 #include "model/sheet.h"
 
+// CONSTRUCTORS
+
 CompositeObject::CompositeObject()
     : Object() { }
 
 CompositeObject::CompositeObject(const CompositeObject &obj)
-    : Object(), QList<Object *>()
+    : Object()
 {
     variables = obj.variables;
-    this->reserve(obj.size());
-    for (Object *object : obj)
-        this->append(object->clone());
+    constituents.reserve(obj.getConstituents().size());
+    for (Object *object : obj.getConstituents())
+        add(object->clone());
     file = obj.file;
 }
 
 CompositeObject::~CompositeObject()
 {
-    for (Object *child : *this)
+    for (Object *child : getConstituents())
         delete child;
 }
 
@@ -67,6 +69,16 @@ QString CompositeObject::getSourceFile() const
     return file;
 }
 
+QList<Object *> &CompositeObject::getConstituents()
+{
+    return constituents;
+}
+
+QList<Object *> CompositeObject::getConstituents() const
+{
+    return constituents;
+}
+
 // SETTERS
 
 void CompositeObject::setPos(const QPointF &pos)
@@ -99,8 +111,6 @@ void CompositeObject::setSourceFile(const QString &filename)
     // TODO maybe load the object from the file...
 }
 
-// MODIFIER METHODS
-
 void CompositeObject::addVariable(const Variable &variable)
 {
     for (const auto &var : variables)
@@ -109,33 +119,42 @@ void CompositeObject::addVariable(const Variable &variable)
     variables.append(variable);
 }
 
-void CompositeObject::append(Object *object)
+void CompositeObject::add(Object *object)
 {
-    QList::append(object);
+    getConstituents().append(object);
     object->setParent(this);
     object->setSheet(sheet);
 }
 
-void CompositeObject::append(const QList<Object *> &list)
+void CompositeObject::add(const QList<Object *> &list)
 {
+    getConstituents().reserve(list.size());
     for (auto *obj : list)
     {
         obj->setParent(this);
         obj->setSheet(sheet);
     }
-    QList::append(list);
+    getConstituents().append(list);
 }
+
+void CompositeObject::remove(Object *obj)
+{
+    constituents.removeOne(obj);
+}
+
+// OPERATORS
 
 bool CompositeObject::operator==(const CompositeObject &obj) const
 {
     if (file == obj.file) // Objects are taken from the same file
         return true;
 
-    if (obj.size() != size() || obj.variables != variables)
+    if (obj.getConstituents().size() != getConstituents().size()
+            || obj.variables != variables)
         return false; // Objects do not have same number of children
 
-    for (int i = 0; i < size(); ++i)
-        if (at(i) != obj.at(i))
+    for (int i = 0; i < getConstituents().size(); ++i)
+        if (getConstituents().at(i) != obj.getConstituents().at(i))
             return false; // A child object is different
 
     return Object::operator==(obj) && obj.pos == pos;

@@ -20,21 +20,21 @@ int LinearObjectArray::getCount()
 
 void LinearObjectArray::generate()
 {
-    qDeleteAll(*this);
-    clear();
+    qDeleteAll(getConstituents());
+    getConstituents().clear();
 
     if (count == 0)
         return;
-    reserve(count);
+    getConstituents().reserve(count);
 
-    append(baseObj);
+    add(baseObj);
     baseObj->setParent(this);
     for (int i = 1; i < count; ++i)
     {
         Object *obj = baseObj->clone();
         obj->setPos(baseObj->getPos() + i * QPointF{deltaX, deltaY});
         obj->setParent(this);
-        append(obj);
+        add(obj);
     }
 }
 

@@ -5,6 +5,7 @@
 #include "gline.h"
 #include "grect.h"
 #include "gtext.h"
+#include "gterminal.h"
 #include "special/glinearobjectarray.h"
 
 #include "global.h"
@@ -13,6 +14,7 @@
 #include "model/component.h"
 #include "model/rect.h"
 #include "model/text.h"
+#include "model/terminal.h"
 #include "model/special/linearobjectarray.h"
 
 #include <QGraphicsSceneMouseEvent>
@@ -84,11 +86,10 @@ QRectF GObject::boundingRect() const
     return childrenBoundingRect();
 }
 
-void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt,
+                    QWidget *)
 {
     auto pen = painter->pen();
-    // The default color (unless overriden) is black
-    pen.setColor(qApp->palette().color(QPalette::Text));
     pen.setCosmetic(cosmetic);
 
     // The order is important
@@ -97,6 +98,9 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
     else if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
         // TODO the color source may be a little stupid, but it looks reasonably nice
         pen.setColor(qApp->palette().color(QPalette::LinkVisited));
+    else
+        // The default color is the theme's text color
+        pen.setColor(qApp->palette().color(QPalette::Text));
 
     painter->setPen(pen);
 }
@@ -136,16 +140,14 @@ void GObject::handleChanged(GObjectHandle *) { }
 GObject *GObject::assign(Object *obj)
 {
 #define if_cast_return(TYPE, object) if (dynamic_cast<TYPE*>(object)) return new G##TYPE((TYPE*)object)
-    Header *hdr = dynamic_cast<Header*>(obj);
-
     if_cast_return(Line, obj);
     if_cast_return(Rect, obj);
     if_cast_return(Text, obj);
+    if_cast_return(Terminal, obj);
     if_cast_return(Header, obj);
     if_cast_return(Component, obj);
     if_cast_return(LinearObjectArray, obj);
     if_cast_return(CompositeObject, obj);
-
 #undef if_cast_return
     return nullptr;
 }
@@ -154,19 +156,19 @@ GObject *GObject::assign(Object *obj)
 
 void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    QGraphicsItem::hoverEnterEvent(event);
     if (flags() & ItemIsSelectable)
     {
         hovered = true;
         scene()->hoveredItem = getOldestParent();
     }
+    QGraphicsItem::hoverEnterEvent(event);
 }
 
 void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    QGraphicsItem::hoverLeaveEvent(event);
     if (flags() & ItemIsSelectable)
         hovered = false;
+    QGraphicsItem::hoverLeaveEvent(event);
 }
 
 void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

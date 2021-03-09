@@ -33,14 +33,14 @@ public:
 
     // GETTERS
     /// @brief Return the position of the object in the sheet.
-    virtual QPointF getPos() const;
+    virtual QPointF getPos() const = 0;
     Sheet *getSheet() const;
     CompositeObject *getParent() const;
     virtual QString getProperty(const QString &name) const;
 
     // SETTERS
     /// @brief Set the position of the object in the sheet.
-    virtual void setPos(const QPointF &pos);
+    virtual void setPos(const QPointF &pos) = 0;
     void setSheet(Sheet *sheet);
     void setParent(CompositeObject *parent);
     virtual void setProperty(const QString &name, const QString &value);

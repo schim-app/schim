@@ -17,6 +17,7 @@ public:
     // GETTERS
     Text *get();
     const Text *get() const;
+    bool isInEditMode() const;
     /** Cast the scene to a `SheetScene*`. */
     SheetScene *scene();
 
@@ -47,7 +48,7 @@ public:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     void timerEvent(QTimerEvent *event) override;
 
-    // FOR EDITING THE OBJECT
+    // OBJECT EDITING
     void reload() override;
     void apply() override;
     void showContextMenu();
@@ -63,7 +64,6 @@ private slots:
 private:
     // ATTRIBUTES
     GDisplayText *displayItem;
-    bool editMode = false;
 };
 
 class GDisplayText : public QGraphicsTextItem
@@ -71,7 +71,6 @@ class GDisplayText : public QGraphicsTextItem
     Q_OBJECT
 public:
     // EVENTS
-    /** Disable editing, reset mouse cursor to default, and clear text selection. */
     void focusOutEvent(QFocusEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
@@ -87,8 +86,6 @@ signals:
     void focusOut();
 
 private:
-    // ATTRIBUTES
-    bool editMode = false;
     friend class GText;
 };
 

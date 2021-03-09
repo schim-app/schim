@@ -2,7 +2,10 @@
 #define COMPONENT_H
 
 #include "model/compositeobject.h"
+#include "terminal.h"
+#include "text.h"
 
+#include <QList>
 #include <QSharedPointer>
 
 class Device;
@@ -16,6 +19,17 @@ public:
     Component(const Component &obj);
     Object *clone() const override;
 
+    // GETTERS
+    QList<Text*> &getTexts();
+    QList<Terminal*> &getTerminals();
+
+    // SETTERS
+    void addText(Text *text);
+    void addTexts(const QList<Text*> &texts);
+    void addTerminal(Terminal *terminal);
+    void addTerminals(const QList<Terminal*> &terminals);
+    void remove(Object *obj);
+
     // MISCELLANEOUS
     /** @brief Steal everything from `obj` and delete it. */
     static Component *absorb(CompositeObject *obj);
@@ -25,6 +39,8 @@ public:
     virtual bool operator!=(const Component &obj) const;
 
 private:
+    QList<Text*> texts;
+    QList<Terminal*> terminals;
     QSharedPointer<Device> device;
 };
 

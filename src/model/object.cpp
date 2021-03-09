@@ -19,7 +19,7 @@ CompositeObject *Object::getParent() const
 
 // SETTERS
 
-void Object::setPos(const QPointF &pos) { Q_UNUSED(pos) }
+void Object::setPos(const QPointF &) { }
 
 void Object::setSheet(Sheet *sheet)
 {
