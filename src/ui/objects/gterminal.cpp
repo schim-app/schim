@@ -64,12 +64,12 @@ QVariant GTerminal::itemChange(QGraphicsItem::GraphicsItemChange change,
     return GObject::itemChange(change, value);
 }
 
-GTerminal::GConnectionSuggester::GConnectionSuggester(
+GConnectionSuggester::GConnectionSuggester(
         const Terminal::Prong &p1,
         const Terminal::Prong &p2)
 {
-    setPos(p1.getTerminal()->getParent()->getPos());
     // TODO use in a smarter way later
-    setLine({p1.getTerminal()->getPos(), p2.getTerminal()->getPos()});
-    setPen(QPen(qApp->palette().color(QPalette::Text), 0.3, Qt::DashLine));
+    setLine({p1.getTerminal()->getParent()->getPos() + p1.getTerminal()->getPos(),
+            p2.getTerminal()->getParent()->getPos() + p2.getTerminal()->getPos()});
+    setPen(QPen(qApp->palette().color(QPalette::Text), 0, Qt::DotLine));
 }

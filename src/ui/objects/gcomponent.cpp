@@ -1,17 +1,19 @@
 #include "gcomponent.h"
 
+#include "model/text.h"
+
 #include "gterminal.h"
 #include "gtext.h"
 
 #include "ui/mainwindow.h"
+#include "ui/operations.h"
 #include "ui/windows/componentsettings.h"
 
 #include <QAction>
 #include <QMenu>
 #include <QGraphicsSceneMouseEvent>
 
-#include "model/text.h"
-#include "ui/operations.h"
+#include <iostream>
 
 // CONSTRUCTORS
 

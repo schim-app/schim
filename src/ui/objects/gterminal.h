@@ -8,8 +8,6 @@
 class GTerminal : public GObject
 {
 public:
-    class GConnectionSuggester;
-
     GTerminal(Terminal *obj);
 
     // GETTERS
@@ -26,7 +24,7 @@ protected:
     QVariant itemChange(GraphicsItemChange, const QVariant &) override;
 };
 
-class GTerminal::GConnectionSuggester : public QGraphicsLineItem
+class GConnectionSuggester : public QGraphicsLineItem
 {
 public:
     GConnectionSuggester(const Terminal::Prong &p1, const Terminal::Prong &p2);

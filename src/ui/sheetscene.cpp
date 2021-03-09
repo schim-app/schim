@@ -6,6 +6,7 @@
 #include "objects/gcomponent.h"
 #include "ui/objects/gline.h"
 #include "ui/objects/gheader.h"
+#include "ui/objects/gterminal.h"
 #include "ui/commands.h"
 #include "ui/operations.h"
 #include "ui/widgets/componentlist.h"
@@ -75,17 +76,17 @@ bool SheetScene::getSnapCursorGuides() const
     return snapGuides;
 }
 
-bool SheetScene::isGridEnabled()
+bool SheetScene::isGridEnabled() const
 {
     return gridEnabled;
 }
 
-bool SheetScene::isSnapEnabled()
+bool SheetScene::isSnapEnabled() const
 {
     return snapEnabled;
 }
 
-QSizeF SheetScene::getGridSize()
+QSizeF SheetScene::getGridSize() const
 {
     return {gridX, gridY};
 }
@@ -347,11 +348,18 @@ void SheetScene::insertComponentOrHeader(Object *obj)
 }
 
 // Local helpers
+float wrap_angle(float angleDeg)
+{
+    return angleDeg - int(angleDeg / 360) * 360;
+}
 bool are_compatible(Terminal::Prong p1, Terminal::Prong p2)
 {
+    float angle1 = wrap_angle(p1.getAngle()), angle2 = wrap_angle(p2.getAngle());
     float angDiff = p1.getAngle() - p2.getAngle();
     float n_360 = qAbs(angDiff - 180) / 360;
-    return n_360 - qRound(n_360) < 1e-4;
+    QLineF line(p1.getTerminal()->getSheetPos(), p2.getTerminal()->getSheetPos());
+    float angLine = line.angle();
+    return qAbs(qAbs(angDiff) - 180) < 1e-4 && qAbs(angLine - angle1) < 1e-3;
 }
 
 QList<QPair<Terminal::Prong, Terminal::Prong>>
@@ -381,12 +389,9 @@ QList<QPair<Terminal::Prong, Terminal::Prong>>
 
 void SheetScene::registerConnectionSuggestion(Terminal::Prong a, Terminal::Prong b)
 {
-    /* TODO uncomment
-    auto *t1 = a.getTerminal(), *t2 = b.getTerminal();
-    auto *suggester = new GTerminal::GConnectionSuggester(a, b);
+    auto *suggester = new GConnectionSuggester(a, b);
     addItem(suggester);
     _suggesters.append(suggester);
-    */
 }
 
 // OVERRIDDEN
@@ -407,7 +412,6 @@ void SheetScene::reload()
 
 void SheetScene::onSelectionChanged()
 {
-    /* TODO uncomment
     // Clear any previous connection suggestions
     for (auto *s : _suggesters)
     {
@@ -420,7 +424,6 @@ void SheetScene::onSelectionChanged()
     auto selected = selectedItems();
     if (selected.size() == 1 && dynamic_cast<GComponent*>(selected[0]))
         suggestConnections((GComponent*) selected[0]);
-        */
 }
 
 // EVENTS

@@ -1,5 +1,7 @@
 #include "terminal.h"
 
+#include "model/compositeobject.h"
+
 #include <QtMath>
 
 Terminal::Terminal()
@@ -14,6 +16,11 @@ QList<Terminal::Prong> Terminal::getProngs() const
     for (auto p : prongs)
         retVal.append(Prong(p, const_cast<Terminal*>(this)));
     return retVal;
+}
+
+QPointF Terminal::getSheetPos() const
+{
+    return getPos() + (getParent() ? getParent()->getPos() : QPointF{});
 }
 
 void Terminal::addProng(float prong)

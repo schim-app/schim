@@ -34,9 +34,8 @@ public:
 
 protected:
     // EVENTS
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change,
+    QVariant itemChange(GraphicsItemChange change,
                         const QVariant &value) override;
-
 };
 
 #endif // GCOMPOSITEOBJECT_H

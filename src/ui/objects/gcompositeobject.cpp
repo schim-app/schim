@@ -4,6 +4,8 @@
 
 #include "model/text.h"
 
+#include <iostream>
+
 // CONSTRUCTORS
 
 GCompositeObject::GCompositeObject(CompositeObject *obj)

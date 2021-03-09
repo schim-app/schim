@@ -20,6 +20,7 @@ public:
 
     // GETTERS
     QList<Prong> getProngs() const;
+    QPointF getSheetPos() const;
 
     // SETTERS
     void addProng(float prong);

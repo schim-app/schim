@@ -13,11 +13,11 @@
 #include <QList>
 #include <QPair>
 
-class SheetView;
-class QMouseEvent;
 class GObject;
 class GHeader;
 class GComponent;
+class GTerminal;
+class GConnectionSuggester;
 class Operation;
 
 class SheetScene : public QGraphicsScene
@@ -42,9 +42,9 @@ public:
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
-    bool isGridEnabled();
-    bool isSnapEnabled();
-    QSizeF getGridSize();
+    bool isGridEnabled() const;
+    bool isSnapEnabled() const;
+    QSizeF getGridSize() const;
 
     // SETTERS
     void setSheet(Sheet *sheet);
@@ -156,7 +156,7 @@ private:
 
     // A white sheet of paper
     QGraphicsRectItem *pageBackgroundItem;
-    //QList<GTerminal::GConnectionSuggester*> _suggesters;
+    QList<GConnectionSuggester*> _suggesters;
 
     // The scene operation that is currently active
     Operation *operation{};
@@ -173,6 +173,5 @@ private:
     // FRIENDS
     friend class GObject;
 };
-
 
 #endif // SHEETSCENE_H
