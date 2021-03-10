@@ -1,16 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "model/project.h"
+
+#include "ui/windows/sheetsettings.h"
+#include "ui/widgets/projectbrowser.h"
+#include "sheetview.h"
+#include "ui/vim.h"
+
 #include <QAction>
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QList>
-
-#include "model/project.h"
-
-#include "ui/windows/sheetsettings.h"
-#include "sheetview.h"
-#include "ui/vim.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,7 +33,7 @@ public:
 
     // GETTERS
     /** Return the tab widget */
-    QTabWidget *getTabView() const;
+    QTabWidget *getTabWidget() const;
 	/** Return the current tab id*/
     int getTabId() const;
     /**
@@ -46,11 +47,12 @@ public:
      * If no index is specified, return the current sheet.
      */
     Sheet *getSheet(int index = -1);
-    QString getFileName() const;
+    bool isOpen(Sheet *sheet);
 
     // SETTERS
     void setTabId(int id);
     void setVimStatus(const QString &status);
+    void setActiveProject(Project *project);
 
     // OVERRIDEN
     QMenu *createPopupMenu() override;
@@ -60,27 +62,28 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
 
-    // ACTION PROCESSING
+    // USER ACTIONS
     void nextTab(Vim::N n = 1);
     void prevTab(Vim::N n = 1);
     void appendSheet(Vim::N n);
     void newSheetBefore(Vim::N n = 1);
     void newSheetAfter(Vim::N n = 1);
     void closeTab(Vim::N = 0);
-    void openSheetSettings(Vim::N = 0);
+    void sheetSettings(Vim::N = 0);
     void newProject();
-    void openProject();
+    void open();
     void save();
     void saveAs();
+    void projectSettings();
     void print();
-    void cursorLeft();
-    void cursorDown();
-    void cursorUp();
-    void cursorRight();
-    void showHelp();
+    void help();
     void takeScreenshot();
     void toggleDeveloperHints();
-    void openProjectFromFile(const QString &filename);
+    void openProjectsFromFiles(const QStringList &filenames, int active = -1);
+    void openSheet(Sheet *sheet, int index = -1);
+    void closeSheet(Sheet *sheet);
+    void closeProject(Project *project);
+    void closeSheetsForProject(Project *project);
 
 private slots:
     // SLOTS
@@ -91,8 +94,6 @@ private:
     bool processVimAction(const Vim::Action &action);
     void setupActions();
     void setupIcons();
-    /// Populate the window with a new active project.
-    void populateWithProject();
     /**
      * @brief Get the popup menu shown when right clicking a tool bar.
      * If the menu doesn't exist, it will be created.
@@ -107,8 +108,7 @@ private:
 private:
     // ATTRIBUTES
     Ui::MainWindow *ui;
-    Project *activeProject = nullptr;
-    QString filename;
+    ProjectModel *projects;
     bool menuBarShownPermanently = true;
     /// @see getPopupMenu()
     QMenu *popupMenu{};

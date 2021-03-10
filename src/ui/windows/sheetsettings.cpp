@@ -19,7 +19,7 @@ SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     // Initialize widgets with sheet data
     auto *sheet = parent->getTab(sheetId)->scene()->getSheet();
 
-    ui->editSheetTitle->setText(sheet->getTitle());
+    ui->editSheetTitle->setText(sheet->getName());
     ui->editSheetTitle->setFocus();
     if (sheet->getHeader() != nullptr)
     {
@@ -66,8 +66,8 @@ void SheetSettings::accept()
     if (!changed)
         delete hdr;
 
-    parent->getSheet()->setTitle(ui->editSheetTitle->text());
-    parent->getTabView()->setTabText(sheetId, ui->editSheetTitle->text());
+    parent->getSheet()->setName(ui->editSheetTitle->text());
+    parent->getTabWidget()->setTabText(sheetId, ui->editSheetTitle->text());
     parent->getSheet()->setLocalVariables(ui->variableEditor->getVariables());
 
     scene()->reload();

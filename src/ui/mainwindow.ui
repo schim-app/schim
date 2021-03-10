@@ -20,7 +20,7 @@
    <bool>false</bool>
   </property>
   <property name="focusPolicy">
-   <enum>Qt::NoFocus</enum>
+   <enum>Qt::ClickFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Schim</string>
@@ -43,6 +43,38 @@
     <string>Open a sheet here by going to File-&gt;New or File-&gt;Open</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="vimKeyStatus">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="statusTip">
+         <string>Label vimKeyStatus in src/ui/mainwindow.ui</string>
+        </property>
+        <property name="text">
+         <string>VIM key status (text changes dynamically)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="focusPolicy">
@@ -78,35 +110,6 @@
        </attribute>
       </widget>
      </widget>
-    </item>
-    <item row="1" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="vimKeyStatus">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>VIM key status (text changes dynamically)</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
@@ -219,14 +222,51 @@
    <addaction name="actionInsertText"/>
    <addaction name="actionInsertImage"/>
   </widget>
+  <widget class="QDockWidget" name="dockProjects">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Projects</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="contentsProjects">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="ProjectBrowser" name="projectBrowser">
+       <property name="statusTip">
+        <string>Widget projectBrowser in src/ui/mainwindow.ui; class ProjectBrowser in src/ui/widgets/projectbrowser.h</string>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <widget class="QDockWidget" name="dockSymbols">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="windowTitle">
     <string>Components</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="contentsSymbols">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QPushButton" name="todoButton">
@@ -469,7 +509,7 @@
   </action>
   <action name="actionProjectSettings">
    <property name="text">
-    <string>P&amp;roject settings... (TODO)</string>
+    <string>P&amp;roject settings...</string>
    </property>
   </action>
   <action name="actionPreferences">
@@ -526,6 +566,11 @@
    <class>ComponentList</class>
    <extends>QListWidget</extends>
    <header>ui/widgets/componentlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ProjectBrowser</class>
+   <extends>QTreeView</extends>
+   <header>ui/widgets/projectbrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -2,7 +2,13 @@
 
 // CONSTRUCTORS
 
+Project::Project()
+{
+    setName("Untitled project");
+}
+
 Project::Project(const QList<Sheet *> &sheets)
+    : Project()
 {
 }
 
@@ -12,11 +18,6 @@ Project::~Project()
 }
 
 // GETTERS
-
-QString Project::getTitle() const
-{
-    return title;
-}
 
 VariableSet &Project::getVariables()
 {
@@ -40,21 +41,19 @@ QList<Sheet *> Project::getSheets() const
 
 // SETTERS
 
-void Project::setTitle(const QString &title)
-{
-    this->title = title;
-}
-
-void Project::addSheet(Sheet *sheet)
+void Project::addSheet(Sheet *sheet, int index)
 {
     sheet->setProject(this);
-    sheets.append(sheet);
+    if (index == -1)
+        sheets.append(sheet);
+    else
+        sheets.insert(index, sheet);
 }
 
 void Project::removeSheet(Sheet *sheet)
 {
     sheet->setProject(nullptr);
-    sheets.append(sheet);
+    sheets.removeOne(sheet);
 }
 
 // MISCELLANEOUS

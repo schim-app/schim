@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
     // Show help and/or version and quit
     if (parser.isSet("help") || parser.isSet("version"))
     {
-    // TODO using const_cast makes me a bit nervous, but seems
-    // to be the easiest way to change the help message.
+        // TODO using const_cast makes me a bit nervous, but seems
+        // to be the easiest way to change the help message.
         argv[0] = const_cast<char*>("schim");
         QCoreApplication app(argc, argv); // This is necessary
         parser.process(args); // Print out unknown options and quit
@@ -74,9 +74,9 @@ int main(int argc, char *argv[])
         QApplication app(argc, argv);
         parser.process(args);
         (new MainWindow)->show();
-        if (posArgs.size() == 2)
-            MainWindow::getInstance()->openProjectFromFile(posArgs[1]);
-        // TODO allow to open multiple projects at once
+        if (posArgs.size() >= 2)
+            MainWindow::getInstance()->openProjectsFromFiles(
+                        QStringList(posArgs.begin()+1, posArgs.end()), 0);
         return app.exec();
     }
     else

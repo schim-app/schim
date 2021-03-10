@@ -3,6 +3,7 @@
 #include "global.h"
 #include "fileio/miscfiles.h"
 #include "fileio/xml.h"
+#include "ui/objects/gobject.h"
 
 #include <QDirIterator>
 #include <QHeaderView>
@@ -13,8 +14,6 @@
 #include <iostream>
 #include <QDebug>
 #include <QFileSystemModel>
-
-#include "ui/objects/gobject.h"
 
 ComponentList::ComponentList(QWidget *parent)
     : QTreeView(parent)

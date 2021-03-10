@@ -8,6 +8,7 @@
 
 Sheet::Sheet(bool defaultHeader)
 {
+    setName("New sheet");
     if (defaultHeader)
     {
         QString file = "headers/defaultheader.xsym";
@@ -34,11 +35,6 @@ float Sheet::getHeight() const
     return height;
 }
 
-QString Sheet::getTitle() const
-{
-    return title;
-}
-
 Header *Sheet::getHeader()
 {
     return header;
@@ -52,12 +48,12 @@ QRectF Sheet::getContentArea() const
         return Header().getContentArea();
 }
 
-QList<Object *> &Sheet::getObjects()
+QList<Object*> &Sheet::getObjects()
 {
     return objects;
 }
 
-QList<Object *> Sheet::getObjects() const
+QList<Object*> Sheet::getObjects() const
 {
     return objects;
 }
@@ -81,6 +77,16 @@ VariableSet Sheet::getVariables() const
     return vars;
 }
 
+Project *Sheet::getProject() const
+{
+    return project;
+}
+
+int Sheet::getIndex()
+{
+    return project ? project->getSheets().indexOf(this) : -1;
+}
+
 // SETTERS
 
 void Sheet::setWidth(float width)
@@ -91,16 +97,6 @@ void Sheet::setWidth(float width)
 void Sheet::setHeight(float height)
 {
     this->height = height;
-}
-
-void Sheet::setProject(Project *project)
-{
-    this->project = project;
-}
-
-void Sheet::setTitle(const QString &title)
-{
-    this->title = title;
 }
 
 void Sheet::setHeader(Header *header, bool destroy)
@@ -131,6 +127,11 @@ void Sheet::addVariable(const Variable &variable)
     variables.append(variable);
 }
 
+void Sheet::setProject(Project *project)
+{
+    this->project = project;
+}
+
 void Sheet::addObject(Object *obj)
 {
     objects.append(obj);
@@ -144,12 +145,12 @@ void Sheet::removeObject(Object *obj)
     obj->setSheet(nullptr);
 }
 
-QList<Object *>::iterator Sheet::begin()
+QList<Object*>::iterator Sheet::begin()
 {
     return objects.begin();
 }
 
-QList<Object *>::iterator Sheet::end()
+QList<Object*>::iterator Sheet::end()
 {
     return objects.end();
 }

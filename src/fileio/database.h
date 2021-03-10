@@ -3,7 +3,7 @@
 
 #include "model/object.h"
 
-#include <QStandardItem>
+#include <QAbstractItemModel>
 #include <QString>
 
 class DatabaseItem

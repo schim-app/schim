@@ -1,6 +1,7 @@
 #ifndef SHEET_H
 #define SHEET_H
 
+#include "entity.h"
 #include "header.h"
 #include "object.h"
 
@@ -13,7 +14,7 @@ class Project;
  * contains. It inherits QList<Object*> so that we don't have to reimplement
  * convenience functions that QList already provides.
  */
-class Sheet
+class Sheet : public Entity
 {
 public:
     // CONSTRUCTORS
@@ -23,7 +24,6 @@ public:
     // GETTERS
     float getWidth() const;
     float getHeight() const;
-    QString getTitle() const;
     Header *getHeader();
     QRectF getContentArea() const;
     QList<Object *> &getObjects();
@@ -31,13 +31,13 @@ public:
     VariableSet &getLocalVariables();
     VariableSet getLocalVariables() const;
     VariableSet getVariables() const;
+    Project *getProject() const;
+    int getIndex();
 
     // SETTERS
     void setWidth(float width);
     void setHeight(float height);
     void setHeight() const;
-    void setProject(Project *project);
-    void setTitle(const QString &title);
     /**
      * @brief Set this sheet's header.
      *
@@ -49,6 +49,7 @@ public:
     void setHeader(Header *header, bool destroy = true);
     void setLocalVariables(const VariableSet &vars);
     void addVariable(const Variable &variable);
+    void setProject(Project *project);
 
     void addObject(Object *obj);
     void removeObject(Object *obj);
@@ -59,7 +60,6 @@ private:
     // ATTRIBUTES
     float width = 297, height = 210;
     Header *header = nullptr;
-    QString title{"New sheet"};
 
     VariableSet variables;
     QList<Object *> objects;

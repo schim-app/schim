@@ -112,7 +112,7 @@ void SheetView::showContextMenu()
     //Connections
     connect(&insert, &QAction::triggered, this, &SheetView::insertPopup);
     connect(&settings, &QAction::triggered, this, []() {
-        MainWindow::getInstance()->openSheetSettings();
+        MainWindow::getInstance()->sheetSettings();
     });
     connect(&settings, &QAction::triggered, this, []() {
         // TODO

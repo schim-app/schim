@@ -30,7 +30,7 @@ Header *xmlParseHeader(const QString &filename);
 QString xmlPeekName(const QString &filename);
 
 /// Parse the XML file into a project
-void xmlWriteProject(Project *project, const QString &filename);
+void xmlWriteProject(Project *project, const QString &filename = "");
 
 /// Parse a sheet from the specified XML stream
 Sheet *xmlParseSheet(QXmlStreamReader &stream);

@@ -34,6 +34,7 @@ add_executable(schim
     fileio/xml.cpp 
     global.cpp 
     main.cpp 
+    model/entity.cpp
     model/component.cpp 
     model/compositeobject.cpp 
     model/objectarray.cpp 
@@ -65,9 +66,11 @@ add_executable(schim
     ui/widgets/completer.cpp
     ui/widgets/insertcompleter.cpp
     ui/widgets/componentlist.cpp 
+    ui/widgets/projectbrowser.cpp
     ui/widgets/variableeditor.cpp 
     ui/windows/componentsettings.cpp 
     ui/windows/sheetsettings.cpp 
+    ui/windows/projectsettings.cpp
     ui/windows/textsettings.cpp
     ui/windows/about.cpp
     cli/cli_common.cpp

@@ -171,7 +171,7 @@ Project *xmlParseProject(const QString &filename)
         {
             QString name = attr.name().toString();
             if (name == "title")
-                project->setTitle(attr.value().toString());
+                project->setName(attr.value().toString());
         }
         // Parse contents
         while (!stream.atEnd())
@@ -191,13 +191,14 @@ Project *xmlParseProject(const QString &filename)
     {
         delete project; throw;
     }
+    project->setFileName(filename);
 
     return project;
 }
 
 void xmlWriteProject(Project *project, const QString &filename)
 {
-    QFile file(filename);
+    QFile file(filename != "" ? filename : project->getFileName());
     if (!file.open(QIODevice::WriteOnly))
         throw std::runtime_error("Unable to open XML file for writing: " + filename.toStdString());
     QXmlStreamWriter stream(&file);
@@ -205,7 +206,7 @@ void xmlWriteProject(Project *project, const QString &filename)
     stream.setAutoFormattingIndent(4); // consider changing this to tabs
 
     stream.writeStartElement("project");
-    stream.writeAttribute("title", project->getTitle());
+    stream.writeAttribute("title", project->getName());
     for (auto *sheet : project->getSheets())
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
@@ -223,7 +224,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
         {
             QString name = attr.name().toString();
             if (name == "title")
-                sheet->setTitle(attr.value().toString());
+                sheet->setName(attr.value().toString());
         }
 
         // Parse children
@@ -253,7 +254,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
 void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
 {
     stream.writeStartElement("sheet");
-    stream.writeAttribute("title", sheet->getTitle());
+    stream.writeAttribute("title", sheet->getName());
 
     xmlWriteHeader(sheet->getHeader(), stream);
 

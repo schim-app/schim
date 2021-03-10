@@ -32,6 +32,7 @@ QVariant getSetting(const QString &key, const QVariant &defaultValue);
  * installation directory, real path, etc.
  */
 QString resolvePath(const QString &path);
+QString resolveAbsPath(const QString &path);
 
 /**
  * @brief Take an input in pixels and return a value that is independent of screen DPI.

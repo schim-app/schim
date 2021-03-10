@@ -15,6 +15,8 @@ static QMap<QString, QString> actionMap = {
     // General
     {"<C-n>", "next-entry"},
     {"<C-p>", "prev-entry"},
+    {"d", "delete"}, // TODO impl
+    {"x", "cut"}, // TODO impl
     // Sheet scene
     {"h", "left"},
     {"j", "down"},
@@ -29,6 +31,8 @@ static QMap<QString, QString> actionMap = {
     {"gi", "new-sheet-before"},
     {"ga", "new-sheet-after"},
     {"gA", "sheet-append"},
+    {"go", "sheet-open"}, // TODO impl
+    {"gO", "sheet-open-all"}, // TODO impl
     // Sheet View
     {"zi", "zoom-in"},
     {"zo", "zoom-out"},
@@ -47,7 +51,8 @@ static QMap<QString, QString> actionMap = {
     {"st", "select-texts"},
     {"sp", "select-primitive"},
     // Settings
-    {"<C-g>", "sheet-settings"}
+    {"<C-g>", "sheet-settings"},
+    {"g<C-g>", "project-settings"},
     // NEW (update)
 
 };

@@ -78,3 +78,8 @@ float dpiInvariant(float pxInput)
 {
     return pxInput * QApplication::screens().at(0)->logicalDotsPerInch() / 141.21;
 }
+
+QString resolveAbsPath(const QString &path)
+{
+    return QFileInfo(resolvePath(path)).absoluteFilePath();
+}

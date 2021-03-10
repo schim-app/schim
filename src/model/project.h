@@ -12,25 +12,23 @@
  *
  * This class should always take care of the destruction of sheets.
  */
-class Project
+class Project : public Entity
 {
 public:
     // CONSTRUCTORS
     /// @brief Construct an empty project with default properties.
-    Project() = default;
+    Project();
     Project(const QList<Sheet*> &sheets);
     ~Project();
 
     // GETTERS
-    QString getTitle() const;
     VariableSet &getVariables();
     VariableSet getVariables() const;
     QList<Sheet *> &getSheets();
     QList<Sheet *> getSheets() const;
 
     // SETTERS
-    void setTitle(const QString &title);
-    void addSheet(Sheet *sheet);
+    void addSheet(Sheet *sheet, int index=-1);
     void removeSheet(Sheet *sheet);
 
     // MISCELLANEOUS
@@ -39,7 +37,6 @@ public:
 
 private:
     // ATTRIBUTES
-    QString title{"Untitled Project"};
     VariableSet variables;
     QList<Sheet *> sheets;
 };
