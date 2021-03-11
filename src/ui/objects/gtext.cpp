@@ -53,68 +53,6 @@ bool GText::isInEditMode() const
     return displayItem->textInteractionFlags() & Qt::TextEditorInteraction;
 }
 
-SheetScene *GText::scene()
-{
-    return GObject::scene();
-}
-
-// EVENTS
-
-QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    if (change == ItemSceneHasChanged && scene() != nullptr)
-    {
-        scene()->addItem(displayItem);
-        displayItem->setParentItem(this);
-        displayItem->setZValue(zValue() - 0.1);
-        displayItem->setFlags({});
-    }
-    return GObject::itemChange(change, value);
-}
-
-void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->buttons() == Qt::RightButton)
-        showContextMenu();
-    else
-        GObject::mousePressEvent(event);
-}
-
-void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    GObject::mouseReleaseEvent(event);
-}
-
-void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (!isInEditMode() && event->buttons() == Qt::LeftButton)
-    {
-        scene()->showGuides(false);
-        setEditMode(true);
-    }
-    GObject::mouseDoubleClickEvent(event);
-}
-
-void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    if (isInEditMode())
-        scene()->showGuides(false);
-    GObject::hoverEnterEvent(event);
-}
-
-void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    if (isInEditMode())
-        scene()->showGuides(true);
-    GObject::hoverLeaveEvent(event);
-}
-
-void GText::timerEvent(QTimerEvent *event)
-{
-    update();
-    GObject::timerEvent(event);
-}
-
 // OBJECT EDITING
 
 void GText::reload()
@@ -129,7 +67,7 @@ void GText::reload()
         font.setPixelSize(get()->getTextHeight());
 
     displayItem->setFont(font);
-    displayItem->setPlainText(get()->getDisplayText(parentItem()->get()));
+    displayItem->setPlainText(get()->getDisplayText(getModelParent()));
     setPos(get()->getPos());
 }
 
@@ -165,7 +103,7 @@ void GText::setEditMode(bool edit)
     }
     else
     {
-        displayItem->setPlainText(get()->getDisplayText(parentItem()->get()));
+        displayItem->setPlainText(get()->getDisplayText(getModelParent()));
 
         displayItem->setTextInteractionFlags(Qt::NoTextInteraction);
         displayItem->unsetCursor();
@@ -182,6 +120,65 @@ void GText::setEditMode(bool edit)
     }
 }
 
+// EVENTS
+
+QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change,
+                           const QVariant &value)
+{
+    if (change == ItemSceneHasChanged && scene() != nullptr)
+    { // Scene has changed: move displayItem along with me
+        // TODO is this even necessary?
+        scene()->addItem(displayItem);
+        displayItem->setParentItem(this);
+        displayItem->setZValue(zValue() - 0.1);
+        displayItem->setFlags({});
+    }
+    return GObject::itemChange(change, value);
+}
+
+void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() == Qt::RightButton)
+        showContextMenu();
+    else
+        GObject::mousePressEvent(event);
+}
+
+void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    GObject::mouseReleaseEvent(event);
+}
+
+void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!isInEditMode() && event->buttons() == Qt::LeftButton)
+    {
+        getSheetScene()->showGuides(false);
+        setEditMode(true);
+    }
+    GObject::mouseDoubleClickEvent(event);
+}
+
+void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (isInEditMode())
+        getSheetScene()->showGuides(false);
+    GObject::hoverEnterEvent(event);
+}
+
+void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (isInEditMode())
+        getSheetScene()->showGuides(true);
+    GObject::hoverLeaveEvent(event);
+}
+
+void GText::timerEvent(QTimerEvent *event)
+{
+    update();
+    GObject::timerEvent(event);
+}
+
 // SLOTS
 
 void GText::edit()
@@ -192,7 +189,7 @@ void GText::edit()
 
 void GText::onFocusOut()
 {
-    scene()->showGuides(true);
+    getSheetScene()->showGuides(true);
     apply(); // Has to be before setEditMode
     setEditMode(false);
     emit focusOut();
@@ -212,19 +209,23 @@ QRectF GText::boundingRect() const
 
 void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
+    // The text is drawn enclosed in a box if it is selectable and:
+    // - It or its parent is selected, or
+    // - It or its parent is hovered, or
+    // - It is in edit mode
     if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
-            (isSelected() || parentItem()->isSelected() || isHovered() ||
-            parentItem()->isHovered() || isInEditMode()))
+            (isSelected() || isHovered() || isInEditMode() ||
+             (parentItem() && (parentItem()->isSelected() || parentItem()->isHovered()))))
     { // Draw the "selected" border around the text
         QPen pen(qApp->palette().color(QPalette::Text),
-                 dpiInvariant(1), Qt::DashLine);
+             dpiInvariant(1), Qt::DashLine);
         pen.setCosmetic(true);
         painter->setPen(pen);
         painter->drawPath(shape());
     }
 }
 
-/*** GDisplayText **************************************************************/
+// class GDisplayText ***********************************************************
 
 // EVENTS
 

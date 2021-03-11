@@ -95,14 +95,15 @@ void Sheet::setHeader(Header *header, bool destroy)
 void Sheet::addObject(Object *obj)
 {
     objects.append(obj);
-    // TODO preliminary remove obj->setParent(this);
+    if (dynamic_cast<CompositeObject*>(obj))
+        static_cast<CompositeObject*>(obj)->setParent(this);
 }
 
 void Sheet::removeObject(Object *obj)
 {
-    // TODO check if this sheet owns the object?
-    objects.removeOne(obj);
-    // TODO preliminary remove obj->setParent(nullptr);
+    // Remove it and set its parent to null if it is a composite object
+    if (objects.removeOne(obj) && dynamic_cast<CompositeObject*>(obj))
+        static_cast<CompositeObject*>(obj)->setParent(nullptr);
 }
 
 void Sheet::setParent(Project *project)

@@ -6,7 +6,7 @@
 #include <QRectF>
 
 /**
- * @brief Class that represents a Rectangle object.
+ * @brief A visual rectangle object.
  *
  * Inherits QRectF so we don't have to reimplement convenience functions that
  * QRectF already provides.
@@ -15,11 +15,17 @@ class Rect : public Object, public QRectF
 {
 public:
     // CONSTRUCTORS
-    /// @brief Null rectangle.
+    /**
+     * @brief Construct a null rectangle.
+     */
     Rect();
-    /// @brief Usual way to construct a rectangle.
+    /**
+     * @brief Usual way to construct a rectangle.
+     */
     Rect(qreal x, qreal y, qreal width, qreal height);
-    /// @brief Copy constructor
+    /**
+     * @brief Copy constructor
+     */
     Rect(const Rect &rect);
     Object *clone() const override;
 

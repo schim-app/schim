@@ -27,16 +27,13 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     setScene(new SheetScene(sheet));
     init();
 
-    viewport()->setCursor(Qt::BlankCursor);
-
     recalculateBaselineZoom();
     updateBackground();
 
     connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
     connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorMoved);
 
-    setWhatsThis("This is a sheet view. This is where you draw your schematics"
-                 "on a sheet of paper.");
+    setWhatsThis("This is a sheet of paper where you draw your schematics.");
     setStatusTip("class SheetView in src/ui/sheetview.h");
 }
 
@@ -356,14 +353,16 @@ void SheetView::init()
 {
     setDragMode(DragMode::NoDrag);
     setRubberBandSelectionMode(Qt::ContainsItemShape);
+    setFocusPolicy(Qt::ClickFocus);
     setMouseTracking(true);
+    setAcceptDrops(true);
+    viewport()->setCursor(Qt::BlankCursor);
     setTransformationAnchor(QGraphicsView::NoAnchor);
     setRenderHint(QPainter::Antialiasing);
     // Needed to update the cursor guides when the viewport is scrolled
     // TODO Don't know if this is the optimal setting, but Minimal mode doesn't work properly
+    // TODO try updating the scene in a small neighborhood of the guides
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
-    setAcceptDrops(true);
-    setFocusPolicy(Qt::ClickFocus);
 }
 
 void SheetView::recalculateBaselineZoom()

@@ -6,20 +6,28 @@
 #include <QLineF>
 
 /**
- * @brief Class that represents a line object.
+ * @brief A visual line object.
  *
- * It inherits QLineF so we don't have to reimplement convenience functions that
- * QLineF already provides.
+ * A line is represented by two points. We take its position to be the first of
+ * those points.
+ *
+ * @note `Line` is derived from `QLineF`, so you can use all its base functions.
  */
 class Line : public Object, public QLineF
 {
 public:
     // CONSTRUCTORS
-    /// @brief Null line.
+    /**
+     * @brief Construct a null line.
+     */
     Line();
-    /// @brief Usual way to construct a line.
+    /**
+     * @brief Usual way to construct a line.
+     */
     Line(qreal x1, qreal y1, qreal x2, qreal y2);
-    /// @brief Copy constructor
+    /**
+     * @brief Copy constructor
+     */
     Line(const Line &line);
     Object *clone() const override;
 

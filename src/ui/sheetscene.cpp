@@ -27,9 +27,9 @@
 SheetScene::SheetScene(Sheet *sheet)
     : sheet(sheet)
 {
-    if (sheet == nullptr) return;
-
-    // In default theme: white background with dark border (sheet background)
+    if (sheet == nullptr)
+        throw std::logic_error("Cannot construct a scene with a null sheet.");
+    // Paper background item
     pageBackgroundItem = addRect({0, 0, sheet->getWidth(), sheet->getHeight()},
                      {qApp->palette().color(QPalette::Text), 0},
                      qApp->palette().color(QPalette::Base));
@@ -45,9 +45,6 @@ SheetScene::SheetScene(Sheet *sheet)
     connect(this, &SheetScene::selectionChanged,
             this, &SheetScene::onSelectionChanged);
 }
-
-SheetScene::SheetScene()
-    : SheetScene(nullptr) { }
 
 // GETTERS
 

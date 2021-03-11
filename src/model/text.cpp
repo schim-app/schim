@@ -9,8 +9,8 @@ Text::Text(const QString &text)
     : text(text) { }
 
 Text::Text(const Text &text)
-    : Object(), QPointF(text),
-      text(text.text), font(text.font), textHeight(text.textHeight) { }
+    : Object(), text(text.text), font(text.font),
+      textHeight(text.textHeight) { }
 
 Object *Text::clone() const
 {
@@ -21,7 +21,7 @@ Object *Text::clone() const
 
 QPointF Text::getPos() const
 {
-    return *this;
+    return pos;
 }
 
 QString Text::getText() const
@@ -44,7 +44,7 @@ QString Text::getDisplayText(const Entity *context) const
     if (context)
         return getDisplayText(context->getVariables());
     else
-        return getDisplayText({});
+        return getDisplayText(VariableSet{});
 }
 
 QString Text::getFont() const
@@ -56,8 +56,7 @@ QString Text::getFont() const
 
 void Text::setPos(const QPointF &pos)
 {
-    setX(pos.x());
-    setY(pos.y());
+    this->pos = pos;
 }
 
 void Text::setText(const QString &text)
@@ -111,8 +110,8 @@ QString Text::getProperty(const QString &name) const
 
 bool Text::operator==(const Text &obj) const
 {
-    return Object::operator==(obj) && QPointF(*this) == obj && textHeight == obj.textHeight
-            && font == obj.font;
+    return Object::operator==(obj) && getPos() == obj.getPos() &&
+            textHeight == obj.textHeight && font == obj.font;
 }
 
 bool Text::operator!=(const Text &obj) const

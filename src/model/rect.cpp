@@ -65,7 +65,8 @@ void Rect::setProperty(const QString &name, const QString &value)
     set_float_property("linewidth", setLinewidth);
     set_float_property("lw", setLinewidth);;
     // else
-    throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for rectangle");
+    throw std::logic_error("Unknown property \"" + name.toStdString() +
+                           "\" for rectangle");
 }
 QString Rect::getProperty(const QString &name) const
 {
@@ -75,14 +76,16 @@ QString Rect::getProperty(const QString &name) const
     if (name == "h") return QString::number(height());
     if (name == "linewidth" || name == "lw") return QString::number(linewidth);
     // else
-    throw std::logic_error("Unknown property \"" + name.toStdString() + "\" for rectangle");
+    throw std::logic_error("Unknown property \"" + name.toStdString() +
+                           "\" for rectangle");
 }
 
 // OPERATORS
 
 bool Rect::operator==(const Rect &obj) const
 {
-    return Object::operator==(obj) && QRectF(*this) == obj && linewidth == obj.linewidth;
+    return Object::operator==(obj) && QRectF(*this) == obj &&
+            linewidth == obj.linewidth;
 }
 
 bool Rect::operator!=(const Rect &obj) const

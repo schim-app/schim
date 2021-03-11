@@ -18,9 +18,14 @@ public:
     Text *get();
     const Text *get() const;
     bool isInEditMode() const;
-    /** Cast the scene to a `SheetScene*`. */
-    SheetScene *scene();
 
+    // OBJECT EDITING
+    void reload() override;
+    void apply() override;
+    void showContextMenu();
+    void setEditMode(bool edit);
+
+protected:
     // EVENTS
     /** Use `GObject`'s implementation */
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -42,12 +47,6 @@ public:
     /** Show cursor guides. */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     void timerEvent(QTimerEvent *event) override;
-
-    // OBJECT EDITING
-    void reload() override;
-    void apply() override;
-    void showContextMenu();
-    void setEditMode(bool edit);
 
 signals:
     void focusOut();

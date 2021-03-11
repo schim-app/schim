@@ -8,13 +8,23 @@
 #include <QRectF>
 #include <QString>
 
-class Text : public Object, public QPointF
+/**
+ * @brief A visual text object.
+ *
+ * A text object is characterized by its text content, position, and standard
+ * display properties associated with texts.
+ */
+class Text : public Object
 {
 public:
     // CONSTRUCTORS
-    /// @brief Usual way to construct a text object.
+    /**
+     * @brief Usual way to construct a text object.
+     */
     Text(const QString &text = "");
-    /// @brief Copy constructor
+    /**
+     * @brief Copy constructor
+     */
     Text(const Text &text);
     Object *clone() const override;
 
@@ -40,6 +50,7 @@ public:
 
 private:
     QString text, font = "Sans Serif";
+    QPointF pos;
     float textHeight = 4;
 };
 

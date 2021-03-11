@@ -47,9 +47,9 @@ void GComponent::showContextMenu()
                      this, &GComponent::onContextEdit);
     QObject::connect(&addText, &QAction::triggered, this, [this]() {
         GText *obj = new GText; // Create new graphical text object
-        TextInsertOperation *op = new TextInsertOperation(scene(), obj);
+        TextInsertOperation *op = new TextInsertOperation(getSheetScene(), obj);
         obj->setParentItem(this); // The operation must know this text has a parent
-        scene()->startOperation(op);
+        getSheetScene()->startOperation(op);
     });
     contextMenu.exec(QCursor::pos());
 }
@@ -98,7 +98,7 @@ void GComponent::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     auto val = GCompositeObject::itemChange(change, value);
-    if (change == ItemSceneHasChanged && scene() != nullptr)
+    if (change == ItemSceneHasChanged && getSheetScene() != nullptr)
     {
         // Add texts
         for (auto *text : get()->getTexts())
@@ -116,9 +116,6 @@ QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value
             // The terminal is hidden unless the component is hovered
             assignee->hide();
         }
-    }
-    else if (change == ItemSelectedHasChanged)
-    {
     }
     return val;
 }

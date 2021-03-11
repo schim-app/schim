@@ -72,6 +72,11 @@ GObject *GObject::getOldestParent()
         return this;
 }
 
+SheetScene *GObject::getSheetScene() const
+{
+    return dynamic_cast<SheetScene*>(scene());
+}
+
 // SETTERS
 
 void GObject::setCosmetic(bool cosmetic)
@@ -123,7 +128,7 @@ void GObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     if (flags() & ItemIsSelectable)
     {
         hovered = true;
-        scene()->hoveredItem = getOldestParent();
+        getSheetScene()->hoveredItem = getOldestParent();
     }
     QGraphicsItem::hoverEnterEvent(event);
 }
@@ -138,7 +143,7 @@ void GObject::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void GObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
-        scene()->setSnapCursorGuides(true);
+        getSheetScene()->setSnapCursorGuides(true);
     QGraphicsItem::mouseMoveEvent(event);
 }
 
@@ -153,7 +158,7 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
         moveHandlesAbove();
     else if (change == ItemSelectedHasChanged)
         showHandles(value.toBool());
-    else if (change == ItemSceneHasChanged)
+    else if (change == ItemSceneHasChanged || change == ItemParentHasChanged)
     {
         if (value.isNull())
         { // Unselect and unhover the item when it leaves the scene
@@ -163,8 +168,8 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
         else
             reload();
     }
-    else if (change == ItemPositionChange && scene())
-        return scene()->snap(value.toPointF());
+    else if (change == ItemPositionChange && getSheetScene())
+        return getSheetScene()->snap(value.toPointF());
     else if (change == ItemPositionHasChanged)
         apply();
 
@@ -178,7 +183,7 @@ QRectF GObject::boundingRect() const
     return childrenBoundingRect();
 }
 
-void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt,
+void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem*,
                     QWidget *)
 {
     auto pen = painter->pen();
@@ -197,25 +202,19 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt,
     painter->setPen(pen);
 }
 
-GCompositeObject *GObject::parentItem()
+GCompositeObject *GObject::parentItem() const
 {
     return (GCompositeObject *) QGraphicsItem::parentItem();
 }
 
-SheetScene *GObject::scene()
+Entity *GObject::getModelParent() const
 {
-    return (SheetScene*) QGraphicsItem::scene();
-}
-
-Entity *GObject::getModelParent()
-{
-    if (!parentItem())
-    { // Sheet is the parent
-        if (scene()) return scene()->getSheet();
-        else return nullptr;
-    }
-    else
+    if (parentItem())
         return parentItem()->get();
+    else if (getSheetScene())
+        return getSheetScene()->getSheet();
+    else
+        return nullptr;
 }
 
 // HELPER METHODS

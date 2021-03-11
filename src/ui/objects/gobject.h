@@ -44,11 +44,13 @@ public:
      */
     Object *get();
     const Object *get() const;
+    Entity *getModelParent() const;
     /**
      * @brief Return whether the mouse is over this object.
      */
     bool isHovered() const;
     GObject *getOldestParent();
+    SheetScene *getSheetScene() const;
 
     // SETTERS
     /**
@@ -111,18 +113,18 @@ public:
     /**
      * @brief Set `hovered=true` so that it can be used by paint.
      */
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     /**
      * @brief Disable the bool `hovered` so that it can be used by paint.
      */
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 protected:
     /**
      * If the item is being dragged (left button is down),
      * snap the cursor guides to the grid.
      */
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void keyPressEvent(QKeyEvent *event) override;
     /**
      * @brief Process item changes that should behave uniformly across different
      * object types.
@@ -140,12 +142,14 @@ protected:
      * implementation.
      *
      */
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value)
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)
         override;
 
 public:
     // OVERRIDE QGraphicsItem
-    /** The default implementation returns childrenBoundingRect(). */
+    /**
+     * @brief Default implementation that returns childrenBoundingRect().
+     */
     QRectF boundingRect() const override;
     /**
      * This implementation applies aesthetic modifications when the
@@ -155,14 +159,10 @@ public:
      * of their implementation to apply the aesthetic changes.
      */
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
-    /** Return the parent item cast to a `GObject*`. */
-    GCompositeObject *parentItem();
-    /** Return the scene cast to a `SheetScene*`. */
-    SheetScene *scene();
-
-protected:
-    // MISCELLANEOUS
-    Entity *getModelParent();
+    /**
+     * @brief Return the parent item cast to a `GObject*`.
+     */
+    GCompositeObject *parentItem() const;
 private:
     // HELPER METHODS
     /**

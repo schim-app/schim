@@ -79,7 +79,7 @@ QImage DatabaseItem::getIcon() const
         return {};
 
     // Create a scene that we will use to generate the icon
-    QGraphicsScene *scene = new QGraphicsScene();
+    QGraphicsScene *scene = new QGraphicsScene;
     GObject *gobject = GObject::assign(object);
     scene->addItem(gobject);
     gobject->setCosmetic(true);

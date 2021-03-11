@@ -20,6 +20,9 @@ class GTerminal;
 class GConnectionSuggester;
 class Operation;
 
+/**
+ * @brief A scene containing a sheet of paper.
+ */
 class SheetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -27,13 +30,11 @@ class SheetScene : public QGraphicsScene
 public:
     // CONSTRUCTORS
     /**
-     * @brief Create a scene based on the specified sheet.
-     *
-     * This should be considered the default constructor,
-     * i.e. the one that contains the common functionality.
+     * @brief Construct a scene based on the specified sheet.
+     * @throws std::logic_error If sheet is null.
+     * @note The scene does not take ownership of `sheet`.
      */
     SheetScene(Sheet *sheet);
-    SheetScene();
 
     // GETTERS
     Sheet *getSheet();
@@ -108,7 +109,7 @@ public:
     void tryChangeHeader(Header *hdr, bool *changed = nullptr,
                          bool *confirmed = nullptr);
 
-    // OVERRIDDEN
+    // OVERRIDDE QGraphicsScene
     GObject *itemAt(const QPointF &pt, const QTransform &deviceTransform);
 
     // OTHER METHODS
@@ -121,7 +122,6 @@ private slots:
     void onSelectionChanged();
 
 private:
-
     // HELPERS
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
@@ -130,7 +130,7 @@ private:
         getConnectionSuggestions(GComponent *component);
     void registerConnectionSuggestion(Terminal::Prong a, Terminal::Prong b);
 
-    // OVERRIDDEN METHODS
+    // EVENTS
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
@@ -150,7 +150,7 @@ private slots:
 private:
     // ATTRIBUTES
 
-    Sheet *sheet;
+    Sheet *sheet{};
     QUndoStack undoStack{this};
     GHeader *headerItem{};
 

@@ -44,12 +44,13 @@ void Component::addTexts(const QList<Text*> &texts)
 void Component::addTerminal(Terminal *terminal)
 {
     terminals.append(terminal);
-    // Terminal setParent?
+    terminal->setParent(this);
 }
 
 void Component::addTerminals(const QList<Terminal *> &terminals)
 {
-    // TODO terminals->setParent?
+    for (auto *t : terminals)
+        t->setParent(this);
     this->terminals.append(terminals);
 }
 

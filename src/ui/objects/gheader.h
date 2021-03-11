@@ -18,10 +18,6 @@ public:
     // GETTERS
     Header *get();
     const Header *get() const;
-
-protected:
-    // EVENTS
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 };
 
 #endif // GHEADER_H
