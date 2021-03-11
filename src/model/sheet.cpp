@@ -108,7 +108,7 @@ void Sheet::setHeader(Header *header, bool destroy)
         delete this->header;
     this->header = header;
     if (header != nullptr)
-        header->setSheet(this);
+        header->setParent(this);
 }
 
 void Sheet::setLocalVariables(const VariableSet &vars)
@@ -135,14 +135,14 @@ void Sheet::setProject(Project *project)
 void Sheet::addObject(Object *obj)
 {
     objects.append(obj);
-    obj->setSheet(this);
+    // TODO preliminary remove obj->setParent(this);
 }
 
 void Sheet::removeObject(Object *obj)
 {
     // TODO check if this sheet owns the object?
     objects.removeOne(obj);
-    obj->setSheet(nullptr);
+    // TODO preliminary remove obj->setParent(nullptr);
 }
 
 QList<Object*>::iterator Sheet::begin()

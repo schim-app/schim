@@ -58,31 +58,6 @@ SheetScene *GText::scene()
     return GObject::scene();
 }
 
-// OVERRIDEN QGraphicsItem METHODS
-
-QPainterPath GText::shape() const
-{
-    return displayItem->shape();
-}
-
-QRectF GText::boundingRect() const
-{
-    return displayItem->boundingRect();
-}
-
-void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
-            (isSelected() || parentItem()->isSelected() || isHovered() ||
-            parentItem()->isHovered() || isInEditMode()))
-    { // Draw the "selected" border around the text
-        QPen pen(qApp->palette().color(QPalette::Text), dpiInvariant(1), Qt::DashLine);
-        pen.setCosmetic(true);
-        painter->setPen(pen);
-        painter->drawPath(shape());
-    }
-}
-
 // EVENTS
 
 QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
@@ -154,7 +129,7 @@ void GText::reload()
         font.setPixelSize(get()->getTextHeight());
 
     displayItem->setFont(font);
-    displayItem->setPlainText(get()->getDisplayText());
+    displayItem->setPlainText(get()->getDisplayText(parentItem()->get()));
     setPos(get()->getPos());
 }
 
@@ -190,7 +165,7 @@ void GText::setEditMode(bool edit)
     }
     else
     {
-        displayItem->setPlainText(get()->getDisplayText());
+        displayItem->setPlainText(get()->getDisplayText(parentItem()->get()));
 
         displayItem->setTextInteractionFlags(Qt::NoTextInteraction);
         displayItem->unsetCursor();
@@ -223,6 +198,32 @@ void GText::onFocusOut()
     emit focusOut();
 }
 
+// OVERRIDE QGraphicsItem
+
+QPainterPath GText::shape() const
+{
+    return displayItem->shape();
+}
+
+QRectF GText::boundingRect() const
+{
+    return displayItem->boundingRect();
+}
+
+void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
+{
+    if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
+            (isSelected() || parentItem()->isSelected() || isHovered() ||
+            parentItem()->isHovered() || isInEditMode()))
+    { // Draw the "selected" border around the text
+        QPen pen(qApp->palette().color(QPalette::Text),
+                 dpiInvariant(1), Qt::DashLine);
+        pen.setCosmetic(true);
+        painter->setPen(pen);
+        painter->drawPath(shape());
+    }
+}
+
 /*** GDisplayText **************************************************************/
 
 // EVENTS
@@ -250,7 +251,8 @@ void GDisplayText::keyPressEvent(QKeyEvent *event)
     QGraphicsTextItem::keyPressEvent(event);
 }
 
-void GDisplayText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GDisplayText::paint(QPainter *painter,
+                         const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QStyleOptionGraphicsItem tweak(*option);
     // Remove the border so we can draw a custom one in GText

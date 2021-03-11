@@ -39,12 +39,10 @@ QString Text::getDisplayText(const VariableSet &variableSet) const
     return Variable::substitute(getText(), variableSet);
 }
 
-QString Text::getDisplayText() const
+QString Text::getDisplayText(const Entity *context) const
 {
-    if (parent)
-        return getDisplayText(parent->getVariables());
-    else if (sheet)
-        return getDisplayText(sheet->getVariables());
+    if (context)
+        return getDisplayText(context->getVariables());
     else
         return getDisplayText({});
 }

@@ -44,7 +44,9 @@ public:
      */
     Object *get();
     const Object *get() const;
-    /** @brief Return whether the mouse is over this object. */
+    /**
+     * @brief Return whether the mouse is over this object.
+     */
     bool isHovered() const;
     GObject *getOldestParent();
 
@@ -57,23 +59,7 @@ public:
      */
     virtual void setCosmetic(bool cosmetic);
 
-    // OVERRIDE
-    /** The default implementation returns childrenBoundingRect(). */
-    QRectF boundingRect() const override;
-    /**
-     * This implementation applies aesthetic modifications when the
-     * object is hovered or selected.
-     *
-     * @note Derived classes should call this version at the beginning
-     * of their implementation to apply the aesthetic changes.
-     */
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
-    /** Return the parent item cast to a `GObject*`. */
-    GCompositeObject *parentItem();
-    /** Return the scene cast to a `SheetScene*`. */
-    SheetScene *scene();
-
-    // FOR EDITING THE OBJECT
+    // OBJECT EDITING
     /**
      * @brief Update the graphical representation to match the object from the
      * model.
@@ -122,9 +108,13 @@ public:
     static GObject *assign(Object *obj);
 
     // EVENTS
-    /// @brief Set `hovered=true` so that it can be used by paint.
+    /**
+     * @brief Set `hovered=true` so that it can be used by paint.
+     */
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-    /// @brief Disable the bool `hovered` so that it can be used by paint.
+    /**
+     * @brief Disable the bool `hovered` so that it can be used by paint.
+     */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 protected:
     /**
@@ -153,6 +143,26 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value)
         override;
 
+public:
+    // OVERRIDE QGraphicsItem
+    /** The default implementation returns childrenBoundingRect(). */
+    QRectF boundingRect() const override;
+    /**
+     * This implementation applies aesthetic modifications when the
+     * object is hovered or selected.
+     *
+     * @note Derived classes should call this version at the beginning
+     * of their implementation to apply the aesthetic changes.
+     */
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
+    /** Return the parent item cast to a `GObject*`. */
+    GCompositeObject *parentItem();
+    /** Return the scene cast to a `SheetScene*`. */
+    SheetScene *scene();
+
+protected:
+    // MISCELLANEOUS
+    Entity *getModelParent();
 private:
     // HELPER METHODS
     /**
@@ -161,8 +171,8 @@ private:
      */
     void moveHandlesAbove();
 
-    // ATTRIBUTES
 protected:
+    // ATTRIBUTES
     /// The object that is being wrapped.
     Object *obj;
     /// Dynamically allocated list of handles.

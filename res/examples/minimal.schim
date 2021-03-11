@@ -1,6 +1,6 @@
 
-<project title="Example Project">
-  <sheet title="A sheet of paper">
+<project name="Example Project">
+  <sheet name="A sheet of paper">
     <header from="headers/defaultheader.xsym"/>
     <component x="88.5" y="25">
       <terminals>

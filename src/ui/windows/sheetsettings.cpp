@@ -23,8 +23,8 @@ SheetSettings::SheetSettings(MainWindow *parent, int sheetId)
     ui->editSheetTitle->setFocus();
     if (sheet->getHeader() != nullptr)
     {
-        originalHeader = sheet->getHeader()->getSourceFile();
-        ui->editHeader->setText(sheet->getHeader()->getSourceFile());
+        originalHeader = sheet->getHeader()->getFileName();
+        ui->editHeader->setText(sheet->getHeader()->getFileName());
     }
     else
         originalHeader = "";

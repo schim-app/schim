@@ -37,9 +37,7 @@
 CompositeObject *parseCompositeObject(const QString &);
 CompositeObject *dxfParseCompositeObject(const std::string &);
 
-/********************
- * Helper functions *
- ********************/
+// HELPER FUNCTIONS
 
 void xmlTestRootTag(QXmlStreamReader &stream, const QString &tagname)
 {
@@ -89,9 +87,7 @@ void xmlReadProperties(Object *object, QXmlStreamReader &stream)
     catch (std::exception &e) { delete object; throw; }
 }
 
-/*********************
- * Parse by filename *
- *********************/
+// PARSE BY FILENAME
 
 Object *xmlParseObject(const QString &filename)
 {
@@ -175,7 +171,7 @@ Project *xmlParseProject(const QString &filename)
         // Parse the root tag attributes
         for_attrs
         {
-            if_attr("title") project->setName(attr.value().toString());
+            if_attr("name") project->setName(attr.value().toString());
         }
         // Parse contents
         while (!stream.atEnd())
@@ -208,7 +204,7 @@ void xmlWriteProject(Project *project, const QString &filename)
     stream.setAutoFormattingIndent(2); // consider changing this to tabs
 
     stream.writeStartElement("project");
-    stream.writeAttribute("title", project->getName());
+    stream.writeAttribute("name", project->getName());
     for (auto *sheet : project->getSheets())
         xmlWriteSheet(sheet, stream);
     stream.writeEndElement();
@@ -223,9 +219,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
 
     try {
         for_attrs {
-            QString name = attr.name().toString();
-            if (name == "title")
-                sheet->setName(attr.value().toString());
+            if_attr("name") sheet->setName(attr.value().toString());
         }
         parse_children (
             if_name("header") sheet->setHeader(xmlParseHeader(stream));
@@ -245,7 +239,7 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
 void xmlWriteSheet(Sheet *sheet, QXmlStreamWriter &stream)
 {
     stream.writeStartElement("sheet");
-    stream.writeAttribute("title", sheet->getName());
+    stream.writeAttribute("name", sheet->getName());
 
     xmlWriteHeader(sheet->getHeader(), stream);
 
@@ -494,8 +488,8 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
     stream.writeStartElement("header");
 
     // TODO do this for all other types of CompositeObject
-    if (header->getSourceFile() != "") // The header is associated with a source file
-        stream.writeAttribute("from", header->getSourceFile());
+    if (header->getFileName() != "") // The header is associated with a source file
+        stream.writeAttribute("from", header->getFileName());
     else
         foreach (auto obj, header->getConstituents())
             xmlWriteObject(obj, stream);
@@ -505,7 +499,7 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 
 ///////////////////////////////////////////////////////////////////////////
 
-// Helper functions
+// Local helpers
 QList<Text*> xmlParseTexts(QXmlStreamReader &stream)
 {
     PARSE_BEGIN
@@ -601,8 +595,8 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     Component def; // Default component
     QPointF defPos = def.getPos(), pos = component->getPos();
 
-    if (!component->getSourceFile().isNull())
-        stream.writeAttribute("from", component->getSourceFile());
+    if (!component->getFileName().isNull())
+        stream.writeAttribute("from", component->getFileName());
 
     if (pos.x() != defPos.x())
         stream.writeAttribute("x", QString::number(pos.x()));
@@ -627,7 +621,7 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     foreach (auto var, component->getVariables())
         xmlWriteVariable(var, stream);
 
-    if (component->getSourceFile().isNull())
+    if (component->getFileName().isNull())
         foreach (auto *obj, component->getConstituents())
             xmlWriteObject(obj, stream);
 

@@ -262,6 +262,8 @@ int ProjectModel::rowCount(const QModelIndex &parent) const
         return static_cast<Project*>(ptr)->getSheets().size();
     else if (dynamic_cast<Sheet*>(ptr))
         return 0;
+    else
+        return 0;
 }
 
 int ProjectModel::columnCount(const QModelIndex &parent) const

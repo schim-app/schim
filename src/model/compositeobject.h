@@ -1,7 +1,8 @@
 #ifndef COMPOSITEOBJECT_H
 #define COMPOSITEOBJECT_H
 
-#include "object.h"
+#include "model/object.h"
+#include "model/entity.h"
 #include "model/variable.h"
 
 /**
@@ -12,7 +13,7 @@
  * This class inherits QList<Object*> so we don't have to
  * reimplement the convenience functions that QList already provides.
  */
-class CompositeObject : public Object
+class CompositeObject : public Object, public Entity
 {
 
 public:
@@ -32,20 +33,15 @@ public:
      * found, and `false` otherwise.
      */
     QString getValue(const QString &name, bool *exists = nullptr) const;
-    VariableSet getVariables() const;
-    VariableSet &getLocalVariables();
-    VariableSet getLocalVariables() const;
-    QString getSourceFile() const;
+    QString getFileName() const;
     QList<Object *> &getConstituents();
     QList<Object *> getConstituents() const;
 
     // SETTERS
     void setPos(const QPointF &pos) override;
     void setValue(const QString &name, const QString &value);
-    void setLocalVariables(const VariableSet &vars);
     void setSourceFile(const QString &filename);
 
-    void addVariable(const Variable &variable);
     void add(Object *obj);
     void add(const QList<Object*> &list);
     /**

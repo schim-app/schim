@@ -33,34 +33,23 @@ QList<Terminal *> &Component::getTerminals()
 void Component::addText(Text *text)
 {
     texts.append(text);
-    text->setParent(this);
-    text->setSheet(sheet);
 }
 
 void Component::addTexts(const QList<Text*> &texts)
 {
-    for (auto *t : texts)
-    {
-        t->setParent(this);
-        t->setSheet(sheet);
-    }
+    // TODO children->setParent?
     this->texts.append(texts);
 }
 
 void Component::addTerminal(Terminal *terminal)
 {
     terminals.append(terminal);
-    terminal->setParent(this);
-    terminal->setSheet(sheet);
+    // Terminal setParent?
 }
 
 void Component::addTerminals(const QList<Terminal *> &terminals)
 {
-    for (auto *t : terminals)
-    {
-        t->setParent(this);
-        t->setSheet(sheet);
-    }
+    // TODO terminals->setParent?
     this->terminals.append(terminals);
 }
 

@@ -79,43 +79,7 @@ void GObject::setCosmetic(bool cosmetic)
     this->cosmetic = cosmetic;
 }
 
-// OVERRIDE
-
-QRectF GObject::boundingRect() const
-{
-    return childrenBoundingRect();
-}
-
-void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt,
-                    QWidget *)
-{
-    auto pen = painter->pen();
-    pen.setCosmetic(cosmetic);
-
-    // The order is important
-    if (isSelected() || (parentItem() && parentItem()->isSelected()))
-        pen.setColor(qApp->palette().color(QPalette::Highlight));
-    else if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
-        // TODO the color source may be a little stupid, but it looks reasonably nice
-        pen.setColor(qApp->palette().color(QPalette::LinkVisited));
-    else
-        // The default color is the theme's text color
-        pen.setColor(qApp->palette().color(QPalette::Text));
-
-    painter->setPen(pen);
-}
-
-GCompositeObject *GObject::parentItem()
-{
-    return (GCompositeObject *) QGraphicsItem::parentItem();
-}
-
-SheetScene *GObject::scene()
-{
-    return (SheetScene*) QGraphicsItem::scene();
-}
-
-// FOR EDITING THE OBJECT
+// OBJECT EDITING
 
 void GObject::reload() { }
 
@@ -205,6 +169,53 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
         apply();
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+// OVERRIDE QGraphicsItem
+
+QRectF GObject::boundingRect() const
+{
+    return childrenBoundingRect();
+}
+
+void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt,
+                    QWidget *)
+{
+    auto pen = painter->pen();
+    pen.setCosmetic(cosmetic);
+
+    // The order is important
+    if (isSelected() || (parentItem() && parentItem()->isSelected()))
+        pen.setColor(qApp->palette().color(QPalette::Highlight));
+    else if (isHovered() || (parentItem() &&  parentItem()->isHovered()))
+        // TODO the color source may be a little stupid, but it looks reasonably nice
+        pen.setColor(qApp->palette().color(QPalette::LinkVisited));
+    else
+        // The default color is the theme's text color
+        pen.setColor(qApp->palette().color(QPalette::Text));
+
+    painter->setPen(pen);
+}
+
+GCompositeObject *GObject::parentItem()
+{
+    return (GCompositeObject *) QGraphicsItem::parentItem();
+}
+
+SheetScene *GObject::scene()
+{
+    return (SheetScene*) QGraphicsItem::scene();
+}
+
+Entity *GObject::getModelParent()
+{
+    if (!parentItem())
+    { // Sheet is the parent
+        if (scene()) return scene()->getSheet();
+        else return nullptr;
+    }
+    else
+        return parentItem()->get();
 }
 
 // HELPER METHODS

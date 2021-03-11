@@ -21,11 +21,6 @@ public:
     /** Cast the scene to a `SheetScene*`. */
     SheetScene *scene();
 
-    // OVERRIDEN QGraphicsItem METHODS
-    QPainterPath shape() const override;
-    QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     // EVENTS
     /** Use `GObject`'s implementation */
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -62,6 +57,11 @@ private slots:
     void onFocusOut();
 
 private:
+    // OVERRIDE QGraphicsItem
+    QPainterPath shape() const override;
+    QRectF boundingRect() const override;
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
+
     // ATTRIBUTES
     GDisplayText *displayItem;
 };

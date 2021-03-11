@@ -132,8 +132,11 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if (obj == nullptr)
             obj = new GText;
         // We are doing this so it displays variables correctly
-        obj->get()->setSheet(scene->getSheet());
+
+        /* TODO determine what to do
+        obj->get()->setParent(scene->getSheet());
         obj->get()->setParent(obj->parentItem()->get());
+        */
         // Position the object relative to its parent (if it has one)
         if (obj->parentItem() == nullptr)
             obj->get()->setPos(pos);

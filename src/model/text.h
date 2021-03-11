@@ -1,8 +1,9 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "object.h"
-#include "variable.h"
+#include "model/object.h"
+#include "model/entity.h"
+#include "model/variable.h"
 
 #include <QRectF>
 #include <QString>
@@ -21,7 +22,7 @@ public:
     QPointF getPos() const override;
     QString getText() const;
     QString getDisplayText(const VariableSet &variableList) const;
-    QString getDisplayText() const;
+    QString getDisplayText(const Entity *context) const;
     float getTextHeight() const;
     QString getFont() const;
     QString getProperty(const QString &name) const override;

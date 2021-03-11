@@ -97,7 +97,7 @@ void ComponentSettings::onChanged()
 
 void ComponentSettings::accept()
 {
-    component->get()->setLocalVariables(ui->variableEditor->getVariables());
+    component->get()->setVariables(ui->variableEditor->getVariables());
 
     QDialog::accept();
     component->reload();

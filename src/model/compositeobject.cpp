@@ -43,28 +43,7 @@ QString CompositeObject::getValue(const QString &name, bool *exists) const
     return var.value;
 }
 
-VariableSet CompositeObject::getVariables() const
-{
-    VariableSet vars = variables;
-    if (parent)
-        vars.append(parent->getVariables());
-    else if (sheet)
-        vars.append(sheet->getVariables());
-
-    return vars;
-}
-
-VariableSet &CompositeObject::getLocalVariables()
-{
-    return variables;
-}
-
-VariableSet CompositeObject::getLocalVariables() const
-{
-    return variables;
-}
-
-QString CompositeObject::getSourceFile() const
+QString CompositeObject::getFileName() const
 {
     return file;
 }
@@ -97,43 +76,22 @@ void CompositeObject::setValue(const QString &name, const QString &value)
     addVariable({{name}, "", value});
 }
 
-void CompositeObject::setLocalVariables(const VariableSet &vars)
-{
-    variables.clear();
-    for (const auto &var : vars)
-        if (var.getTrueName() != "")
-            variables.append(var);
-}
-
 void CompositeObject::setSourceFile(const QString &filename)
 {
     this->file = filename;
     // TODO maybe load the object from the file...
 }
 
-void CompositeObject::addVariable(const Variable &variable)
-{
-    for (const auto &var : variables)
-        if (var == variable)
-            return;
-    variables.append(variable);
-}
-
 void CompositeObject::add(Object *object)
 {
     getConstituents().append(object);
-    object->setParent(this);
-    object->setSheet(sheet);
+    // TODO object->setParent?
 }
 
 void CompositeObject::add(const QList<Object *> &list)
 {
     getConstituents().reserve(list.size());
-    for (auto *obj : list)
-    {
-        obj->setParent(this);
-        obj->setSheet(sheet);
-    }
+    // TODO children->setParent?
     getConstituents().append(list);
 }
 

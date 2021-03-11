@@ -587,8 +587,7 @@ void MainWindow::setupIcons()
 {
     // Window icon
     setWindowIcon(QIcon(ICON_DIR "/apps/schim.svg"));
-// TODO maybe use this one #define PREFIX ICON_DIR "/actions/schim-"
-#define __ACTIONS ICON_DIR "/actions/"
+#define __ACTIONS SCHIM_ICON_DIR "/actions/"
     ui->actionInsertRect->setIcon(svgColorChange(__ACTIONS "rect.svg"));
     ui->actionInsertLine->setIcon(svgColorChange(__ACTIONS "line.svg"));
 #undef __ACTIONS

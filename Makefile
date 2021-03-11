@@ -9,8 +9,9 @@ DEPLOY_TARGET ?= linux-x86_64
 BUILD_DIR 	   = _build/$(shell [ "${TYPE}" = Release ] && echo release || echo debug)
 ICON_DIR       = share/icons/hicolor/scalable
 SHARE_DIR      = share/schim
+SCHIM_ICON_DIR = share/schim/icons
 MAN_DIR	       = share/man/man1
-DOC_DIR	       = share/doc
+DOC_DIR	       = share/doc/schim
 
 JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).*_\2_p')
 
@@ -46,17 +47,18 @@ app:# qthelp
 	@echo -e "Copying binary to destination..."
 	@cd "${BUILD_DIR}"; \
 	mkdir -p dest/bin \
-		"dest/${ICON_DIR}"/{apps,actions} \
+		"dest/${ICON_DIR}"/apps \
 		"dest/${SHARE_DIR}/symb" \
+		"dest/${SCHIM_ICON_DIR}/actions" \
 		"dest/${DOC_DIR}"; \
 		mv schim dest/bin/
 	@# Create launcher and copy resources
 	@echo -e "Copying resources to destination..."
 	@cp misc/schim.sh "${BUILD_DIR}/"
-	cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"
-	cp res/img/actions/*.svg "${BUILD_DIR}/dest/${ICON_DIR}/actions/" 
-	cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"
-	cp res/ATTRIBUTION.md "${BUILD_DIR}/dest/${DOC_DIR}/"
+	@cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"		# Icon
+	@cp res/img/actions/*.svg "${BUILD_DIR}/dest/${SCHIM_ICON_DIR}/actions/" # Action icons
+	@cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"					# Symbols
+	@cp res/ATTRIBUTION.md "${BUILD_DIR}/dest/${DOC_DIR}/"					# ATTRIBUTION.md
 ifeq (${OS},Windows_NT)
 	@echo "Bundling required libraries..."
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe
@@ -84,14 +86,15 @@ install: app man
 	@mkdir -p "${INSTALL_DIR}/${MAN_DIR}"
 	@# INSTALL_DIR can be the same as BUILD_DIR
 	@cp -r "${BUILD_DIR}"/dest/** "${INSTALL_DIR}" 2>/dev/null || true
-	@cp docs/_build/man/*.1* "${INSTALL_DIR}/${MAN_DIR}"
-	@cp -r res/examples "${INSTALL_DIR}/${SHARE_DIR}"
-	@cp -r res/*.conf "${INSTALL_DIR}/${SHARE_DIR}/"
+	@cp docs/_build/man/*.1* "${INSTALL_DIR}/${MAN_DIR}" # Manpages
+	@cp -r res/examples "${INSTALL_DIR}/${SHARE_DIR}"    # Examples
+	@cp -r res/*.conf "${INSTALL_DIR}/${SHARE_DIR}/"     # Config files
 
 uninstall:
 	rm -rf \
 		"${INSTALL_DIR}/bin/schim" \
 		"${INSTALL_DIR}/${ICON_DIR}/apps/schim.svg" \
+		"${INSTALL_DIR}/${DOC_DIR}" \
 		"${INSTALL_DIR}/${SHARE_DIR}" \
 		"${INSTALL_DIR}/${MAN_DIR}"
 

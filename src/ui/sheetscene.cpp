@@ -266,7 +266,7 @@ void SheetScene::showGuides(bool show)
 bool SheetScene::askHeaderChangeConfirmation() const
 {
     if (sheet->getHeader() == nullptr ||
-            sheet->getHeader()->getSourceFile() == "")
+            sheet->getHeader()->getFileName() == "")
         return QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
                 == QMessageBox::Yes;
     return true;
@@ -276,7 +276,7 @@ void SheetScene::tryChangeHeader(Header *hdr, bool *changed, bool *confirmed)
 {
     if (changed) *changed = false;
     if (confirmed) *confirmed = true;
-    bool hadLocalHdr = sheet->getHeader() && sheet->getHeader()->getSourceFile() == "";
+    bool hadLocalHdr = sheet->getHeader() && sheet->getHeader()->getFileName() == "";
     // ONLY one of them is null or they are both not null and they are not equal
     bool newHdrDifferent = ((!hdr && sheet->getHeader()) || (hdr && !sheet->getHeader()))
             || (hdr && sheet->getHeader() && *hdr != *sheet->getHeader());
