@@ -11,14 +11,6 @@ Header::Header(CompositeObject &&obj)
     obj.getConstituents().clear();
 }
 
-Header::Header(CompositeObject *obj)
-    : Header()
-{
-    add(obj->getConstituents());
-    obj->getConstituents().clear();
-    delete obj; //TODO maybe not do this here
-}
-
 Header::Header(const Header &obj)
     : CompositeObject(obj), contentArea(obj.contentArea) { }
 
@@ -39,6 +31,17 @@ QRectF Header::getContentArea() const
 void Header::setContentArea(const QRectF &rect)
 {
     contentArea = rect;
+}
+
+// STATIC
+
+Header *Header::absorb(CompositeObject *obj)
+{
+    Header *retVal = new Header;
+    retVal->add(obj->getConstituents());
+    obj->getConstituents().clear(); // Take away ownership from obj
+    delete obj; //TODO maybe not do this here
+    return retVal;
 }
 
 // OPERATORS

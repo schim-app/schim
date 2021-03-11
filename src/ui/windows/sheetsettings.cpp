@@ -68,7 +68,7 @@ void SheetSettings::accept()
 
     parent->getSheet()->setName(ui->editSheetTitle->text());
     parent->getTabWidget()->setTabText(sheetId, ui->editSheetTitle->text());
-    parent->getSheet()->setLocalVariables(ui->variableEditor->getVariables());
+    parent->getSheet()->setVariables(ui->variableEditor->getVariables());
 
     scene()->reload();
     QDialog::accept();

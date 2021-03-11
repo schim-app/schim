@@ -28,11 +28,14 @@ public:
     QRectF getContentArea() const;
     QList<Object *> &getObjects();
     QList<Object *> getObjects() const;
-    VariableSet &getLocalVariables();
-    VariableSet getLocalVariables() const;
-    VariableSet getVariables() const;
-    Project *getProject() const;
+    /**
+     * @brief Return the index of the sheet in the project it belongs to.
+     */
     int getIndex();
+    /**
+     * @brief Override `getParent` with covariant return type `Project`.
+     */
+    virtual Project *getParent() const;
 
     // SETTERS
     void setWidth(float width);
@@ -40,19 +43,15 @@ public:
     void setHeight() const;
     /**
      * @brief Set this sheet's header.
-     *
-     * The sheet becomes the owner of `header` and is responsible for its
-     * deletion when the sheet's destructor is called.
-     *
      * @param destroy Whether to destroy the old header.
+     * @note The sheet takes ownership of `header`.
      */
     void setHeader(Header *header, bool destroy = true);
-    void setLocalVariables(const VariableSet &vars);
-    void addVariable(const Variable &variable);
-    void setProject(Project *project);
-
     void addObject(Object *obj);
     void removeObject(Object *obj);
+    virtual void setParent(Project *project);
+
+    // MISCELLANEOUS
     QList<Object *>::iterator begin();
     QList<Object *>::iterator end();
 
@@ -63,9 +62,6 @@ private:
 
     VariableSet variables;
     QList<Object *> objects;
-    Project *project{};
-
-    friend class Project;
 };
 
 #endif // SHEET_H

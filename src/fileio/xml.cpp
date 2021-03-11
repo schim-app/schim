@@ -458,7 +458,8 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
     {
         if (attr.name() == "from" && header == nullptr)
         { // The header content is taken from another file
-            header = new Header(xmlParseHeader(resolvePath(attr.value().toString())));
+            header = Header::absorb(
+                        xmlParseHeader(resolvePath(attr.value().toString())));
             // TODO how can I make it possible to get the header data from a dxf file
             header->setSourceFile(attr.value().toString());
         }

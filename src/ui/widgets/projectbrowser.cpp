@@ -39,7 +39,7 @@ void ProjectBrowser::mouseDoubleClickEvent(QMouseEvent *event)
         else
         {
             Sheet *sheet = (Sheet*) index.internalPointer();
-            if (model()->getActiveProject() == sheet->getProject())
+            if (model()->getActiveProject() == sheet->getParent())
             { // Sheet belongs to the active project and is not already open
                 int id = MainWindow::getInstance()->openSheet(sheet);
                 MainWindow::getInstance()->getTabWidget()->setCurrentIndex(id);
@@ -115,7 +115,7 @@ QMenu *ProjectBrowser::createSheetMenu(Sheet *sheet)
             *actionSheetEnd = menu->addAction("New sheet at end");
 
     if (MainWindow::getInstance()->isOpen(sheet)
-            || model()->getActiveProject() != sheet->getProject())
+            || model()->getActiveProject() != sheet->getParent())
         actionOpenSheet->setDisabled(true);
     connect(actionDelete, &QAction::triggered, [this, sheet]() {
         MainWindow::getInstance()->closeSheet(sheet);
@@ -125,17 +125,17 @@ QMenu *ProjectBrowser::createSheetMenu(Sheet *sheet)
         MainWindow::getInstance()->openSheet(sheet);
     });
     connect(actionSheetBefore, &QAction::triggered, this, [this, sheet]() {
-        model()->addSheet(new Sheet, sheet->getIndex(), sheet->getProject());
+        model()->addSheet(new Sheet, sheet->getIndex(), sheet->getParent());
     });
     connect(actionSheetAfter, &QAction::triggered, this, [this, sheet]() {
-        model()->addSheet(new Sheet, sheet->getIndex() + 1, sheet->getProject());
+        model()->addSheet(new Sheet, sheet->getIndex() + 1, sheet->getParent());
     });
     connect(actionSheetStart, &QAction::triggered, this, [this, sheet]() {
-        model()->addSheet(new Sheet, 0, sheet->getProject());
+        model()->addSheet(new Sheet, 0, sheet->getParent());
     });
     connect(actionSheetEnd, &QAction::triggered, this, [this, sheet]() {
-        int count = sheet->getProject()->getSheets().count();
-        model()->addSheet(new Sheet, count, sheet->getProject());
+        int count = sheet->getParent()->getSheets().count();
+        model()->addSheet(new Sheet, count, sheet->getParent());
     });
     return menu;
 }
@@ -161,7 +161,7 @@ QModelIndex ProjectModel::getIndex(Entity *entity) const
     else if (dynamic_cast<Sheet*>(entity))
     {
         Sheet *sheet = static_cast<Sheet*>(entity);
-        Project *proj = sheet->getProject();
+        Project *proj = sheet->getParent();
         return index(sheet->getIndex(), 0, getIndex(proj));
     }
     else
@@ -222,7 +222,7 @@ void ProjectModel::removeProject(Project *project)
 
 void ProjectModel::deleteSheet(Sheet *sheet)
 {
-    Project *project = sheet->getProject();
+    Project *project = sheet->getParent();
     int index = sheet->getIndex();
     beginRemoveRows(getIndex(project), index, index);
     project->removeSheet(sheet);
@@ -295,8 +295,8 @@ QModelIndex ProjectModel::parent(const QModelIndex &child) const
     else
     {
         auto *sheet = static_cast<Sheet*>(ptr);
-        return createIndex(projects.indexOf(sheet->getProject()),
-                           0, sheet->getProject());
+        return createIndex(projects.indexOf(sheet->getParent()),
+                           0, sheet->getParent());
     }
 }
 

@@ -64,7 +64,7 @@ void Project::setProperty(const QString &name, const QString &value)
 
 void Project::addSheet(Sheet *sheet, int index)
 {
-    sheet->setProject(this);
+    sheet->setParent(this);
     if (index == -1)
         sheets.append(sheet);
     else
@@ -73,7 +73,7 @@ void Project::addSheet(Sheet *sheet, int index)
 
 void Project::removeSheet(Sheet *sheet)
 {
-    sheet->setProject(nullptr);
+    sheet->setParent(nullptr);
     sheets.removeOne(sheet);
 }
 

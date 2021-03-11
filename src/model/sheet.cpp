@@ -58,33 +58,14 @@ QList<Object*> Sheet::getObjects() const
     return objects;
 }
 
-VariableSet &Sheet::getLocalVariables()
-{
-    return variables;
-}
-
-VariableSet Sheet::getLocalVariables() const
-{
-    return variables;
-}
-
-VariableSet Sheet::getVariables() const
-{
-    VariableSet vars = variables;
-    if (project)
-        vars.append(project->getVariables());
-
-    return vars;
-}
-
-Project *Sheet::getProject() const
-{
-    return project;
-}
-
 int Sheet::getIndex()
 {
-    return project ? project->getSheets().indexOf(this) : -1;
+    return getParent() ? getParent()->getSheets().indexOf(this) : -1;
+}
+
+Project *Sheet::getParent() const
+{
+    return dynamic_cast<Project*>(Entity::getParent());
 }
 
 // SETTERS
@@ -111,27 +92,6 @@ void Sheet::setHeader(Header *header, bool destroy)
         header->setParent(this);
 }
 
-void Sheet::setLocalVariables(const VariableSet &vars)
-{
-    variables.clear();
-    for (const auto &var : vars)
-        if (var.getTrueName() != "")
-            variables.append(var);
-}
-
-void Sheet::addVariable(const Variable &variable)
-{
-    for (const auto &var : variables)
-        if (var == variable)
-            return;
-    variables.append(variable);
-}
-
-void Sheet::setProject(Project *project)
-{
-    this->project = project;
-}
-
 void Sheet::addObject(Object *obj)
 {
     objects.append(obj);
@@ -144,6 +104,13 @@ void Sheet::removeObject(Object *obj)
     objects.removeOne(obj);
     // TODO preliminary remove obj->setParent(nullptr);
 }
+
+void Sheet::setParent(Project *project)
+{
+    Entity::setParent(project);
+}
+
+// MISCELLANEOUS
 
 QList<Object*>::iterator Sheet::begin()
 {

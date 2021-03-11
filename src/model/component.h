@@ -31,7 +31,12 @@ public:
     void remove(Object *obj);
 
     // MISCELLANEOUS
-    /** @brief Steal everything from `obj` and delete it. */
+    /**
+     * @brief Steal everything from `obj` and delete it.
+     *
+     * This creates a new component containing all constituents from `obj`, and
+     * then destroys `obj`.
+     */
     static Component *absorb(CompositeObject *obj);
 
     // OPERATORS

@@ -65,7 +65,7 @@ void Component::remove(Object *obj)
 
 Component *Component::absorb(CompositeObject *obj)
 {
-    Component *retVal = new Component();
+    Component *retVal = new Component;
     retVal->add(obj->getConstituents());
     obj->getConstituents().clear();
     delete obj;

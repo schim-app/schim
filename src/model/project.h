@@ -28,11 +28,13 @@ public:
     VariableSet getVariables() const;
     QList<Sheet *> &getSheets();
     QList<Sheet *> getSheets() const;
+    virtual Entity *getParent() const = delete;
 
     // SETTERS
     void setProperty(const QString &name, const QString &value);
     void addSheet(Sheet *sheet, int index=-1);
     void removeSheet(Sheet *sheet);
+    virtual void setParent() const = delete;
 
     // MISCELLANEOUS
     QList<Sheet *>::iterator begin();

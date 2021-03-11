@@ -14,21 +14,22 @@
  */
 class Header : public CompositeObject
 {
-
 public:
     // CONSTRUCTORS
-    /// @brief Default constructor.
+    /**
+     * @brief Default constructor.
+     */
     Header() = default;
     /**
      * @brief Move constructor
      *
      * Take all children from `obj`. Consequently, `obj` is emptied and this
-     * object becomes responsible for the destruction of the children.
+     * object takes ownership of its children.
      */
     Header(CompositeObject &&obj);
-    /// @brief Steal everything from `obj` and delete it.
-    Header(CompositeObject *obj);
-    /// @brief Copy constructor.
+    /**
+     * @brief Copy constructor.
+     */
     Header(const Header &obj);
     Header *clone() const;
 
@@ -38,14 +39,23 @@ public:
     // SETTERS
     void setContentArea(const QRectF &rect);
 
+    // STATIC
+    /**
+     * @brief Steal everything from `obj` and delete it.
+     *
+     * This creates a new component containing all constituents from `obj`, and
+     * then destroys `obj`.
+     */
+    static Header *absorb(CompositeObject *obj);
+
     // OPERATORS
     bool operator==(const Header &obj) const;
     bool operator!=(const Header &obj) const;
 
 private:
-    /// @brief The area where the schematic content should be.
+    /// The area where the schematic content should be.
     QRectF contentArea{0, 0, 297, 210};
-    /// Both of these strings represent bash-readable arrays.
+    /// Both of these strings should be bash-readable arrays.
     QString columnMarkers = "{0..9}", rowMarkers = "{A..F}";
     /// Display options.
     bool displayColumns = true, displayRows = true;
