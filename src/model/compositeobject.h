@@ -12,12 +12,12 @@
  * This class inherits QList<Object*> so we don't have to
  * reimplement the convenience functions that QList already provides.
  */
-class CompositeObject : public Object, public QList<Object*>
+class CompositeObject : public Object
 {
 
 public:
     CompositeObject();
-    /** @brief Copy constructor */
+    /// @brief Copy constructor
     CompositeObject(const CompositeObject &obj);
     ~CompositeObject();
 
@@ -27,7 +27,6 @@ public:
     QPointF getPos() const override;
     /**
      * @brief Return the value of the variable with the specified name.
-     *
      * @param name The name of the variable.
      * @param exists `true` is written to this variable if the variable is
      * found, and `false` otherwise.
@@ -37,6 +36,8 @@ public:
     VariableSet &getLocalVariables();
     VariableSet getLocalVariables() const;
     QString getSourceFile() const;
+    QList<Object *> &getConstituents();
+    QList<Object *> getConstituents() const;
 
     // SETTERS
     void setPos(const QPointF &pos) override;
@@ -44,16 +45,24 @@ public:
     void setLocalVariables(const VariableSet &vars);
     void setSourceFile(const QString &filename);
 
-    // MODIFIER METHODS
     void addVariable(const Variable &variable);
-    void append(Object *object);
-    void append(const QList<Object*> &list);
+    void add(Object *obj);
+    void add(const QList<Object*> &list);
+    /**
+     * @brief Remove `obj` from the object.
+     *
+     * If this is an instance of `CompositeObject`, then `obj` is removed from
+     * its list of constituents. The behavior can vary in subclasses.
+     * @see For an example behavior in subclasses, see `Component::remove`.
+     */
+    virtual void remove(Object *obj);
 
     // OPERATORS
     bool operator==(const CompositeObject &obj) const;
     bool operator!=(const CompositeObject &obj) const;
 
 protected:
+    QList<Object *> constituents;
     // TODO determine appropriate container
     VariableSet variables;
     QPointF pos{};

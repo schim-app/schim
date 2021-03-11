@@ -1,15 +1,19 @@
 #include "gcomponent.h"
+
+#include "model/text.h"
+
+#include "gterminal.h"
 #include "gtext.h"
 
 #include "ui/mainwindow.h"
+#include "ui/operations.h"
 #include "ui/windows/componentsettings.h"
 
 #include <QAction>
 #include <QMenu>
 #include <QGraphicsSceneMouseEvent>
 
-#include "model/text.h"
-#include "ui/operations.h"
+#include <iostream>
 
 // CONSTRUCTORS
 
@@ -72,20 +76,49 @@ void GComponent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         onContextEdit();
 }
 
+void GComponent::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    // TODO The hover event is not a 100% reliable way to determine if the mouse
+    // is over the object. And mouseMoveEvent doesn't fire even when mouse
+    // tracking is enabled in the view.
+    for (auto *child : childItems())
+        if (dynamic_cast<GTerminal*>(child))
+            child->show();
+    GCompositeObject::hoverEnterEvent(event);
+}
+
+void GComponent::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    for (auto *child : childItems())
+        if (dynamic_cast<GTerminal*>(child))
+            child->hide();
+    GCompositeObject::hoverLeaveEvent(event);
+}
+
 QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value)
 {
+    auto val = GCompositeObject::itemChange(change, value);
     if (change == ItemSceneHasChanged && scene() != nullptr)
     {
-        for (auto *child : *get())
+        // Add texts
+        for (auto *text : get()->getTexts())
         {
-            auto *assignee = GObject::assign(child);
+            auto *assignee = new GText(text);
             scene()->addItem(assignee);
             assignee->setParentItem(this);
-            if (!dynamic_cast<Text*>(child))
-                assignee->setFlags({});
         }
-        return value;
+        // Add terminals
+        for (auto *terminal : get()->getTerminals())
+        {
+            auto *assignee = new GTerminal(terminal);
+            scene()->addItem(assignee);
+            assignee->setParentItem(this);
+            // The terminal is hidden unless the component is hovered
+            assignee->hide();
+        }
     }
-
-    return GCompositeObject::itemChange(change, value);
+    else if (change == ItemSelectedHasChanged)
+    {
+    }
+    return val;
 }

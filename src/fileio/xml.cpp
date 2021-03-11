@@ -17,7 +17,21 @@
         throw std::runtime_error("Unable to open XML file for reading " + filename.toStdString() ); \
     QXmlStreamReader stream(&file)
 
-#define write_xml_file(filename)
+#define if_name(NAME) if (stream.name() == NAME)
+
+#define if_attr(NAME) if (attr.name() == NAME)
+
+#define for_attrs foreach (const auto attr, stream.attributes())
+
+#define parse_children(COMMANDS)  while (!stream.atEnd() \
+    && !(stream.isEndElement() && stream.name() == objectName)) { \
+        stream.readNext(); \
+        if (stream.isStartElement()) { \
+            COMMANDS \
+        } \
+    }
+
+#define PARSE_BEGIN auto objectName = stream.name();
 
 // PROTOTYPES
 CompositeObject *parseCompositeObject(const QString &);
@@ -55,14 +69,11 @@ void xmlConsumeFirstElement(QXmlStreamReader &stream)
 Variable xmlParseVariable(QXmlStreamReader &stream)
 {
     Variable var;
-    foreach (auto attr, stream.attributes())
+    for_attrs
     {
-        if (attr.name() == "names")
-            var.names = attr.value().toString().split(' ');
-        else if (attr.name() == "desc")
-            var.description = attr.value().toString();
-        else if (attr.name() == "value")
-            var.value = attr.value().toString();
+        if_attr("names") var.names = attr.value().toString().split(' ');
+        else if_attr("desc") var.description = attr.value().toString();
+        else if_attr("value") var.value = attr.value().toString();
     }
     stream.skipCurrentElement();
     return var;
@@ -72,7 +83,7 @@ void xmlReadProperties(Object *object, QXmlStreamReader &stream)
 {
     try
     {
-        foreach (const auto &attr, stream.attributes())
+        for_attrs
             object->setProperty(attr.name().toString(), attr.value().toString());
     }
     catch (std::exception &e) { delete object; throw; }
@@ -105,18 +116,14 @@ Object *xmlParseObject(const QString &filename)
 CompositeObject *xmlParseCompositeObject(const QString &filename)
 {
     read_xml_file(filename);
-
     xmlConsumeFirstElement(stream);
-
     return xmlParseCompositeObject(stream);
 }
 
 CompositeObject *xmlParseFromDxf(const QString &filename)
 {
     read_xml_file(filename);
-
     xmlConsumeFirstElement(stream);
-
     return xmlParseFromDxf(stream);
 }
 
@@ -145,9 +152,8 @@ QString xmlPeekName(const QString &filename)
         stream.readNext();
         if (stream.isStartElement())
         {
-            foreach (const auto &attr, stream.attributes())
-                if (attr.name() == "name")
-                    return attr.value().toString();
+            for_attrs
+                if_attr("name") return attr.value().toString();
         }
     }
     return "";
@@ -167,11 +173,9 @@ Project *xmlParseProject(const QString &filename)
     try
     {
         // Parse the root tag attributes
-        foreach (const auto &attr, stream.attributes())
+        for_attrs
         {
-            QString name = attr.name().toString();
-            if (name == "title")
-                project->setName(attr.value().toString());
+            if_attr("title") project->setName(attr.value().toString());
         }
         // Parse contents
         while (!stream.atEnd())
@@ -179,11 +183,9 @@ Project *xmlParseProject(const QString &filename)
             stream.readNext();
             if (stream.isStartElement())
             {
-                if (stream.name() == "sheet")
-                    project->addSheet(xmlParseSheet(stream));
-                else
-                    throw std::logic_error(std::string("Unrecognized tag: ")
-                                           + stream.name().toString().toStdString());
+                if_name("sheet") project->addSheet(xmlParseSheet(stream));
+                else throw std::logic_error(std::string("Unrecognized tag: ")
+                            + stream.name().toString().toStdString());
             }
         }
     }
@@ -203,7 +205,7 @@ void xmlWriteProject(Project *project, const QString &filename)
         throw std::runtime_error("Unable to open XML file for writing: " + filename.toStdString());
     QXmlStreamWriter stream(&file);
     stream.setAutoFormatting(true);
-    stream.setAutoFormattingIndent(4); // consider changing this to tabs
+    stream.setAutoFormattingIndent(2); // consider changing this to tabs
 
     stream.writeStartElement("project");
     stream.writeAttribute("title", project->getName());
@@ -216,31 +218,20 @@ void xmlWriteProject(Project *project, const QString &filename)
 
 Sheet *xmlParseSheet(QXmlStreamReader &stream)
 {
+    PARSE_BEGIN
     Sheet *sheet = new Sheet;
 
     try {
-        // Parse the attributes
-        foreach (const auto &attr, stream.attributes())
-        {
+        for_attrs {
             QString name = attr.name().toString();
             if (name == "title")
                 sheet->setName(attr.value().toString());
         }
-
-        // Parse children
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "sheet"))
-        {
-            stream.readNext();
-            if (stream.isStartElement())
-            {
-                if (stream.name() == "header")
-                    sheet->setHeader(xmlParseHeader(stream));
-                else if (stream.name() == "var")
-                    sheet->addVariable(xmlParseVariable(stream));
-                else
-                    sheet->addObject(xmlParseObject(stream));
-            }
-        }
+        parse_children (
+            if_name("header") sheet->setHeader(xmlParseHeader(stream));
+            else if_name("var") sheet->addVariable(xmlParseVariable(stream));
+            else sheet->addObject(xmlParseObject(stream));
+        )
 
     }
     catch (...)
@@ -272,27 +263,16 @@ Object *xmlParseObject(QXmlStreamReader &stream)
 {
     Object *object = nullptr;
 
-    if (stream.name() == "line")
-        object = xmlParseLine(stream);
-    else if (stream.name() == "rect")
-        object = xmlParseRect(stream);
-    else if (stream.name() == "text")
-        object = xmlParseText(stream);
-    else if (stream.name() == "header")
-        object = xmlParseHeader(stream);
-    else if (stream.name() == "component")
-        object = xmlParseComponent(stream);
-    else if (stream.name() == "linear-array")
-        object = xmlParseLinearObjectArray(stream);
+    if_name("line") object = xmlParseLine(stream);
+    else if_name("rect") object = xmlParseRect(stream);
+    else if_name("text") object = xmlParseText(stream);
+    else if_name("terminal") object = xmlParseTerminal(stream);
+    else if_name("header") object = xmlParseHeader(stream);
+    else if_name("component") object = xmlParseComponent(stream);
+    else if_name("linear-array") object = xmlParseLinearObjectArray(stream);
     else
-        throw std::logic_error("Unknown object type: " + stream.name().toString().toStdString());
-
-    auto objectName = stream.name();
-
-    // TODO maybe the following part can be removed.
-    // Eat up all remaining tokens related to this object
-    while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
-        stream.readNext();
+        throw std::logic_error("Unknown object type: " +
+                               stream.name().toString().toStdString());
 
     return object;
 }
@@ -305,6 +285,7 @@ void xmlWriteObject(Object *obj, QXmlStreamWriter &stream)
     if_cast_write(obj, Line);
     if_cast_write(obj, Rect);
     if_cast_write(obj, Text);
+    if_cast_write(obj, Terminal);
     if_cast_write(obj, Component);
 }
 
@@ -382,16 +363,38 @@ void xmlWriteText(Text *text, QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+Terminal *xmlParseTerminal(QXmlStreamReader &stream)
+{
+    Terminal *terminal = new Terminal;
+    QPointF pos = terminal->getPos(); // default position
+    for_attrs
+    {
+        // TODO exceptions!!
+        if_attr("prongAngles") {
+            for (const auto &val : attr.value().toString().split(','))
+                terminal->addProng(val.toFloat());
+        }
+        else if_attr("x") pos.setX(attr.value().toFloat());
+        else if_attr("y") pos.setY(attr.value().toFloat());
+    }
+    terminal->setPos(pos);
+
+    // TODO implement
+    return terminal;
+}
+
+void xmlWriteTerminal(Terminal *terminal, QXmlStreamWriter &stream)
+{
+    // TODO implement
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 {
+    PARSE_BEGIN
     CompositeObject *obj = nullptr;
-
-    QString objectName = stream.name().toString();
-
-    foreach (auto attr, stream.attributes())
-    {
+    for_attrs {
         if (attr.name() == "from" && obj == nullptr)
         {
             // The content is taken from another file
@@ -405,17 +408,12 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
 
     try
     {
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == objectName))
-        {
-            stream.readNext();
-            if (stream.isStartElement())
-            {
-                if (stream.name() == "var")
-                    obj->addVariable(xmlParseVariable(stream));
-                else
-                    obj->append(xmlParseObject(stream));
-            }
-        }
+        parse_children (
+            if_name("var")
+                obj->addVariable(xmlParseVariable(stream));
+            else
+                obj->add(xmlParseObject(stream));
+        )
     }
     catch (...)
     {
@@ -439,22 +437,19 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
     float dx = 1, dy = 0;
     int count = 1;
     bool conversion_ok = true;
-    foreach (auto attr, stream.attributes())
-    {
-        if (attr.name() == "dx")
-            dx = attr.value().toFloat(&conversion_ok);
-        else if (attr.name() == "dy")
-            dy = attr.value().toFloat(&conversion_ok);
-        else if (attr.name() == "count")
-            count = attr.value().toUInt(&conversion_ok);
+    for_attrs {
+        if_attr("dx") dx = attr.value().toFloat(&conversion_ok);
+        else if_attr("dy") dy = attr.value().toFloat(&conversion_ok);
+        else if_attr("count") count = attr.value().toUInt(&conversion_ok);
         else
-            throw std::logic_error("Unknown attribute for linear object array: " + attr.name().toString().toStdString());
+            throw std::logic_error("Unknown attribute for linear object array: "+ attr.name().toString().toStdString());
         if (!conversion_ok)
             throw std::logic_error("Linear object array attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
     CompositeObject *baseObj = xmlParseCompositeObject(stream);
-    if (baseObj->size() == 1 && dynamic_cast<CompositeObject*>((*baseObj)[0]))
-        baseObj = static_cast<CompositeObject*>((*baseObj)[0]);
+    if (baseObj->getConstituents().size() == 1 &&
+            dynamic_cast<CompositeObject*>(baseObj->getConstituents()[0]))
+        baseObj = static_cast<CompositeObject*>(baseObj->getConstituents()[0]);
 
     return new LinearObjectArray(baseObj, dx, dy, count);
 }
@@ -463,8 +458,9 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
 
 Header *xmlParseHeader(QXmlStreamReader &stream)
 {
+    PARSE_BEGIN
     Header *header = nullptr;
-    foreach (auto attr, stream.attributes())
+    for_attrs
     {
         if (attr.name() == "from" && header == nullptr)
         { // The header content is taken from another file
@@ -478,17 +474,10 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
         header = new Header;
     try
     {
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "header"))
-        {
-            stream.readNext();
-            if (stream.isStartElement())
-            {
-                if (stream.name() == "content-area")
-                    header->setContentArea(*xmlParseRect(stream));
-                else
-                    header->append(xmlParseObject(stream));
-            }
-        }
+        parse_children (
+            if_name("content-area") header->setContentArea(*xmlParseRect(stream));
+            else header->add(xmlParseObject(stream));
+        )
     }
     catch (...)
     {
@@ -508,7 +497,7 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
     if (header->getSourceFile() != "") // The header is associated with a source file
         stream.writeAttribute("from", header->getSourceFile());
     else
-        foreach (auto obj, *header)
+        foreach (auto obj, header->getConstituents())
             xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
@@ -516,29 +505,66 @@ void xmlWriteHeader(Header *header, QXmlStreamWriter &stream)
 
 ///////////////////////////////////////////////////////////////////////////
 
+// Helper functions
+QList<Text*> xmlParseTexts(QXmlStreamReader &stream)
+{
+    PARSE_BEGIN
+    QList<Text*> texts;
+    try
+    {
+        parse_children (
+            if_name("text") texts.append(xmlParseText(stream));
+            else throw std::logic_error(
+                "<texts> tag must contain only <text> elements!");
+        )
+    }
+    catch (std::exception &e) {
+        for (auto *t : texts) delete t;
+    }
+    return texts;
+}
+QList<Terminal*> xmlParseTerminals(QXmlStreamReader &stream)
+{
+    PARSE_BEGIN
+    QList<Terminal*> terminals;
+    try
+    {
+        parse_children (
+            if_name("terminal") terminals.append(xmlParseTerminal(stream));
+            else throw std::logic_error(
+                "<texts> tag must contain only <text> elements!");
+        )
+    }
+    catch (std::exception &e)
+    {
+        for (auto *t : terminals) delete t;
+    }
+    return terminals;
+}
+
 Component *xmlParseComponent(QXmlStreamReader &stream)
 {
+    PARSE_BEGIN
     Component *obj = nullptr;
     QPointF pos;
     bool conversion_ok = true;
-    foreach (auto attr, stream.attributes())
+    for_attrs
     {
-        if (attr.name() == "from")
+        if (attr.name() == "from" && obj == nullptr)
         { // The content is taken from another file
-            if (obj == nullptr)
-            {
-                obj = Component::absorb(parseCompositeObject(resolvePath(attr.value().toString())));
-                obj->setSourceFile(attr.value().toString());
-            }
+            obj = Component::absorb(parseCompositeObject(resolvePath(attr.value().toString())));
+            obj->setSourceFile(attr.value().toString());
         }
-        else if (attr.name() == "x")
-            pos.setX(attr.value().toFloat());
-        else if (attr.name() == "y")
-            pos.setY(attr.value().toFloat());
-        //TODO enable this else
-            //throw std::logic_error("Unknown component attribute");
+        else if_attr("x") pos.setX(attr.value().toFloat());
+        else if_attr("y") pos.setY(attr.value().toFloat());
+        /* Add this; problem is "name" attribute that is valid with xmlPeekName
+        else throw std::logic_error("Unknown component attribute: " +
+                                    attr.name().toString().toStdString());
+                                    */
         if (!conversion_ok)
-            throw std::logic_error("Component attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
+            throw std::logic_error("Component attribute \"" +
+                                   attr.name().toString().toStdString() +
+                                   "\" is of invalid format");
     }
 
     if (obj == nullptr) // The content was not taken from a file
@@ -548,29 +574,22 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
 
     try
     {
-        while (!stream.atEnd() && !(stream.isEndElement() && stream.name() == "component"))
-        {
-            stream.readNext();
-            if (stream.isStartElement())
+        parse_children (
+            if_name("var") obj->addVariable(xmlParseVariable(stream));
+            else if_name("texts") obj->addTexts(xmlParseTexts(stream));
+            else if_name("terminals") obj->addTerminals(xmlParseTerminals(stream));
+            else if_name("dxf")
             {
-                if (stream.name() == "var")
-                    obj->addVariable(xmlParseVariable(stream));
-                else if (stream.name() == "dxf")
-                {
-                    auto *container = xmlParseFromDxf(stream);
-                    obj->append(*container);
-                    container->clear();
-                    delete container;
-                }
-                else
-                    obj->append(xmlParseObject(stream));
+                auto *container = xmlParseFromDxf(stream);
+                obj->add(container->getConstituents());
+                container->getConstituents().clear();
+                delete container;
             }
-        }
+            else
+                obj->add(xmlParseObject(stream));
+        )
     }
-    catch (...)
-    {
-        delete obj; throw;
-    }
+    catch (...) { delete obj; throw; }
 
     return obj;
 }
@@ -582,16 +601,35 @@ void xmlWriteComponent(Component *component, QXmlStreamWriter &stream)
     Component def; // Default component
     QPointF defPos = def.getPos(), pos = component->getPos();
 
+    if (!component->getSourceFile().isNull())
+        stream.writeAttribute("from", component->getSourceFile());
+
     if (pos.x() != defPos.x())
         stream.writeAttribute("x", QString::number(pos.x()));
     if (pos.y() != defPos.y())
         stream.writeAttribute("y", QString::number(pos.y()));
 
+    if (!component->getTexts().isEmpty())
+    {
+        stream.writeStartElement("texts");
+        foreach (auto *text, component->getTexts())
+            xmlWriteText(text, stream);
+        stream.writeEndElement();
+    }
+    if (!component->getTerminals().isEmpty())
+    {
+        stream.writeStartElement("terminals");
+        foreach (auto *terminal, component->getTerminals())
+            xmlWriteTerminal(terminal, stream);
+        stream.writeEndElement();
+    }
+
     foreach (auto var, component->getVariables())
         xmlWriteVariable(var, stream);
 
-    foreach (auto obj, *component)
-        xmlWriteObject(obj, stream);
+    if (component->getSourceFile().isNull())
+        foreach (auto *obj, component->getConstituents())
+            xmlWriteObject(obj, stream);
 
     stream.writeEndElement();
 }

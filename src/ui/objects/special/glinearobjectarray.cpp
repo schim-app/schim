@@ -3,7 +3,7 @@
 GLinearObjectArray::GLinearObjectArray(LinearObjectArray *obj)
     : GCompositeObject(obj)
 {
-    if (get()->empty())
+    if (get()->getConstituents().empty())
         get()->generate();
 }
 
@@ -19,7 +19,7 @@ const LinearObjectArray *GLinearObjectArray::get() const
 
 void GLinearObjectArray::reload()
 {
-    if (get()->empty())
+    if (get()->getConstituents().empty())
         get()->generate();
     GCompositeObject::reload();
 }

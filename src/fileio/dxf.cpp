@@ -9,7 +9,7 @@ DXFFilter::DXFFilter(CompositeObject *obj)
 
 void DXFFilter::addLine(const DL_LineData &d)
 {
-    obj->append(new Line(d.x1, d.y1, d.x2, d.y2));
+    obj->add(new Line(d.x1, d.y1, d.x2, d.y2));
 }
 
 CompositeObject *dxfParseCompositeObject(const QString &filename)

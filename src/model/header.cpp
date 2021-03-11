@@ -7,15 +7,15 @@
 Header::Header(CompositeObject &&obj)
     : Header()
 {
-    append(obj);
-    obj.clear();
+    add(obj.getConstituents());
+    obj.getConstituents().clear();
 }
 
 Header::Header(CompositeObject *obj)
     : Header()
 {
-    append(*obj);
-    obj->clear();
+    add(obj->getConstituents());
+    obj->getConstituents().clear();
     delete obj; //TODO maybe not do this here
 }
 

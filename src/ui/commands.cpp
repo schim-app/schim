@@ -3,7 +3,7 @@
 #include <algorithm>
 
 CmdInsertObject::CmdInsertObject(GObject *obj, SheetScene *scene, GCompositeObject *parent)
-    : obj(obj), scene(scene), parent(parent) { }
+    : obj(obj), parent(parent), scene(scene) { }
 
 CmdInsertObject::~CmdInsertObject()
 {
@@ -22,7 +22,7 @@ void CmdInsertObject::redo()
     if (parent)
     {
         obj->setParentItem(parent);
-        parent->get()->append(obj->get());
+        parent->get()->add(obj->get());
     }
     else
     {
@@ -58,7 +58,7 @@ void CmdDeleteSelection::undo()
         if (parentList[i] == nullptr)
             scene->getSheet()->addObject(modelObject);
         else
-            parentList[i]->get()->append(modelObject);
+            parentList[i]->get()->add(modelObject);
         scene->addItem(list[i]);
     }
 }
@@ -69,7 +69,7 @@ void CmdDeleteSelection::redo()
     {
         auto *modelObject = static_cast<GObject*>(item)->get();
         if (item->parentItem())
-            static_cast<GObject*>(item)->parentItem()->get()->removeAll(modelObject);
+            static_cast<GObject*>(item)->parentItem()->get()->remove(modelObject);
         else
             scene->getSheet()->getObjects().removeAll(modelObject);
         scene->removeItem(item);
@@ -97,14 +97,10 @@ CmdChangeHeader::~CmdChangeHeader()
 
 void CmdChangeHeader::undo()
 {
-    //if (newHeader != nullptr)
-        //newHeader = newHeader->clone();
     scene->setHeader(oldHeader, false); // newHeader will be automatically deleted
 }
 
 void CmdChangeHeader::redo()
 {
-    //if (oldHeader != nullptr)
-        //oldHeader = oldHeader->clone();
     scene->setHeader(newHeader, false);
 }

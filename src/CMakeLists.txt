@@ -49,6 +49,7 @@ add_executable(schim
     model/special/linearobjectarray.cpp 
     model/text.cpp 
     model/variable.cpp 
+    model/terminal.cpp
     ui/commands.cpp 
     ui/mainwindow.cpp 
     ui/vim.cpp
@@ -59,6 +60,7 @@ add_executable(schim
     ui/objects/gobject.cpp 
     ui/objects/grect.cpp 
     ui/objects/gtext.cpp 
+    ui/objects/gterminal.cpp
     ui/objects/special/glinearobjectarray.cpp 
     ui/operations.cpp 
     ui/sheetscene.cpp 

@@ -1,6 +1,9 @@
 #include <QApplication>
 #include <list>
 
+#include <model/component.h>
+#include <model/line.h>
+
 #include "global.h"
 #include "ui/mainwindow.h"
 #include "cli/cli_common.h"

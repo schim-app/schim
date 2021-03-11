@@ -167,10 +167,8 @@ protected:
     Object *obj;
     /// Dynamically allocated list of handles.
     QList<GObjectHandle*> *handles{};
+    // TODO Squeeze into one flag variable
     bool cosmetic = false;
-
-private:
-    // PRIVATE ATTRIBUTES
     bool hovered = false;
 
     // FRIENDS
@@ -222,7 +220,6 @@ protected:
 private:
     // ATTRIBUTES
     GObject *obj;
-    bool selected = false;
     QPointF _dragStartPos;
 };
 

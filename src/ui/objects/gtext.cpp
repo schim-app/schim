@@ -4,6 +4,8 @@
 #include "ui/mainwindow.h"
 #include "global.h"
 
+#include "ui/objects/gcompositeobject.h"
+
 #include <QGraphicsSceneEvent>
 #include <QTextCursor>
 #include <QKeyEvent>
@@ -12,6 +14,10 @@
 #include <QFont>
 #include <QMenu>
 #include <QTextDocument>
+
+#include <iostream>
+
+// CONSTRUCTORS
 
 GText::GText(Text *obj)
     : GObject(obj)
@@ -42,6 +48,11 @@ const Text *GText::get() const
     return (Text*) obj;
 }
 
+bool GText::isInEditMode() const
+{
+    return displayItem->textInteractionFlags() & Qt::TextEditorInteraction;
+}
+
 SheetScene *GText::scene()
 {
     return GObject::scene();
@@ -61,8 +72,10 @@ QRectF GText::boundingRect() const
 
 void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (isSelected() || isHovered() || editMode)
-    {
+    if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
+            (isSelected() || parentItem()->isSelected() || isHovered() ||
+            parentItem()->isHovered() || isInEditMode()))
+    { // Draw the "selected" border around the text
         QPen pen(qApp->palette().color(QPalette::Text), dpiInvariant(1), Qt::DashLine);
         pen.setCosmetic(true);
         painter->setPen(pen);
@@ -99,7 +112,7 @@ void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (!editMode && event->buttons() == Qt::LeftButton)
+    if (!isInEditMode() && event->buttons() == Qt::LeftButton)
     {
         scene()->showGuides(false);
         setEditMode(true);
@@ -109,14 +122,14 @@ void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void GText::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (editMode)
+    if (isInEditMode())
         scene()->showGuides(false);
     GObject::hoverEnterEvent(event);
 }
 
 void GText::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (editMode)
+    if (isInEditMode())
         scene()->showGuides(true);
     GObject::hoverLeaveEvent(event);
 }
@@ -127,7 +140,7 @@ void GText::timerEvent(QTimerEvent *event)
     GObject::timerEvent(event);
 }
 
-// FOR EDITING THE OBJECT
+// OBJECT EDITING
 
 void GText::reload()
 {
@@ -148,7 +161,7 @@ void GText::reload()
 void GText::apply()
 {
     get()->setPos(GObject::pos());
-    if (editMode)
+    if (isInEditMode())
         get()->setText(displayItem->toPlainText());
 }
 
@@ -164,7 +177,6 @@ void GText::showContextMenu()
 void GText::setEditMode(bool edit)
 {
     static int timerId = -1;
-    editMode = displayItem->editMode = edit;
     if (edit)
     {
         displayItem->setPlainText(get()->getText());
@@ -211,15 +223,12 @@ void GText::onFocusOut()
     emit focusOut();
 }
 
-/****************
- * GDisplayText *
- ****************/
+/*** GDisplayText **************************************************************/
 
 // EVENTS
 
 void GDisplayText::focusOutEvent(QFocusEvent *event)
 {
-    editMode = false;
     emit focusOut();
     QGraphicsTextItem::focusOutEvent(event);
 }
@@ -227,7 +236,7 @@ void GDisplayText::focusOutEvent(QFocusEvent *event)
 void GDisplayText::keyPressEvent(QKeyEvent *event)
 {
     // Enter finalizes the edit, while SHIFT+Enter inserts a new line
-    if (editMode && event->key() == Qt::Key_Return)
+    if (parentItem()->isInEditMode() && event->key() == Qt::Key_Return)
     {
         if (event->modifiers() == 0)
         {
@@ -246,6 +255,17 @@ void GDisplayText::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     QStyleOptionGraphicsItem tweak(*option);
     // Remove the border so we can draw a custom one in GText
     tweak.state &= ~QStyle::State_HasFocus;
+    auto *higherParent = parentItem()->parentItem();
+
+    setDefaultTextColor(qApp->palette().color(QPalette::Text));
+    if (!higherParent || parentItem()->isInEditMode())
+        return QGraphicsTextItem::paint(painter, &tweak, widget);
+    else if (parentItem()->isSelected() || higherParent->isSelected())
+        setDefaultTextColor(qApp->palette().color(QPalette::Highlight));
+    else if (higherParent && higherParent->isHovered())
+        // TODO the color source may be a little stupid, but it looks reasonably nice
+        setDefaultTextColor(qApp->palette().color(QPalette::LinkVisited));
+
     QGraphicsTextItem::paint(painter, &tweak, widget);
 }
 

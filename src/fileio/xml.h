@@ -52,6 +52,10 @@ void xmlWriteRect(Rect *rect, QXmlStreamWriter &stream);
 Text *xmlParseText(QXmlStreamReader &stream);
 void xmlWriteText(Text *text, QXmlStreamWriter &stream);
 
+/// Parse a terminal object
+Terminal *xmlParseTerminal(QXmlStreamReader &stream);
+void xmlWriteTerminal(Terminal *terminal, QXmlStreamWriter &stream);
+
 /// Parse a custom object
 CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream);
 CompositeObject *xmlParseFromDxf(QXmlStreamReader &stream);

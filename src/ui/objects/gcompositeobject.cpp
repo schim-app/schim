@@ -4,6 +4,8 @@
 
 #include "model/text.h"
 
+#include <iostream>
+
 // CONSTRUCTORS
 
 GCompositeObject::GCompositeObject(CompositeObject *obj)
@@ -60,7 +62,7 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
     // When the object is added to a scene, add all its children as well and
     // set their parent to this
     if (change == ItemSceneHasChanged && scene() != nullptr)
-        for (auto *child : *get())
+        for (auto *child : get()->getConstituents())
         {
             auto *assignee = GObject::assign(child);
             scene()->addItem(assignee);
