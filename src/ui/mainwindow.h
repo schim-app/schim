@@ -48,6 +48,7 @@ public:
      */
     Sheet *getSheet(int index = -1);
     bool isOpen(Sheet *sheet);
+    ProjectModel *getProjectModel();
 
     // SETTERS
     void setTabId(int id);
@@ -80,7 +81,7 @@ public:
     void takeScreenshot();
     void toggleDeveloperHints();
     void openProjectsFromFiles(const QStringList &filenames, int active = -1);
-    void openSheet(Sheet *sheet, int index = -1);
+    int openSheet(Sheet *sheet, int index = -1);
     void closeSheet(Sheet *sheet);
     void closeProject(Project *project);
     void closeSheetsForProject(Project *project);

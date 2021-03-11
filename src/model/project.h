@@ -4,6 +4,7 @@
 #include "sheet.h"
 
 #include <QList>
+#include <QMap>
 #include <QString>
 
 /**
@@ -22,12 +23,14 @@ public:
     ~Project();
 
     // GETTERS
+    QString getProperty(const QString name);
     VariableSet &getVariables();
     VariableSet getVariables() const;
     QList<Sheet *> &getSheets();
     QList<Sheet *> getSheets() const;
 
     // SETTERS
+    void setProperty(const QString &name, const QString &value);
     void addSheet(Sheet *sheet, int index=-1);
     void removeSheet(Sheet *sheet);
 
@@ -39,6 +42,17 @@ private:
     // ATTRIBUTES
     VariableSet variables;
     QList<Sheet *> sheets;
+    /**
+     * Contains all textual project properties, except for the name -- the name
+     * is contained inside the base class `Entity`
+     */
+    // TODO provide better integration with variables
+    QMap<QString, QString> properties {
+        {"author", ""},
+        {"number", ""},
+        {"revision", ""},
+        {"standard", ""},
+    };
 };
 
 #endif // PROJECT_H

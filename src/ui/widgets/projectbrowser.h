@@ -22,6 +22,7 @@ public:
     QList<Project*> &getProjects();
     Project* getActiveProject() const;
     QModelIndex getIndex(Entity *entity) const;
+    bool isEmpty() const;
 
     // SETTERS
     void setActiveProject(Project *project);

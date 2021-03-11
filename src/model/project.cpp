@@ -17,6 +17,17 @@ Project::~Project()
     qDeleteAll(getSheets());
 }
 
+QString Project::getProperty(const QString name)
+{
+    if (properties.contains(name))
+        return properties[name];
+    else if (name == "name")
+        return getName();
+    else
+        std::logic_error("Project has no such property: " + name.toStdString());
+    return {};
+}
+
 // GETTERS
 
 VariableSet &Project::getVariables()
@@ -37,6 +48,16 @@ QList<Sheet *> &Project::getSheets()
 QList<Sheet *> Project::getSheets() const
 {
     return sheets;
+}
+
+void Project::setProperty(const QString &name, const QString &value)
+{
+    if (properties.contains(name))
+        properties[name] = value;
+    else if (name == "name")
+        setName(value);
+    else
+        std::logic_error("Project has no such property: " + name.toStdString());
 }
 
 // SETTERS

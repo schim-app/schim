@@ -39,10 +39,11 @@ void ProjectBrowser::mouseDoubleClickEvent(QMouseEvent *event)
         else
         {
             Sheet *sheet = (Sheet*) index.internalPointer();
-            if (!MainWindow::getInstance()->isOpen(sheet) &&
-                    model()->getActiveProject() == sheet->getProject())
-                // Sheet belongs to the active project and is not already open
-                MainWindow::getInstance()->openSheet(sheet);
+            if (model()->getActiveProject() == sheet->getProject())
+            { // Sheet belongs to the active project and is not already open
+                int id = MainWindow::getInstance()->openSheet(sheet);
+                MainWindow::getInstance()->getTabWidget()->setCurrentIndex(id);
+            }
         }
     }
     else
@@ -165,6 +166,11 @@ QModelIndex ProjectModel::getIndex(Entity *entity) const
     }
     else
         return {};
+}
+
+bool ProjectModel::isEmpty() const
+{
+    return rowCount({}) == 0;
 }
 
 // SETTERS

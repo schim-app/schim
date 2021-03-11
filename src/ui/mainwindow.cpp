@@ -56,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Override tab close requests for proper cleanup
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested,
             this, &MainWindow::onTabCloseRequested);
+
+    setFocus();
 }
 
 MainWindow::~MainWindow()
@@ -107,6 +109,11 @@ bool MainWindow::isOpen(Sheet *sheet)
         if (getSheet(i) == sheet)
             return true;
     return false;
+}
+
+ProjectModel *MainWindow::getProjectModel()
+{
+    return projects;
 }
 
 // SETTERS
@@ -363,7 +370,8 @@ void MainWindow::saveAs()
 
 void MainWindow::projectSettings()
 {
-    ProjectSettings(projects->getActiveProject()).exec();
+    if (!projects->isEmpty())
+        ProjectSettings().exec();
 }
 
 void MainWindow::print()
@@ -617,13 +625,13 @@ void MainWindow::openProjectsFromFiles(const QStringList &filenames, int active)
                 projects->getIndex(projects->getActiveProject()));
 }
 
-void MainWindow::openSheet(Sheet *sheet, int index)
+int MainWindow::openSheet(Sheet *sheet, int index)
 {
     for (int i = 0; i < ui->tabWidget->count(); ++i)
     {
         auto *tab = (SheetView*) ui->tabWidget->widget(i);
         if (tab->scene()->getSheet() == sheet)
-            return;
+            return i;
     }
     auto *newTab = new SheetView(sheet, ui->tabWidget);
     QString name = sheet->getName();
@@ -635,6 +643,7 @@ void MainWindow::openSheet(Sheet *sheet, int index)
     // A tooltip over the central widget is only useful before the user opens
     // any sheets
     ui->centralwidget->setToolTip("");
+    return index != -1 ? index : getTabWidget()->count() - 1;
 }
 
 void MainWindow::closeSheet(Sheet *sheet)
