@@ -7,7 +7,7 @@
 /**
  * @brief Base class for entities.
  *
- * An entity is any class that has some metadata associated with them. Metadata
+ * An entity is any class that has some metadata associated with it. Metadata
  * can be a name, annotative properties and variables. Currently, the only
  * entities in Schim are `Project`, `Sheet`, `CompositeObject` and any of their
  * subclasses.

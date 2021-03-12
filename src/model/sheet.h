@@ -11,8 +11,7 @@ class Project;
  * @brief This class models a sheet of paper.
  *
  * This class should always take care of the destruction of the objects it
- * contains. It inherits QList<Object*> so that we don't have to reimplement
- * convenience functions that QList already provides.
+ * contains.
  */
 class Sheet : public Entity
 {

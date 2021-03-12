@@ -24,16 +24,20 @@ public:
 
     // GETTERS
     QString getProperty(const QString name);
-    VariableSet &getVariables();
-    VariableSet getVariables() const;
     QList<Sheet *> &getSheets();
     QList<Sheet *> getSheets() const;
+    /**
+     * @brief A project is an entity that has no parent.
+     */
     virtual Entity *getParent() const = delete;
 
     // SETTERS
     void setProperty(const QString &name, const QString &value);
     void addSheet(Sheet *sheet, int index=-1);
     void removeSheet(Sheet *sheet);
+    /**
+     * @brief A project is an entity that has no parent.
+     */
     virtual void setParent() const = delete;
 
     // MISCELLANEOUS

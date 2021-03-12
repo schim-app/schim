@@ -162,7 +162,6 @@ void SheetScene::cursorLeft(Vim::N n)
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(rawCursorPos - QPointF{n * gridX, 0}))
                 );
-    emit cursorMoved();
 }
 
 void SheetScene::cursorDown(Vim::N n)
@@ -170,7 +169,6 @@ void SheetScene::cursorDown(Vim::N n)
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(rawCursorPos + QPointF{0, n * gridY}))
                 );
-    emit cursorMoved();
 }
 
 void SheetScene::cursorUp(Vim::N n)
@@ -178,7 +176,6 @@ void SheetScene::cursorUp(Vim::N n)
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(rawCursorPos - QPointF{0, n * gridY}))
                 );
-    emit cursorMoved();
 }
 
 void SheetScene::cursorRight(Vim::N n)
@@ -186,7 +183,6 @@ void SheetScene::cursorRight(Vim::N n)
     applyCursorMovement(
                 constrainToContentArea(forcedSnap(rawCursorPos + QPointF{n * gridX, 0}))
                 );
-    emit cursorMoved();
 }
 
 void SheetScene::gridIncrease(Vim::N n)
@@ -203,10 +199,11 @@ void SheetScene::gridDecrease(Vim::N n)
 
 void SheetScene::startOperation(SceneOperation *op)
 {
-    if (operation)
+    if (operation) // Cancel any previous operation
         operation->cancel();
-    operation = op;
-    connect(operation, &SceneOperation::finished, this, &SheetScene::onOperationFinished);
+    operation = op; // Store the pointer
+    connect(operation, &SceneOperation::finished,
+            this, &SheetScene::onOperationFinished);
 }
 
 void SheetScene::selectTexts()
@@ -263,15 +260,6 @@ QPointF SheetScene::forcedSnap(const QPointF &pt) const
 void SheetScene::showGuides(bool show)
 {
     showCursorGuides = show;
-}
-
-bool SheetScene::askHeaderChangeConfirmation() const
-{
-    if (sheet->getHeader() == nullptr ||
-            sheet->getHeader()->getFileName() == "")
-        return QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
-                == QMessageBox::Yes;
-    return true;
 }
 
 void SheetScene::tryChangeHeader(Header *hdr, bool *changed, bool *confirmed)
@@ -347,6 +335,15 @@ void SheetScene::insertComponentOrHeader(Object *obj)
         tryChangeHeader(hdr);
     else // Start scene operation
         startOperation(new OpInsertComponent(this, obj->clone()));
+}
+
+bool SheetScene::askHeaderChangeConfirmation() const
+{
+    if (sheet->getHeader() == nullptr ||
+            sheet->getHeader()->getFileName() == "")
+        return QMessageBox::question(nullptr, "Confirmation", "The local header will be deleted. Proceed?")
+                == QMessageBox::Yes;
+    return true;
 }
 
 // Local helpers

@@ -29,12 +29,28 @@ public:
     SceneOperation(SheetScene *scene);
     virtual ~SceneOperation();
 
+    /**
+     * @brief Process a mousePressEvent.
+     * The base implementation does nothing.
+     */
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    /**
+     * @brief Process a mouseMoveEvent.
+     * The base implementation does nothing.
+     */
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    /**
+     * @brief Process a mouseReleaseEvent.
+     * The base implementation does nothing.
+     */
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    /**
+     * @brief Process a keyPressEvent.
+     * The base implementation does nothing.
+     */
     virtual void keyPressEvent(QKeyEvent *event);
     /**
-     * @brief Call this to cancel the operation.
+     * @brief Cancel the operation.
      *
      * This will delete any dangling objects and remove them from the scene.
      * The `finished` signal will be emitted.
@@ -53,6 +69,9 @@ protected:
     int state = 0;
 };
 
+/**
+ * @brief A scene operation that is triggered when the user inserts a line.
+ */
 class OpInsertLine : public SceneOperation
 {
 public:
@@ -66,6 +85,9 @@ private:
     GLine *object() const;
 };
 
+/**
+ * @brief A scene operation that is triggered when the user inserts a rectangle.
+ */
 class OpInsertRect : public SceneOperation
 {
 public:
@@ -77,6 +99,9 @@ public:
     GRect *object() const;
 };
 
+/**
+ * @brief A scene operation that is triggered when the user inserts a text.
+ */
 class OpInsertText : public SceneOperation
 {
     Q_OBJECT
@@ -89,6 +114,9 @@ public:
     GText *object() const;
 };
 
+/**
+ * @brief A scene operation that is triggered when the user inserts a component.
+ */
 class OpInsertComponent : public SceneOperation
 {
 public:

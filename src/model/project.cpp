@@ -10,6 +10,7 @@ Project::Project()
 Project::Project(const QList<Sheet *> &sheets)
     : Project()
 {
+    this->sheets = sheets;
 }
 
 Project::~Project()
@@ -29,16 +30,6 @@ QString Project::getProperty(const QString name)
 }
 
 // GETTERS
-
-VariableSet &Project::getVariables()
-{
-    return variables;
-}
-
-VariableSet Project::getVariables() const
-{
-    return variables;
-}
 
 QList<Sheet *> &Project::getSheets()
 {

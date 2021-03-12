@@ -97,6 +97,12 @@ public:
     void cursorRight(Vim::N n = 0);
     void gridIncrease(Vim::N n = 0);
     void gridDecrease(Vim::N n = 0);
+    /**
+     * @brief Start a scene operation.
+     *
+     * The scene takes ownership of `op`, which must be dynamically allocated.
+     * Any active operations will be canceled.
+     */
     void startOperation(SceneOperation *op);
     void selectTexts();
     void selectPrimitive();
@@ -105,7 +111,6 @@ public:
     void insertText();
     void suggestConnections(GComponent *component);
     void showGuides(bool show);
-    bool askHeaderChangeConfirmation() const;
     /**
      * @brief Try to set the sheet header to `hdr` and update the scene.
      *
@@ -127,7 +132,7 @@ public:
     void reload();
 
 signals:
-    void cursorMoved();
+    void itemMoveRequested();
 
 private slots:
     void onSelectionChanged();
@@ -137,6 +142,7 @@ private:
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
     void insertComponentOrHeader(Object *obj);
+    bool askHeaderChangeConfirmation() const;
     QList<QPair<Terminal::Prong, Terminal::Prong>>
         getConnectionSuggestions(GComponent *component);
     void registerConnectionSuggestion(Terminal::Prong a, Terminal::Prong b);

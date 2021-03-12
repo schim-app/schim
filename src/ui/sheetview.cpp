@@ -30,8 +30,6 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     recalculateBaseZoom();
     updateBackground();
 
-    connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorMoved);
-
     setWhatsThis("This is a sheet of paper where you draw your schematics.");
     setStatusTip("class SheetView in src/ui/sheetview.h");
 }
