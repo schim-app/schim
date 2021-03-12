@@ -15,11 +15,6 @@ ProjectBrowser::ProjectBrowser(QWidget *parent)
 {
 }
 
-ProjectBrowser::~ProjectBrowser()
-{
-    delete model();
-}
-
 ProjectModel *ProjectBrowser::model()
 {
     return (ProjectModel*) QTreeView::model();
@@ -193,7 +188,7 @@ void ProjectModel::setActiveProject(Project *project)
 
 void ProjectModel::addProject(Project *project)
 {
-    for (const auto *proj : projects)
+    for (auto *proj : projects)
         if (proj->getFileName() != "" && resolveAbsPath(proj->getFileName())
                 == resolveAbsPath(project->getFileName()))
             return;

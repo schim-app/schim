@@ -88,3 +88,20 @@ QList<Sheet *>::iterator Project::end()
 {
     return sheets.end();
 }
+
+Project &Project::operator=(Project &&project)
+{
+    // Clear all sheets
+    qDeleteAll(sheets);
+    sheets.clear();
+    // Copy properties
+    for (const auto prop : {"name", "author", "number", "revision", "standard"})
+        setProperty(prop, project.getProperty(prop));
+    // Copy variables
+    variables = project.variables;
+    // Copy sheets
+    sheets.append(project.sheets);
+    // Drain the source project
+    project.getSheets().clear();
+    return *this;
+}

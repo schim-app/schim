@@ -40,6 +40,9 @@ public:
     QList<Sheet *>::iterator begin();
     QList<Sheet *>::iterator end();
 
+    // OPERATORS
+    Project &operator=(Project &&project);
+
 private:
     // ATTRIBUTES
     VariableSet variables;

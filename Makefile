@@ -54,11 +54,11 @@ app:# qthelp
 		mv schim dest/bin/
 	@# Create launcher and copy resources
 	@echo -e "Copying resources to destination..."
-	@cp misc/schim.sh "${BUILD_DIR}/"
-	@cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"		# Icon
+	@cp misc/schim.sh "${BUILD_DIR}/"										 # Launch script
+	@cp res/img/icon.svg "${BUILD_DIR}/dest/${ICON_DIR}/apps/schim.svg"		 # Icon
 	@cp res/img/actions/*.svg "${BUILD_DIR}/dest/${SCHIM_ICON_DIR}/actions/" # Action icons
-	@cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"					# Symbols
-	@cp res/ATTRIBUTION.md "${BUILD_DIR}/dest/${DOC_DIR}/"					# ATTRIBUTION.md
+	@cp -r res/symb/* "${BUILD_DIR}/dest/${SHARE_DIR}/symb/"				 # Symbols
+	@cp res/ATTRIBUTION.md "${BUILD_DIR}/dest/${DOC_DIR}/"					 # ATTRIBUTION.md
 ifeq (${OS},Windows_NT)
 	@echo "Bundling required libraries..."
 	windeployqt "${BUILD_DIR}"/dest/bin/schim.exe

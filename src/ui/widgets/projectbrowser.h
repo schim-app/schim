@@ -51,7 +51,6 @@ class ProjectBrowser : public QTreeView
     Q_OBJECT
 public:
     explicit ProjectBrowser(QWidget *parent = nullptr);
-    ~ProjectBrowser();
 
     ProjectModel *model();
 

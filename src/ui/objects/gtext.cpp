@@ -61,7 +61,7 @@ void GText::reloadFromModel()
     if (get()->getFont() != "")
         font.fromString(get()->getFont());
     else
-        font = QApplication::font();
+        font = qApp->font();
 
     if (get()->getTextHeight() != -1)
         font.setPixelSize(get()->getTextHeight());

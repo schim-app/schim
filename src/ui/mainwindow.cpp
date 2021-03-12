@@ -327,7 +327,7 @@ void MainWindow::save()
 {
     if (projects->getActiveProject() == nullptr) return;
 
-    if (projects->getActiveProject()->getName() == "")
+    if (projects->getActiveProject()->getFileName() == "")
     {
         saveAs();
         return;

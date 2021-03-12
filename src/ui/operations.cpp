@@ -23,7 +23,8 @@ void SceneOperation::cancel()
 {
     if (obj)
     {
-        scene->removeItem(obj);
+        if (obj->scene())
+            scene->removeItem(obj);
         delete obj->get();
         delete obj;
     }
@@ -50,8 +51,7 @@ void OpInsertLine::mousePressEvent(QGraphicsSceneMouseEvent *event)
         { // Insertion of second point
             object()->get()->setP2(pos); // Set model properties
             obj->reloadFromModel();
-            // Remove the object from the scene - it will be added again via command
-            scene->removeItem(obj);
+            scene->removeItem(obj); // Remove from scene to add it via command
             // Register the insertion as a command
             scene->command(new CmdInsertObject(obj, scene));
             emit finished();
@@ -67,6 +67,7 @@ void OpInsertLine::mouseMoveEvent(QGraphicsSceneMouseEvent *)
         // The line is updated in real time
         object()->get()->setP2(scene->getSnappedCursorPos());
         obj->reloadFromModel();
+        // TODO performance??
         scene->update(object()->boundingRect().translated(object()->scenePos()));
     }
 }
@@ -84,18 +85,21 @@ void OpInsertRect::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         auto pos = scene->getSnappedCursorPos();
         if (state == 0)
-        {
-            obj = new GRect;
+        { // Inserting the first corner
+            obj = new GRect; // Create the object
+            // Set model properties
             object()->get()->setRect(pos.x(), pos.y(), 0, 0);
             obj->reloadFromModel();
-            scene->addItem(obj);
+            scene->addItem(obj); // Add to scene
             ++state;
         }
         else if (state == 1)
-        {
+        { // Inserting the other corner
+            // Set model properties
             object()->get()->setBottomRight(pos);
             obj->reloadFromModel();
-            scene->removeItem(obj);
+            scene->removeItem(obj); // Remove from scene to add it via command
+            // Register the insertion as a command
             scene->command(new CmdInsertObject(obj, scene));
             state = 2;
             emit finished();
@@ -107,9 +111,11 @@ void OpInsertRect::mouseMoveEvent(QGraphicsSceneMouseEvent *)
 {
     scene->setSnapCursorGuides(true);
     if (state == 1)
-    {
+    { // The first point has been placed; waiting for second point
+        // The rect is updated in real time
         object()->get()->setBottomRight(scene->getSnappedCursorPos());
         obj->reloadFromModel();
+        // TODO performance??
         scene->update();
     }
 }
@@ -124,7 +130,7 @@ GRect *OpInsertRect::object() const
 OpInsertText::OpInsertText(SheetScene *scene, GText *text)
     : SceneOperation(scene)
 {
-    this->obj = text;
+    this->obj = (text != nullptr ? text : new GText);
 }
 
 void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -132,20 +138,8 @@ void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->buttons() == Qt::LeftButton && state == 0)
     {
         auto pos = scene->getSnappedCursorPos();
-        if (obj == nullptr)
-            obj = new GText;
-        // We are doing this so it displays variables correctly
-
-        /* TODO determine what to do
-        obj->get()->setParent(scene->getSheet());
-        obj->get()->setParent(obj->parentItem()->get());
-        */
-        // Position the object relative to its parent (if it has one)
-        if (obj->parentItem() == nullptr)
-            obj->get()->setPos(pos);
-        else
-            obj->get()->setPos(obj->parentItem()->mapFromScene(pos));
-        obj->reloadFromModel(); // Update the object visually
+        // Set the position of the text item
+        obj->setPos(obj->mapFromScene(pos));
         if (!obj->parentItem()) // Add it to the scene if it is parent-less
             scene->addItem(obj);
         object()->setEditMode(true); // Initiate edit mode
@@ -165,9 +159,9 @@ void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 obj->deleteLater();
             }
             else
+                // Register the insertion as a command
                 scene->command(new CmdInsertObject(obj, scene, obj->parentItem()));
         });
-        state = 1;
         emit finished(); // Notify interested parties the operation is done.
     }
 }
