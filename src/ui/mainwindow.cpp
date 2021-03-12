@@ -22,9 +22,8 @@
 #include <QGraphicsItem>
 #include <QSvgRenderer>
 #include <QPainter>
-
-// TODO rm
 #include <QSvgGenerator>
+
 #include <iostream>
 
 MainWindow* MainWindow::instance{};

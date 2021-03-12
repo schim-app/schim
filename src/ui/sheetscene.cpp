@@ -58,9 +58,14 @@ const Sheet *SheetScene::getSheet() const
     return sheet;
 }
 
+QPointF SheetScene::getRawCursorPos() const
+{
+    return rawCursorPos;
+}
+
 QPointF SheetScene::getCursorPos() const
 {
-    return cursorPos;
+    return rawCursorPos;
 }
 
 QPointF SheetScene::getSnappedCursorPos() const
@@ -128,7 +133,7 @@ void SheetScene::setGridEnabled(bool enabled)
     gridEnabled = enabled;
 }
 
-void SheetScene::setSnapToGrid(bool snap)
+void SheetScene::setSnapEnabled(bool snap)
 {
     snapEnabled = snap;
 }
@@ -155,7 +160,7 @@ void SheetScene::command(QUndoCommand *command)
 void SheetScene::cursorLeft(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos - QPointF{n * gridX, 0}))
+                constrainToContentArea(forcedSnap(rawCursorPos - QPointF{n * gridX, 0}))
                 );
     emit cursorMoved();
 }
@@ -163,7 +168,7 @@ void SheetScene::cursorLeft(Vim::N n)
 void SheetScene::cursorDown(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos + QPointF{0, n * gridY}))
+                constrainToContentArea(forcedSnap(rawCursorPos + QPointF{0, n * gridY}))
                 );
     emit cursorMoved();
 }
@@ -171,7 +176,7 @@ void SheetScene::cursorDown(Vim::N n)
 void SheetScene::cursorUp(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos - QPointF{0, n * gridY}))
+                constrainToContentArea(forcedSnap(rawCursorPos - QPointF{0, n * gridY}))
                 );
     emit cursorMoved();
 }
@@ -179,7 +184,7 @@ void SheetScene::cursorUp(Vim::N n)
 void SheetScene::cursorRight(Vim::N n)
 {
     applyCursorMovement(
-                constrainToContentArea(forcedSnap(cursorPos + QPointF{n * gridX, 0}))
+                constrainToContentArea(forcedSnap(rawCursorPos + QPointF{n * gridX, 0}))
                 );
     emit cursorMoved();
 }
@@ -447,7 +452,7 @@ void SheetScene::keyPressEvent(QKeyEvent *event)
 
 void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = event->scenePos();
+    rawCursorPos = event->scenePos();
 
     if (operation)
     {
@@ -460,13 +465,13 @@ void SheetScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = event->scenePos();
+    rawCursorPos = event->scenePos();
 
     QGraphicsSceneHoverEvent hoverEvent;
-    hoverEvent.setScenePos(cursorPos);
+    hoverEvent.setScenePos(rawCursorPos);
     if (hoveredItem != nullptr)
     {
-        auto *item = itemAt(cursorPos, {});
+        auto *item = itemAt(rawCursorPos, {});
         // The item can be null when the event is triggered by zooming
         if (item != nullptr && hoveredItem != item->getOldestParent())
         {
@@ -483,7 +488,7 @@ void SheetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    cursorPos = event->scenePos();
+    rawCursorPos = event->scenePos();
     if (operation)
         operation->mouseReleaseEvent(event);
     else
@@ -504,7 +509,7 @@ void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    cursorPos = event->scenePos();
+    rawCursorPos = event->scenePos();
     if (dynamic_cast<ComponentList*>(event->source()))
     { // A component is being dragged in
         auto *componentList = (ComponentList*) event->source();

@@ -13,6 +13,7 @@ class SheetView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    // CONSTRUCTORS
     /**
      * @brief This constructor is only used so that the MainWindow ui can be
      * generated properly.
@@ -26,13 +27,14 @@ public:
     SheetView(Sheet *sheet, QWidget *parent = nullptr);
     ~SheetView();
 
-    // SETTERS
+    // GETTERS
+    SheetScene *scene();
+
+    // USER ACTIONS
     void setZoom(float zoom);
     void resetZoom();
     void zoomIn(float step = 1.2);
     void zoomOut(float step = 1.2);
-
-    // ACTIONS
     void scrollUp(Vim::N n = 0);
     void scrollDown(Vim::N n = 0);
     void scrollLeft(Vim::N n = 0);
@@ -40,9 +42,6 @@ public:
     void showContextMenu();
 public slots:
     void insertPopup();
-
-    // GETTERS
-    SheetScene *scene();
 
     // EVENTS
     void mousePressEvent(QMouseEvent *event) override;
@@ -55,12 +54,8 @@ public slots:
     void resizeEvent(QResizeEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
-private:
-    bool processVimAction(const Vim::Action &action);
-
 private slots:
     // SLOTS
-    void onRubberBandChanged(QRect rect, QPointF, QPointF);
     void onCursorMoved();
     void onInsertionRequested(Object *obj);
 
@@ -70,14 +65,14 @@ private:
 
     // HELPERS
     void init();
-    void recalculateBaselineZoom();
+    void recalculateBaseZoom();
     void processRubberBandDrag(QMouseEvent *event);
     float zoom() const;
     void updateBackground();
     void updateCursorGuides();
+    bool processVimAction(const Vim::Action &action);
 
 private:
-
     // ATTRIBUTES
     /// Used to compensate for different screen sizes
     float baselineZoom = 1, userZoom = 1;
@@ -85,6 +80,7 @@ private:
     InsertCompleter *insertCompleter{};
     /// Helper attributes for event processing
     QPoint _panStartPos, _selectStartPos;
+    /// Used with rubber band dragging
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;
 };
 

@@ -94,7 +94,7 @@ void SheetSettings::on_cbShowGrid_toggled(bool checked)
 
 void SheetSettings::on_cbSnapGrid_toggled(bool checked)
 {
-    scene()->setSnapToGrid(checked);
+    scene()->setSnapEnabled(checked);
     scene()->update();
 }
 

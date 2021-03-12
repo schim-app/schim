@@ -39,12 +39,39 @@ public:
     // GETTERS
     Sheet *getSheet();
     const Sheet *getSheet() const;
+    /**
+     * @brief Return the raw cursor position, before applying snap.
+     */
+    QPointF getRawCursorPos() const;
+    /**
+     * @brief Return the processed cursor pos.
+     *
+     * If snap is disabled the raw cursor position is returned. If snap is
+     * enabled, the snapped cursor position is returned.
+     * @see getCursorPos
+     * @see getSnappedCursorPos
+     */
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
     bool isGridEnabled() const;
     bool isSnapEnabled() const;
     QSizeF getGridSize() const;
+    /**
+     * @brief Return the point on the grid that is closest to `pt`.
+     *
+     * Both the argument and return value are in scene coordinates.
+     * @note If snap is disabled, the parameter is returned unchanged.
+     */
+    QPointF snap(const QPointF &pt) const;
+    /**
+     * @brief Return the point on the grid that is closest to `pt`.
+     *
+     * Both the argument and return value are in scene coordinates.
+     * @note In contrast to `snap`, this method returns the snapped position
+     * regardless of the enabled state of the snap feature.
+     */
+    QPointF forcedSnap(const QPointF &pt) const;
 
     // SETTERS
     void setSheet(Sheet *sheet);
@@ -58,7 +85,7 @@ public:
     void setGridSize(float x, float y = -1);
     void setGridSize(QSizeF size);
     void setGridEnabled(bool enabled);
-    void setSnapToGrid(bool snap);
+    void setSnapEnabled(bool snap);
 
     // USER ACTIONS
     void undo(Vim::N n = 0);
@@ -77,21 +104,6 @@ public:
     void insertRect();
     void insertText();
     void suggestConnections(GComponent *component);
-    /**
-     * @brief Return the point on the grid that is closest to `pt`.
-     *
-     * Both the argument and return value are in scene coordinates.
-     * @note If snap is disabled, the parameter is returned unchanged.
-     */
-    QPointF snap(const QPointF &pt) const;
-    /**
-     * @brief Return the point on the grid that is closest to `pt`.
-     *
-     * Both the argument and return value are in scene coordinates.
-     * @note In contrast to `snap`, this method returns the snapped position
-     * regardless of the enabled state of the snap feature.
-     */
-    QPointF forcedSnap(const QPointF &pt) const;
     void showGuides(bool show);
     bool askHeaderChangeConfirmation() const;
     /**
@@ -156,8 +168,8 @@ private:
     QList<GConnectionSuggester*> _suggesters;
     /// The scene operation that is currently active
     SceneOperation *operation{};
-    /// Cursor position with snapping in mind
-    QPointF cursorPos;
+    /// Cursor position with no snap applied
+    QPointF rawCursorPos;
     /// This attribute has no effect if snap is not enabled
     bool snapGuides = false,
         showCursorGuides = true;

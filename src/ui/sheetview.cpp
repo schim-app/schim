@@ -17,7 +17,7 @@
 #include <QGraphicsSceneEvent>
 #include <QScrollBar>
 
-#include <QDebug>
+#include <iostream>
 
 // CONSTRUCTORS
 
@@ -27,10 +27,9 @@ SheetView::SheetView(Sheet *sheet, QWidget *parent)
     setScene(new SheetScene(sheet));
     init();
 
-    recalculateBaselineZoom();
+    recalculateBaseZoom();
     updateBackground();
 
-    connect(this, &SheetView::rubberBandChanged, this, &SheetView::onRubberBandChanged);
     connect(scene(), &SheetScene::cursorMoved, this, &SheetView::onCursorMoved);
 
     setWhatsThis("This is a sheet of paper where you draw your schematics.");
@@ -43,7 +42,12 @@ SheetView::~SheetView()
     delete insertCompleter;
 }
 
-// SETTERS
+SheetScene *SheetView::scene()
+{
+    return (SheetScene*) QGraphicsView::scene();
+}
+
+// USER ACTIONS
 
 void SheetView::setZoom(float zoom)
 {
@@ -135,46 +139,25 @@ void SheetView::insertPopup()
     insertCompleter->show();
 }
 
-// GETTERS
-
-SheetScene *SheetView::scene()
-{
-    return (SheetScene*) QGraphicsView::scene();
-}
-
-bool SheetView::processVimAction(const Vim::Action &action)
-{
-#define if_eq_do(name, act) if (action == name) { act(Vim::n()); }
-
-    if_eq_do("zoom-in",				[this](Vim::N n){vimdo(n) zoomIn();})
-    else if_eq_do("zoom-out",	 	[this](Vim::N n){vimdo(n) zoomOut();})
-    else if_eq_do("zoom-set",		[this](Vim::N n){if (n.raw() == 0) resetZoom(); else setZoom(n / 100.);})
-    else if_eq_do("scroll-left",	scrollLeft)
-    else if_eq_do("scroll-down",	scrollDown)
-    else if_eq_do("scroll-up",		scrollUp)
-    else if_eq_do("scroll-right",	scrollRight)
-    else if (action == "insert")	insertPopup();
-    else return false;
-    return true;
-}
-
 // EVENTS
 
 void SheetView::mousePressEvent(QMouseEvent *event)
 {
-    // Object selection
+    // Rubber band selection
     if (event->buttons() == Qt::LeftButton && !scene()->operation)
     {
         setDragMode(DragMode::RubberBandDrag);
         _selectStartPos = event->pos();
         _selectionTypeDetermined = false;
     }
+    // Panning
     else if (event->buttons() == Qt::MidButton)
     {
         setDragMode(DragMode::ScrollHandDrag);
         _panStartPos = event->pos();
         return;
     }
+    // Context menu
     else if (event->buttons() == Qt::RightButton)
     { // Show context menu
         // Had we used contextMenuEvent, then the context menu would be displayed
@@ -269,7 +252,7 @@ void SheetView::enterEvent(QEvent *event)
 
 void SheetView::resizeEvent(QResizeEvent *event)
 {
-    recalculateBaselineZoom();
+    recalculateBaseZoom();
     QGraphicsView::resizeEvent(event);
 }
 
@@ -288,14 +271,9 @@ void SheetView::wheelEvent(QWheelEvent *event)
 
 // SLOTS
 
-void SheetView::onRubberBandChanged(QRect, QPointF, QPointF)
-{
-    _rubberBandDragging = true;
-}
-
 void SheetView::onCursorMoved()
 {
-    auto pos = scene()->getSnappedCursorPos();
+    auto pos = scene()->getCursorPos();
 
     // We do not want to trigger a mouseMoveEvent this time
     setMouseTracking(false);
@@ -310,7 +288,7 @@ void SheetView::onInsertionRequested(Object *obj)
     scene()->insertComponentOrHeader(obj);
 }
 
-// OVERRIDEN QGraphicsView
+// OVERRIDE QGraphicsView
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
@@ -372,7 +350,7 @@ void SheetView::init()
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 }
 
-void SheetView::recalculateBaselineZoom()
+void SheetView::recalculateBaseZoom()
 {
     if (scene() == nullptr)
         return;
@@ -432,4 +410,22 @@ void SheetView::updateCursorGuides()
     // Update the viewport
     viewport()->update(vert.toRect());
     viewport()->update(horiz.toRect());
+}
+
+bool SheetView::processVimAction(const Vim::Action &action)
+{
+#define if_eq_do(name, act) if (action == name) { act(Vim::n()); }
+
+    if_eq_do("zoom-in",				[this](Vim::N n){vimdo(n) zoomIn();})
+    else if_eq_do("zoom-out",	 	[this](Vim::N n){vimdo(n) zoomOut();})
+    else if_eq_do("zoom-set",		[this](Vim::N n) {
+        if (n.raw() == 0) resetZoom(); else setZoom(n / 100.);
+    })
+    else if_eq_do("scroll-left",	scrollLeft)
+    else if_eq_do("scroll-down",	scrollDown)
+    else if_eq_do("scroll-up",		scrollUp)
+    else if_eq_do("scroll-right",	scrollRight)
+    else if (action == "insert")	insertPopup();
+    else return false;
+    return true;
 }

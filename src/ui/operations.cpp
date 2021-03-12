@@ -37,7 +37,7 @@ void OpInsertLine::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = scene->getSnappedCursorPos();
+        auto pos = scene->getCursorPos();
         if (state == 0)
         { // Insertion of first point
             obj = new GLine; // Create line
@@ -65,7 +65,7 @@ void OpInsertLine::mouseMoveEvent(QGraphicsSceneMouseEvent *)
     if (state == 1)
     { // The first point has already been placed into the scene
         // The line is updated in real time
-        object()->get()->setP2(scene->getSnappedCursorPos());
+        object()->get()->setP2(scene->getCursorPos());
         obj->reloadFromModel();
         // TODO performance??
         scene->update(object()->boundingRect().translated(object()->scenePos()));
@@ -83,7 +83,7 @@ void OpInsertRect::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = scene->getSnappedCursorPos();
+        auto pos = scene->getCursorPos();
         if (state == 0)
         { // Inserting the first corner
             obj = new GRect; // Create the object
@@ -113,7 +113,7 @@ void OpInsertRect::mouseMoveEvent(QGraphicsSceneMouseEvent *)
     if (state == 1)
     { // The first point has been placed; waiting for second point
         // The rect is updated in real time
-        object()->get()->setBottomRight(scene->getSnappedCursorPos());
+        object()->get()->setBottomRight(scene->getCursorPos());
         obj->reloadFromModel();
         // TODO performance??
         scene->update();
@@ -137,7 +137,7 @@ void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton && state == 0)
     {
-        auto pos = scene->getSnappedCursorPos();
+        auto pos = scene->getCursorPos();
         // Set the position of the text item
         obj->setPos(obj->mapFromScene(pos));
         if (!obj->parentItem()) // Add it to the scene if it is parent-less
@@ -178,14 +178,14 @@ OpInsertComponent::OpInsertComponent(SheetScene *scene, Object *obj)
 {
     this->obj = GObject::assign(obj);
     scene->addItem(this->obj);
-    this->obj->setPos(scene->getSnappedCursorPos());
+    this->obj->setPos(scene->getCursorPos());
 }
 
 void OpInsertComponent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
-        auto pos = scene->getSnappedCursorPos();
+        auto pos = scene->getCursorPos();
         obj->setPos(pos);
         obj->applyToModel();
         scene->command(new CmdInsertObject(obj, scene));
@@ -197,5 +197,5 @@ void OpInsertComponent::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
     scene->setSnapCursorGuides(true);
-    obj->setPos(scene->getSnappedCursorPos());
+    obj->setPos(scene->getCursorPos());
 }
