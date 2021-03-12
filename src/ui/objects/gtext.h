@@ -20,8 +20,8 @@ public:
     bool isInEditMode() const;
 
     // OBJECT EDITING
-    void reload() override;
-    void apply() override;
+    void reloadFromModel() override;
+    void applyToModel() override;
     void showContextMenu();
     void setEditMode(bool edit);
 

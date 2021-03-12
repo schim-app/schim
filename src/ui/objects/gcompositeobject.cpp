@@ -1,8 +1,7 @@
 #include "gcompositeobject.h"
 
-#include "ui/sheetscene.h"
-
 #include "model/text.h"
+#include "ui/sheetscene.h"
 
 #include <iostream>
 
@@ -13,23 +12,9 @@ GCompositeObject::GCompositeObject(CompositeObject *obj)
 
 // GETTERS
 
-CompositeObject *GCompositeObject::get()
+CompositeObject *GCompositeObject::get() const
 {
     return (CompositeObject*) obj;
-}
-
-const CompositeObject *GCompositeObject::get() const
-{
-    return (CompositeObject*) obj;
-}
-
-// OVERRIDE QGraphicsObject
-
-QPainterPath GCompositeObject::shape() const
-{
-    QPainterPath path;
-    path.addRect(boundingRect());
-    return path;
 }
 
 // SETTERS
@@ -43,16 +28,16 @@ void GCompositeObject::setCosmetic(bool cosmetic)
 
 // MISCELLANEOUS
 
-void GCompositeObject::apply()
+void GCompositeObject::applyToModel()
 {
     get()->setPos(pos());
 }
 
-void GCompositeObject::reload()
+void GCompositeObject::reloadFromModel()
 {
     setPos(get()->getPos());
     for (auto *child : childItems())
-        static_cast<GObject*>(child)->reload();
+        static_cast<GObject*>(child)->reloadFromModel();
 }
 
 // EVENTS
@@ -73,4 +58,40 @@ QVariant GCompositeObject::itemChange(QGraphicsItem::GraphicsItemChange change, 
         return GObject::itemChange(change, value);
 
     return value;
+}
+
+// OVERRIDE QGraphicsObject
+
+QPainterPath GCompositeObject::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    return path;
+}
+
+QRectF GCompositeObject::boundingRect() const
+{
+    QRectF rect; // The return value
+    // Some helper variables
+    bool initialized = false;
+    auto &constituents = get()->getConstituents();
+    int j = 0;
+
+    for (int i = 0; i < childItems().size() && j < constituents.count(); ++i)
+    {
+        auto *child = dynamic_cast<GObject*>(childItems()[i]);
+        if (child == nullptr) continue; // Looking for Object children
+        if (child->get() == constituents[j])
+        { // Child is a constituent
+            if (!initialized) // The initial guess
+            {
+                rect = child->boundingRect().translated(child->pos());
+                initialized = true;
+            }
+            else // Expand the rect with this child's boundingRect
+                rect = rect.united(child->boundingRect().translated(child->pos()));
+            ++j;
+        }
+    }
+    return rect;
 }

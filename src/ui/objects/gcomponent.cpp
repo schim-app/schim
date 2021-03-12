@@ -47,7 +47,7 @@ void GComponent::showContextMenu()
                      this, &GComponent::onContextEdit);
     QObject::connect(&addText, &QAction::triggered, this, [this]() {
         GText *obj = new GText; // Create new graphical text object
-        TextInsertOperation *op = new TextInsertOperation(getSheetScene(), obj);
+        OpInsertText *op = new OpInsertText(getSheetScene(), obj);
         obj->setParentItem(this); // The operation must know this text has a parent
         getSheetScene()->startOperation(op);
     });

@@ -76,7 +76,7 @@ QRectF GLine::boundingRect() const
 
 // FOR EDITING THE OBJECT
 
-void GLine::reload()
+void GLine::reloadFromModel()
 {
     setPos(get()->p1());
     if (handles != nullptr)
@@ -92,7 +92,7 @@ void GLine::reload()
     }
 }
 
-void GLine::apply()
+void GLine::applyToModel()
 {
     if (handles)
     {
@@ -107,7 +107,7 @@ void GLine::handleChanged(GObjectHandle *handle)
         get()->setP1(mapToScene(handle->pos()));
     else if (handle == (*handles)[1])
         get()->setP2(mapToScene(handle->pos()));
-    reload();
+    reloadFromModel();
     //TODO Is there any way I can do this without updating the whole scene?
     // Currently, if I don't do this there are graphical artifacts
     if (scene())
@@ -122,7 +122,7 @@ void GLine::showHandles(bool show)
                 new GObjectHandle(this), // point 1
                 new GObjectHandle(this) // point 2
         };
-        reload();
+        reloadFromModel();
     }
     else
         GObject::showHandles(show);

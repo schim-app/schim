@@ -55,7 +55,7 @@ bool GText::isInEditMode() const
 
 // OBJECT EDITING
 
-void GText::reload()
+void GText::reloadFromModel()
 {
     QFont font;
     if (get()->getFont() != "")
@@ -71,7 +71,7 @@ void GText::reload()
     setPos(get()->getPos());
 }
 
-void GText::apply()
+void GText::applyToModel()
 {
     get()->setPos(GObject::pos());
     if (isInEditMode())
@@ -190,7 +190,7 @@ void GText::edit()
 void GText::onFocusOut()
 {
     getSheetScene()->showGuides(true);
-    apply(); // Has to be before setEditMode
+    applyToModel(); // Has to be before setEditMode
     setEditMode(false);
     emit focusOut();
 }
@@ -242,7 +242,7 @@ void GDisplayText::keyPressEvent(QKeyEvent *event)
     {
         if (event->modifiers() == 0)
         {
-            parentItem()->apply();
+            parentItem()->applyToModel();
             parentItem()->setEditMode(false);
             return;
         }

@@ -12,8 +12,8 @@ public:
     LinearObjectArray *get();
     const LinearObjectArray *get() const;
 
-    void reload() override;
-    void apply() override;
+    void reloadFromModel() override;
+    void applyToModel() override;
 
 };
 

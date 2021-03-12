@@ -30,6 +30,7 @@ void ProjectBrowser::mouseDoubleClickEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
         auto index = indexAt(event->pos());
+        if (!index.isValid()) return; // No item was clicked
         if (index.data(ProjectModel::EntityTypeRole).toInt()
                 == ProjectModel::ProjectEntity)
         {

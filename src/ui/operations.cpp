@@ -4,22 +4,22 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QLineEdit>
 
-Operation::Operation(SheetScene *scene)
+SceneOperation::SceneOperation(SheetScene *scene)
     : scene(scene)
 {
 }
 
-Operation::~Operation() { }
+SceneOperation::~SceneOperation() { }
 
-void Operation::mousePressEvent(QGraphicsSceneMouseEvent *) { }
+void SceneOperation::mousePressEvent(QGraphicsSceneMouseEvent *) { }
 
-void Operation::mouseMoveEvent(QGraphicsSceneMouseEvent *) { }
+void SceneOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *) { }
 
-void Operation::mouseReleaseEvent(QGraphicsSceneMouseEvent *) { }
+void SceneOperation::mouseReleaseEvent(QGraphicsSceneMouseEvent *) { }
 
-void Operation::keyPressEvent(QKeyEvent *) { }
+void SceneOperation::keyPressEvent(QKeyEvent *) { }
 
-void Operation::cancel()
+void SceneOperation::cancel()
 {
     if (obj)
     {
@@ -32,50 +32,53 @@ void Operation::cancel()
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void LineInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void OpInsertLine::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
         auto pos = scene->getSnappedCursorPos();
-        if (state == 0) // Waiting for first point to be placed
-        {
-            obj = new GLine;
+        if (state == 0)
+        { // Insertion of first point
+            obj = new GLine; // Create line
+            // Set model properties
             object()->get()->setLine(pos.x(), pos.y(), pos.x(), pos.y());
-            obj->reload();
-            scene->addItem(obj);
+            obj->reloadFromModel();
+            scene->addItem(obj); // Add to scene
             ++state;
         }
-        else if (state == 1) // The first point has been inserted
-        {
-            object()->get()->setP2(pos);
-            obj->reload();
+        else if (state == 1)
+        { // Insertion of second point
+            object()->get()->setP2(pos); // Set model properties
+            obj->reloadFromModel();
+            // Remove the object from the scene - it will be added again via command
             scene->removeItem(obj);
+            // Register the insertion as a command
             scene->command(new CmdInsertObject(obj, scene));
-            state = 2; // Finished state
             emit finished();
         }
     }
 }
 
-void LineInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *)
+void OpInsertLine::mouseMoveEvent(QGraphicsSceneMouseEvent *)
 {
     scene->setSnapCursorGuides(true);
     if (state == 1)
-    {
+    { // The first point has already been placed into the scene
+        // The line is updated in real time
         object()->get()->setP2(scene->getSnappedCursorPos());
-        obj->reload();
-        scene->update();
+        obj->reloadFromModel();
+        scene->update(object()->boundingRect().translated(object()->scenePos()));
     }
 }
 
-GLine *LineInsertOperation::object() const
+GLine *OpInsertLine::object() const
 {
     return (GLine *) obj;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void OpInsertRect::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
@@ -84,14 +87,14 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             obj = new GRect;
             object()->get()->setRect(pos.x(), pos.y(), 0, 0);
-            obj->reload();
+            obj->reloadFromModel();
             scene->addItem(obj);
             ++state;
         }
         else if (state == 1)
         {
             object()->get()->setBottomRight(pos);
-            obj->reload();
+            obj->reloadFromModel();
             scene->removeItem(obj);
             scene->command(new CmdInsertObject(obj, scene));
             state = 2;
@@ -100,31 +103,31 @@ void RectInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void RectInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *)
+void OpInsertRect::mouseMoveEvent(QGraphicsSceneMouseEvent *)
 {
     scene->setSnapCursorGuides(true);
     if (state == 1)
     {
         object()->get()->setBottomRight(scene->getSnappedCursorPos());
-        obj->reload();
+        obj->reloadFromModel();
         scene->update();
     }
 }
 
-GRect *RectInsertOperation::object() const
+GRect *OpInsertRect::object() const
 {
     return (GRect*) obj;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-TextInsertOperation::TextInsertOperation(SheetScene *scene, GText *text)
-    : Operation(scene)
+OpInsertText::OpInsertText(SheetScene *scene, GText *text)
+    : SceneOperation(scene)
 {
     this->obj = text;
 }
 
-void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton && state == 0)
     {
@@ -142,7 +145,7 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
             obj->get()->setPos(pos);
         else
             obj->get()->setPos(obj->parentItem()->mapFromScene(pos));
-        obj->reload(); // Update the object visually
+        obj->reloadFromModel(); // Update the object visually
         if (!obj->parentItem()) // Add it to the scene if it is parent-less
             scene->addItem(obj);
         object()->setEditMode(true); // Initiate edit mode
@@ -169,34 +172,34 @@ void TextInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-GText *TextInsertOperation::object() const
+GText *OpInsertText::object() const
 {
     return (GText*) obj;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-ComponentInsertOperation::ComponentInsertOperation(SheetScene *scene, Object *obj)
-    : Operation(scene)
+OpInsertComponent::OpInsertComponent(SheetScene *scene, Object *obj)
+    : SceneOperation(scene)
 {
     this->obj = GObject::assign(obj);
     scene->addItem(this->obj);
     this->obj->setPos(scene->getSnappedCursorPos());
 }
 
-void ComponentInsertOperation::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void OpInsertComponent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton)
     {
         auto pos = scene->getSnappedCursorPos();
         obj->setPos(pos);
-        obj->apply();
+        obj->applyToModel();
         scene->command(new CmdInsertObject(obj, scene));
         emit finished();
     }
 }
 
-void ComponentInsertOperation::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void OpInsertComponent::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event)
     scene->setSnapCursorGuides(true);

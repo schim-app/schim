@@ -86,9 +86,9 @@ void GObject::setCosmetic(bool cosmetic)
 
 // OBJECT EDITING
 
-void GObject::reload() { }
+void GObject::reloadFromModel() { }
 
-void GObject::apply() { }
+void GObject::applyToModel() { }
 
 void GObject::showHandles(bool show)
 {
@@ -166,12 +166,12 @@ QVariant GObject::itemChange(GraphicsItemChange change, const QVariant &value)
             hovered = false;
         }
         else
-            reload();
+            reloadFromModel();
     }
     else if (change == ItemPositionChange && getSheetScene())
         return getSheetScene()->snap(value.toPointF());
     else if (change == ItemPositionHasChanged)
-        apply();
+        applyToModel();
 
     return QGraphicsItem::itemChange(change, value);
 }

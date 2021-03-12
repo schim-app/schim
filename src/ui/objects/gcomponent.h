@@ -32,7 +32,7 @@ private:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
-    Operation *operation;
+    SceneOperation *operation;
 };
 
 #endif // GCOMPONENT_H

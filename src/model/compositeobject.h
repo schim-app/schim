@@ -65,8 +65,6 @@ protected:
     // If != "", the object is always taken from the specified file
     QString file;
 
-    friend class GCompositeObject;
-
 };
 
 #endif // COMPOSITEOBJECT_H

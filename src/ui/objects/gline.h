@@ -24,8 +24,8 @@ public:
     QRectF boundingRect() const override;
 
     // OBJECT EDITING
-    void reload() override;
-    void apply() override;
+    void reloadFromModel() override;
+    void applyToModel() override;
     void handleChanged(GObjectHandle *handle) override;
     void showHandles(bool show = true) override;
 };

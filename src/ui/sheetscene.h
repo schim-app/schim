@@ -18,7 +18,7 @@ class GHeader;
 class GComponent;
 class GTerminal;
 class GConnectionSuggester;
-class Operation;
+class SceneOperation;
 
 /**
  * @brief A scene containing a sheet of paper.
@@ -71,7 +71,7 @@ public:
     void cursorRight(Vim::N n = 0);
     void gridIncrease(Vim::N n = 0);
     void gridDecrease(Vim::N n = 0);
-    void startOperation(Operation *op);
+    void startOperation(SceneOperation *op);
     void selectTexts();
     void selectPrimitive();
     void insertLine();
@@ -159,7 +159,7 @@ private:
     QList<GConnectionSuggester*> _suggesters;
 
     // The scene operation that is currently active
-    Operation *operation{};
+    SceneOperation *operation{};
     // Cursor position that takes snapping into mind
     QPointF cursorPos;
     // This attribute has no effect if snap is not enabled

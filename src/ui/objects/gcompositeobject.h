@@ -12,8 +12,7 @@ public:
     GCompositeObject(CompositeObject *obj);
 
     // GETTERS
-    CompositeObject *get();
-    const CompositeObject *get() const;
+    CompositeObject *get() const;
 
     // SETTERS
     /**
@@ -25,17 +24,18 @@ public:
      */
     void setCosmetic(bool cosmetic) override;
 
-    // OVERRIDE QGraphicsObject
-    QPainterPath shape() const override;
-
     // MISCELLANEOUS
-    void apply() override;
-    void reload() override;
+    void applyToModel() override;
+    void reloadFromModel() override;
 
 protected:
     // EVENTS
     QVariant itemChange(GraphicsItemChange change,
                         const QVariant &value) override;
+
+    // OVERRIDE QGraphicsObject
+    virtual QPainterPath shape() const override;
+    virtual QRectF boundingRect() const override;
 };
 
 #endif // GCOMPOSITEOBJECT_H

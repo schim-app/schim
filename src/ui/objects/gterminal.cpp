@@ -22,12 +22,12 @@ const Terminal *GTerminal::get() const
     return (Terminal*) obj;
 }
 
-void GTerminal::reload()
+void GTerminal::reloadFromModel()
 {
     setPos(get()->getPos());
 }
 
-void GTerminal::apply()
+void GTerminal::applyToModel()
 {
     get()->setPos(pos());
 }

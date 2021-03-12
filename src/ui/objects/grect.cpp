@@ -69,7 +69,7 @@ QPainterPath GRect::shape() const
 
 // OBJECT EDITING
 
-void GRect::reload()
+void GRect::reloadFromModel()
 {
     setPos(get()->getPos());
     if (handles != nullptr)
@@ -87,7 +87,7 @@ void GRect::reload()
     }
 }
 
-void GRect::apply()
+void GRect::applyToModel()
 {
     get()->setPos(pos());
 }
@@ -104,7 +104,7 @@ void GRect::showHandles(bool show)
                 new GObjectHandle(this)
         };
         // Place the handles in their proper location
-        reload();
+        reloadFromModel();
     }
     else
         return GObject::showHandles(show);
@@ -150,7 +150,7 @@ void GRect::handleChanged(GObjectHandle *handle)
         std::swap((*handles)[0], (*handles)[1]);
         std::swap((*handles)[2], (*handles)[3]);
     }
-    reload();
+    reloadFromModel();
     if (scene())
         scene()->update();
 }

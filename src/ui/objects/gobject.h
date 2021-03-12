@@ -69,14 +69,14 @@ public:
      * @note The base implementation does nothing and should be implemented
      * in derived classes.
      */
-    virtual void reload();
+    virtual void reloadFromModel();
     /**
      * @brief Apply changes to the underlying model object.
      *
      * @note The base implementation does nothing and should be implemented
      * in derived classes.
      */
-    virtual void apply();
+    virtual void applyToModel();
     /**
      * @brief Display/hide the handles for this item.
      *

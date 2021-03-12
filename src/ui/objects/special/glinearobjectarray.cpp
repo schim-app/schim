@@ -17,14 +17,14 @@ const LinearObjectArray *GLinearObjectArray::get() const
     return static_cast<LinearObjectArray*>(obj);
 }
 
-void GLinearObjectArray::reload()
+void GLinearObjectArray::reloadFromModel()
 {
     if (get()->getConstituents().empty())
         get()->generate();
-    GCompositeObject::reload();
+    GCompositeObject::reloadFromModel();
 }
 
-void GLinearObjectArray::apply()
+void GLinearObjectArray::applyToModel()
 {
     // TODO implement
 }

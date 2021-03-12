@@ -622,6 +622,8 @@ void MainWindow::openProjectsFromFiles(const QStringList &filenames, int active)
     setActiveProject(projects->getProjects()[active]);
     ui->projectBrowser->expand(
                 projects->getIndex(projects->getActiveProject()));
+    for (auto *sheet : projects->getActiveProject()->getSheets())
+        openSheet(sheet);
 }
 
 int MainWindow::openSheet(Sheet *sheet, int index)

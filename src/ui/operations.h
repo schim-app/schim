@@ -18,15 +18,15 @@ class QKeyEvent;
  *
  * Each operation is associated with a scene.
  */
-class Operation : public QObject
+class SceneOperation : public QObject
 {
     Q_OBJECT
 public:
     /**
      * @brief Create a scene operation in the specified scene.
      */
-    Operation(SheetScene *scene);
-    virtual ~Operation();
+    SceneOperation(SheetScene *scene);
+    virtual ~SceneOperation();
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -43,10 +43,10 @@ protected:
     int state = 0;
 };
 
-class LineInsertOperation : public Operation
+class OpInsertLine : public SceneOperation
 {
 public:
-    using Operation::Operation;
+    using SceneOperation::SceneOperation;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
@@ -56,10 +56,10 @@ private:
     GLine *object() const;
 };
 
-class RectInsertOperation : public Operation
+class OpInsertRect : public SceneOperation
 {
 public:
-    using Operation::Operation;
+    using SceneOperation::SceneOperation;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
@@ -67,11 +67,11 @@ public:
     GRect *object() const;
 };
 
-class TextInsertOperation : public Operation
+class OpInsertText : public SceneOperation
 {
     Q_OBJECT
 public:
-    TextInsertOperation(SheetScene *scene, GText *text = nullptr);
+    OpInsertText(SheetScene *scene, GText *text = nullptr);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
@@ -79,10 +79,10 @@ public:
     GText *object() const;
 };
 
-class ComponentInsertOperation : public Operation
+class OpInsertComponent : public SceneOperation
 {
 public:
-    ComponentInsertOperation(SheetScene *scene, Object *obj);
+    OpInsertComponent(SheetScene *scene, Object *obj);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

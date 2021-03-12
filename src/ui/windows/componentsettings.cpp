@@ -100,7 +100,7 @@ void ComponentSettings::accept()
     component->get()->setVariables(ui->variableEditor->getVariables());
 
     QDialog::accept();
-    component->reload();
+    component->reloadFromModel();
 }
 
 void ComponentSettings::reject()

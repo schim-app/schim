@@ -27,9 +27,9 @@ public:
 
     // OBJECT EDITING
     /** @copybrief GObject::reload */
-    void reload() override;
+    void reloadFromModel() override;
     /** @copybrief GObject::apply */
-    void apply() override;
+    void applyToModel() override;
     /** @copybrief GObject::showHandles */
     void showHandles(bool show = true) override;
     /** @copybrief GObject::handleChanged */

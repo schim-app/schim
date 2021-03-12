@@ -14,8 +14,8 @@ public:
     Terminal *get();
     const Terminal *get() const;
 
-    void reload();
-    void apply();
+    void reloadFromModel() override;
+    void applyToModel() override;
 
 protected:
     // QGraphicsItem INTERFACE

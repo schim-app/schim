@@ -196,12 +196,12 @@ void SheetScene::gridDecrease(Vim::N n)
     update();
 }
 
-void SheetScene::startOperation(Operation *op)
+void SheetScene::startOperation(SceneOperation *op)
 {
     if (operation)
         operation->cancel();
     operation = op;
-    connect(operation, &Operation::finished, this, &SheetScene::onOperationFinished);
+    connect(operation, &SceneOperation::finished, this, &SheetScene::onOperationFinished);
 }
 
 void SheetScene::selectTexts()
@@ -220,17 +220,17 @@ void SheetScene::selectPrimitive()
 
 void SheetScene::insertLine()
 {
-    startOperation(new LineInsertOperation(this));
+    startOperation(new OpInsertLine(this));
 }
 
 void SheetScene::insertRect()
 {
-    startOperation(new RectInsertOperation(this));
+    startOperation(new OpInsertRect(this));
 }
 
 void SheetScene::insertText()
 {
-    startOperation(new TextInsertOperation(this));
+    startOperation(new OpInsertText(this));
 }
 
 void SheetScene::suggestConnections(GComponent *component)
@@ -341,7 +341,7 @@ void SheetScene::insertComponentOrHeader(Object *obj)
         // Replace the current sheet header with this one
         tryChangeHeader(hdr);
     else // Start scene operation
-        startOperation(new ComponentInsertOperation(this, obj->clone()));
+        startOperation(new OpInsertComponent(this, obj->clone()));
 }
 
 // Local helpers
@@ -402,7 +402,7 @@ void SheetScene::reload()
 {
     for (auto *obj : items())
         if (dynamic_cast<GObject *>(obj))
-            static_cast<GObject *>(obj)->reload();
+            static_cast<GObject *>(obj)->reloadFromModel();
 }
 
 // SLOTS

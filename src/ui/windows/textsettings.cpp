@@ -24,11 +24,11 @@ void TextSettings::reload()
 void TextSettings::on_editText_textEdited(const QString &text)
 {
     obj->get()->setText(text);
-    obj->reload();
+    obj->reloadFromModel();
 }
 
 void TextSettings::on_fontComboBox_currentFontChanged(const QFont &font)
 {
     obj->get()->setFont(font.toString());
-    obj->reload();
+    obj->reloadFromModel();
 }

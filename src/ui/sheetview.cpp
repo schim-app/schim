@@ -99,13 +99,18 @@ void SheetView::scrollRight(Vim::N n)
 
 void SheetView::showContextMenu()
 {
-    QMenu contextMenu(MainWindow::getInstance());
+    QMenu menu(MainWindow::getInstance());
+
+    // Create actions
     QAction insert("Insert...");
     QAction settings("Sheet settings...");
     QAction editHeader("Edit header... (TODO)");
-    contextMenu.addAction(&insert);
-    contextMenu.addAction(&settings);
-    contextMenu.addAction(&editHeader);
+
+    // Add actions to menu
+    menu.addAction(&insert);
+    menu.addAction(&settings);
+    menu.addAction(&editHeader);
+
     //Connections
     connect(&insert, &QAction::triggered, this, &SheetView::insertPopup);
     connect(&settings, &QAction::triggered, this, []() {
@@ -114,7 +119,7 @@ void SheetView::showContextMenu()
     connect(&settings, &QAction::triggered, this, []() {
         // TODO
     });
-    contextMenu.exec(QCursor::pos());
+    menu.exec(QCursor::pos());
 }
 
 void SheetView::insertPopup()
