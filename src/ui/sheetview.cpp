@@ -177,6 +177,8 @@ void SheetView::mousePressEvent(QMouseEvent *event)
     }
     else if (event->buttons() == Qt::RightButton)
     { // Show context menu
+        // Had we used contextMenuEvent, then the context menu would be displayed
+        // over a child's context menu
         event->ignore();
         QGraphicsView::mousePressEvent(event);
         if (event->isAccepted())
@@ -212,7 +214,8 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
     // This is to update the cursor guides in the foreground
     // TODO maybe there is a way to only update the foreground?
-    viewport()->update();
+    //viewport()->update();
+    updateCursorGuides();
 }
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
@@ -272,9 +275,11 @@ void SheetView::resizeEvent(QResizeEvent *event)
 
 void SheetView::wheelEvent(QWheelEvent *event)
 {
+    // Zoom in/out
     if (QApplication::keyboardModifiers() & Qt::CTRL)
     {
-        float delta = event->pixelDelta().isNull() ? event->angleDelta().y() / 600. : event->pixelDelta().y() / 1000.;
+        float delta = event->pixelDelta().isNull() ?
+                    event->angleDelta().y() / 600. : event->pixelDelta().y() / 1000.;
         zoomIn(1 + delta);
     }
     else
@@ -305,10 +310,11 @@ void SheetView::onInsertionRequested(Object *obj)
     scene()->insertComponentOrHeader(obj);
 }
 
-// OVERRIDEN
+// OVERRIDEN QGraphicsView
 
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
+    // A cosmetic pen with a width of 1
     QPen pen(qApp->palette().color(QPalette::Text), dpiInvariant(1));
     pen.setCosmetic(true);
     painter->setPen(pen);
@@ -336,9 +342,6 @@ void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
     {
         QPointF pos = scene()->getCursorPos();
 
-        if (scene()->getSnapCursorGuides())
-            pos = scene()->snap(pos);
-
         QColor c = pen.color();
         c.setAlphaF(0.75);
         pen.setColor(c);
@@ -349,7 +352,6 @@ void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
         // Vertical
         painter->drawLine(QLineF{pos.x(), rect.top(), pos.x(), rect.bottom()});
     }
-
 }
 
 // HELPERS
@@ -412,4 +414,22 @@ void SheetView::updateBackground()
     auto brush = QBrush(QColor(0, 0, 0, 48), Qt::Dense4Pattern);
     brush.setTransform(QTransform().scale(10 / zoom(), 10 / zoom()));
     setBackgroundBrush(brush);
+}
+
+void SheetView::updateCursorGuides()
+{
+    // For now just update the whole viewport
+    return viewport()->update();
+    // TODO enable this
+    QPointF pos = mapFromScene(scene()->getCursorPos());
+
+    QRectF rect(viewport()->rect());
+    float t = rect.top(), b = rect.bottom(), l = rect.left(), r = rect.right();
+    // Construct a thin rect around the vertical guide
+    QRectF vert(pos.x() - 3, t, 6, rect.height());
+    // Construct a thin rect around the horizontal guide
+    QRectF horiz(l, pos.y() - 3, rect.width(), 6);
+    // Update the viewport
+    viewport()->update(vert.toRect());
+    viewport()->update(horiz.toRect());
 }

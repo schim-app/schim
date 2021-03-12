@@ -39,7 +39,6 @@ public:
     // GETTERS
     Sheet *getSheet();
     const Sheet *getSheet() const;
-
     QPointF getCursorPos() const;
     QPointF getSnappedCursorPos() const;
     bool getSnapCursorGuides() const;
@@ -149,24 +148,21 @@ private slots:
 
 private:
     // ATTRIBUTES
-
     Sheet *sheet{};
     QUndoStack undoStack{this};
     GHeader *headerItem{};
-
-    // A white sheet of paper
+    /// A white sheet of paper
     QGraphicsRectItem *pageBackgroundItem;
     QList<GConnectionSuggester*> _suggesters;
-
-    // The scene operation that is currently active
+    /// The scene operation that is currently active
     SceneOperation *operation{};
-    // Cursor position that takes snapping into mind
+    /// Cursor position with snapping in mind
     QPointF cursorPos;
-    // This attribute has no effect if snap is not enabled
-    bool snapGuides = false, showCursorGuides = true;
+    /// This attribute has no effect if snap is not enabled
+    bool snapGuides = false,
+        showCursorGuides = true;
     GObject *hoveredItem{};
-
-    // In millimeters
+    /// In millimeters
     float gridX = 5, gridY = 5;
     bool gridEnabled = true, snapEnabled = true;
 

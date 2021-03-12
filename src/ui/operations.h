@@ -1,3 +1,4 @@
+/// @file operations.h
 #ifndef OPERATION_H
 #define OPERATION_H
 
@@ -23,7 +24,7 @@ class SceneOperation : public QObject
     Q_OBJECT
 public:
     /**
-     * @brief Create a scene operation in the specified scene.
+     * @brief Construct a scene operation in the specified scene.
      */
     SceneOperation(SheetScene *scene);
     virtual ~SceneOperation();
@@ -32,9 +33,18 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+    /**
+     * @brief Call this to cancel the operation.
+     *
+     * This will delete any dangling objects and remove them from the scene.
+     * The `finished` signal will be emitted.
+     */
     virtual void cancel();
 
 signals:
+    /**
+     * @brief Emitted when the operation has finished, either successfully or not.
+     */
     void finished();
 
 protected:

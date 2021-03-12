@@ -144,7 +144,7 @@ void OpInsertText::mousePressEvent(QGraphicsSceneMouseEvent *event)
             scene->addItem(obj);
         object()->setEditMode(true); // Initiate edit mode
 
-        // We declare these as local variables so we can capture them inside the lambda
+        // We declare these as local variables to capture them inside the lambda
         GText *obj = object();
         auto *scene = this->scene;
 

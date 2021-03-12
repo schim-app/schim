@@ -12,7 +12,12 @@ GCompositeObject::GCompositeObject(CompositeObject *obj)
 
 // GETTERS
 
-CompositeObject *GCompositeObject::get() const
+CompositeObject *GCompositeObject::get()
+{
+    return (CompositeObject*) obj;
+}
+
+const CompositeObject *GCompositeObject::get() const
 {
     return (CompositeObject*) obj;
 }

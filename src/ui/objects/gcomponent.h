@@ -14,22 +14,19 @@ public:
     GComponent(Component *obj);
 
     // GETTERS
-    Component *get();
-    const Component *get() const;
-
-    // USER ACTIONS
-    void showContextMenu();
+    virtual Component *get() override;
+    virtual const Component *get() const override;
 
 private slots:
     void onContextEdit();
 
 private:
     // EVENTS
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
 private:
     SceneOperation *operation;

@@ -14,15 +14,14 @@ class SheetView : public QGraphicsView
     Q_OBJECT
 public:
     /**
-     * @brief This constructor is only used so that the MainWindow ui can be generated properly.
+     * @brief This constructor is only used so that the MainWindow ui can be
+     * generated properly.
      *
      * It is not to be called elsewhere.
      */
     SheetView() = default;
     /**
      * @brief Initialize a new SheetView tied to the specified sheet.
-     *
-     * This is the constructor that implements common functionality.
      */
     SheetView(Sheet *sheet, QWidget *parent = nullptr);
     ~SheetView();
@@ -45,9 +44,6 @@ public slots:
     // GETTERS
     SheetScene *scene();
 
-private:
-    bool processVimAction(const Vim::Action &action);
-
     // EVENTS
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -59,6 +55,9 @@ private:
     void resizeEvent(QResizeEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+private:
+    bool processVimAction(const Vim::Action &action);
+
 private slots:
     // SLOTS
     void onRubberBandChanged(QRect rect, QPointF, QPointF);
@@ -66,7 +65,7 @@ private slots:
     void onInsertionRequested(Object *obj);
 
 private:
-    // OVERRIDDEN
+    // OVERRIDDE QGraphicsView
     void drawForeground(QPainter *painter, const QRectF &rect) override;
 
     // HELPERS
@@ -75,6 +74,7 @@ private:
     void processRubberBandDrag(QMouseEvent *event);
     float zoom() const;
     void updateBackground();
+    void updateCursorGuides();
 
 private:
 
@@ -83,11 +83,9 @@ private:
     float baselineZoom = 1, userZoom = 1;
     /// Dynamically allocated just before first use, and persists afterwards
     InsertCompleter *insertCompleter{};
-
     /// Helper attributes for event processing
     QPoint _panStartPos, _selectStartPos;
     bool _selectionTypeDetermined = false, _rubberBandDragging = false;
-
 };
 
 #endif // SHEETVIEW_H

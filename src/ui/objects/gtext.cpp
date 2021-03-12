@@ -78,15 +78,6 @@ void GText::applyToModel()
         get()->setText(displayItem->toPlainText());
 }
 
-void GText::showContextMenu()
-{
-    QMenu contextMenu(MainWindow::getInstance());
-    QAction edit("Edit text");
-    QObject::connect(&edit, &QAction::triggered, this, &GText::edit);
-    contextMenu.addAction(&edit);
-    contextMenu.exec(QCursor::pos());
-}
-
 void GText::setEditMode(bool edit)
 {
     static int timerId = -1;
@@ -103,11 +94,15 @@ void GText::setEditMode(bool edit)
     }
     else
     {
-        displayItem->setPlainText(get()->getDisplayText(getModelParent()));
+        // Update the model
+        applyToModel();
 
+        // Change to display text
+        displayItem->setPlainText(get()->getDisplayText(getModelParent()));
         displayItem->setTextInteractionFlags(Qt::NoTextInteraction);
         displayItem->unsetCursor();
 
+        // Visual cleanup of the text box
         auto tc = displayItem->textCursor();
         tc.clearSelection();
         displayItem->setTextCursor(tc);
@@ -139,7 +134,7 @@ QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change,
 void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::RightButton)
-        showContextMenu();
+        ;// TODO showContextMenu();
     else
         GObject::mousePressEvent(event);
 }
@@ -179,9 +174,18 @@ void GText::timerEvent(QTimerEvent *event)
     GObject::timerEvent(event);
 }
 
+void GText::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    QMenu menu(MainWindow::getInstance());
+    QAction edit("Edit text");
+    QObject::connect(&edit, &QAction::triggered, this, &GText::onContextEdit);
+    menu.addAction(&edit);
+    menu.exec(QCursor::pos());
+}
+
 // SLOTS
 
-void GText::edit()
+void GText::onContextEdit()
 {
     TextSettings editor(this, MainWindow::getInstance());
     editor.exec();
@@ -242,12 +246,19 @@ void GDisplayText::keyPressEvent(QKeyEvent *event)
     {
         if (event->modifiers() == 0)
         {
-            parentItem()->applyToModel();
             parentItem()->setEditMode(false);
             return;
         }
         else if (event->modifiers() == Qt::SHIFT)
+            // Let the base implementation process the event as if only Return
+            // was pressed
             event->setModifiers({});
+    }
+    else if (parentItem()->isInEditMode() && event->key() == Qt::Key_Escape)
+    {
+        parentItem()->setEditMode(false);
+        parentItem()->setSelected(false);
+        return;
     }
     QGraphicsTextItem::keyPressEvent(event);
 }

@@ -15,8 +15,8 @@ public:
     GLine(Line *obj = new Line);
 
     // GETTERS
-    Line *get();
-    const Line *get() const;
+    virtual Line *get() override;
+    virtual const Line *get() const override;
 
     // OVERRIDE QGraphicsObject
     QPainterPath shape() const override;

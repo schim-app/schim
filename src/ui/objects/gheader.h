@@ -16,8 +16,8 @@ public:
     GHeader(Header *obj);
 
     // GETTERS
-    Header *get();
-    const Header *get() const;
+    virtual Header *get() override;
+    virtual const Header *get() const override;
 };
 
 #endif // GHEADER_H

@@ -17,11 +17,11 @@ class CompositeObject : public Object, public Entity
 {
 
 public:
+    // CONSTRUCTORS
     CompositeObject();
     /// @brief Copy constructor
     CompositeObject(const CompositeObject &obj);
     ~CompositeObject();
-
     Object *clone() const override;
 
     // GETTERS
@@ -35,7 +35,7 @@ public:
     QString getValue(const QString &name, bool *exists = nullptr) const;
     QString getFileName() const;
     QList<Object *> &getConstituents();
-    QList<Object *> getConstituents() const;
+    const QList<Object *> &getConstituents() const;
 
     // SETTERS
     void setPos(const QPointF &pos) override;

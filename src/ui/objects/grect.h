@@ -17,8 +17,8 @@ public:
     GRect(Rect *obj = new Rect);
 
     // GETTERS
-    Rect *get();
-    const Rect *get() const;
+    virtual Rect *get() override;
+    virtual const Rect *get() const override;
 
     // OVERRIDDE QGraphicsItem
     QRectF boundingRect() const override;

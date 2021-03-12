@@ -15,15 +15,17 @@ public:
     ~GText();
 
     // GETTERS
-    Text *get();
-    const Text *get() const;
+    virtual Text *get() override;
+    virtual const Text *get() const override;
     bool isInEditMode() const;
 
     // OBJECT EDITING
     void reloadFromModel() override;
     void applyToModel() override;
-    void showContextMenu();
     void setEditMode(bool edit);
+
+signals:
+    void focusOut();
 
 protected:
     // EVENTS
@@ -47,12 +49,10 @@ protected:
     /** Show cursor guides. */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     void timerEvent(QTimerEvent *event) override;
-
-signals:
-    void focusOut();
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
 private slots:
-    void edit();
+    void onContextEdit();
     void onFocusOut();
 
 private:

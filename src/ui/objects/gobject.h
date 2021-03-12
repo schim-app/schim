@@ -42,8 +42,8 @@ public:
      * @note Derived classes should change the return type of this method
      * to match the type of the object that is wrapped by them.
      */
-    Object *get();
-    const Object *get() const;
+    virtual Object *get();
+    virtual const Object *get() const;
     Entity *getModelParent() const;
     /**
      * @brief Return whether the mouse is over this object.

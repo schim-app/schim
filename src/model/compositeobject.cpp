@@ -53,7 +53,7 @@ QList<Object *> &CompositeObject::getConstituents()
     return constituents;
 }
 
-QList<Object *> CompositeObject::getConstituents() const
+const QList<Object*> &CompositeObject::getConstituents() const
 {
     return constituents;
 }

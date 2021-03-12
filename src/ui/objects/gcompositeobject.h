@@ -12,7 +12,8 @@ public:
     GCompositeObject(CompositeObject *obj);
 
     // GETTERS
-    CompositeObject *get() const;
+    virtual CompositeObject *get() override;
+    virtual const CompositeObject *get() const override;
 
     // SETTERS
     /**
