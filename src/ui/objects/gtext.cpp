@@ -27,7 +27,7 @@ GText::GText(Text *obj)
     displayItem->setDefaultTextColor(qApp->palette().color(QPalette::Text));
     displayItem->setDocument(new QTextDocument);
     displayItem->document()->setDocumentMargin(1);
-    connect(displayItem, SIGNAL(focusOut()), this, SLOT(onFocusOut()));
+    connect(displayItem, &GDisplayText::focusOut, this, &GText::onFocusOut);
 }
 
 GText::~GText()
@@ -54,29 +54,6 @@ bool GText::isInEditMode() const
 }
 
 // OBJECT EDITING
-
-void GText::reloadFromModel()
-{
-    QFont font;
-    if (get()->getFont() != "")
-        font.fromString(get()->getFont());
-    else
-        font = qApp->font();
-
-    if (get()->getTextHeight() != -1)
-        font.setPixelSize(get()->getTextHeight());
-
-    displayItem->setFont(font);
-    displayItem->setPlainText(get()->getDisplayText(getModelParent()));
-    setPos(get()->getPos());
-}
-
-void GText::applyToModel()
-{
-    get()->setPos(GObject::pos());
-    if (isInEditMode())
-        get()->setText(displayItem->toPlainText());
-}
 
 void GText::setEditMode(bool edit)
 {
@@ -115,6 +92,29 @@ void GText::setEditMode(bool edit)
     }
 }
 
+void GText::reloadFromModel()
+{
+    QFont font;
+    if (get()->getFont() != "")
+        font.fromString(get()->getFont());
+    else
+        font = qApp->font();
+
+    if (get()->getTextHeight() != -1)
+        font.setPixelSize(get()->getTextHeight());
+
+    displayItem->setFont(font);
+    displayItem->setPlainText(get()->getDisplayText(getModelParent()));
+    setPos(get()->getPos());
+}
+
+void GText::applyToModel()
+{
+    get()->setPos(GObject::pos());
+    if (isInEditMode())
+        get()->setText(displayItem->toPlainText());
+}
+
 // EVENTS
 
 QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change,
@@ -133,15 +133,10 @@ QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change,
 
 void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->buttons() == Qt::RightButton)
+    //if (event->buttons() == Qt::RightButton)
         ;// TODO showContextMenu();
-    else
+    //else
         GObject::mousePressEvent(event);
-}
-
-void GText::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    GObject::mouseReleaseEvent(event);
 }
 
 void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -211,24 +206,6 @@ QRectF GText::boundingRect() const
     return displayItem->boundingRect();
 }
 
-void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
-{
-    // The text is drawn enclosed in a box if it is selectable and:
-    // - It or its parent is selected, or
-    // - It or its parent is hovered, or
-    // - It is in edit mode
-    if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
-            (isSelected() || isHovered() || isInEditMode() ||
-             (parentItem() && (parentItem()->isSelected() || parentItem()->isHovered()))))
-    { // Draw the "selected" border around the text
-        QPen pen(qApp->palette().color(QPalette::Text),
-             dpiInvariant(1), Qt::DashLine);
-        pen.setCosmetic(true);
-        painter->setPen(pen);
-        painter->drawPath(shape());
-    }
-}
-
 // class GDisplayText ***********************************************************
 
 // EVENTS
@@ -250,7 +227,7 @@ void GDisplayText::keyPressEvent(QKeyEvent *event)
             return;
         }
         else if (event->modifiers() == Qt::SHIFT)
-            // Let the base implementation process the event as if only Return
+            // Let the base implementation process the event as if only Enter
             // was pressed
             event->setModifiers({});
     }
@@ -283,12 +260,7 @@ void GDisplayText::paint(QPainter *painter,
     QGraphicsTextItem::paint(painter, &tweak, widget);
 }
 
-// CUSTOM METHODS
-
-SheetScene *GDisplayText::scene()
-{
-    return static_cast<SheetScene*>(QGraphicsTextItem::scene());
-}
+// OVERRIDE QGraphicsItem
 
 void GDisplayText::setParentItem(GText *parent)
 {
@@ -298,4 +270,22 @@ void GDisplayText::setParentItem(GText *parent)
 GText *GDisplayText::parentItem()
 {
     return (GText *) QGraphicsTextItem::parentItem();
+}
+
+void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
+{
+    // The text is drawn enclosed in a box if it is selectable and:
+    // - It or its parent is selected, or
+    // - It or its parent is hovered, or
+    // - It is in edit mode
+    if ((flags() & GraphicsItemFlag::ItemIsSelectable) &&
+            (isSelected() || isHovered() || isInEditMode() ||
+             (parentItem() && (parentItem()->isSelected() || parentItem()->isHovered()))))
+    { // Draw the "selected" border around the text
+        QPen pen(qApp->palette().color(QPalette::Text),
+             dpiInvariant(1), Qt::DashLine);
+        pen.setCosmetic(true);
+        painter->setPen(pen);
+        painter->drawPath(shape());
+    }
 }

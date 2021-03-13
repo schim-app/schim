@@ -1,3 +1,4 @@
+/// @file gline.h
 #ifndef GLINE_H
 #define GLINE_H
 
@@ -8,6 +9,9 @@
 #include <QGraphicsLineItem>
 #include <QVariant>
 
+/**
+ * @brief Graphical line object that wraps a `Line`.
+ */
 class GLine : public GObject
 {
 public:
@@ -18,16 +22,18 @@ public:
     virtual Line *get() override;
     virtual const Line *get() const override;
 
-    // OVERRIDE QGraphicsObject
-    QPainterPath shape() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
-
     // OBJECT EDITING
     void reloadFromModel() override;
     void applyToModel() override;
     void handleChanged(GObjectHandle *handle) override;
     void showHandles(bool show = true) override;
+
+    // OVERRIDE QGraphicsItem
+    QRectF boundingRect() const override;
+protected:
+    QPainterPath shape() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
 };
 
 #endif // GLINE_H

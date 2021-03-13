@@ -1,3 +1,4 @@
+/// @file gtext.h
 #ifndef GTEXT_H
 #define GTEXT_H
 
@@ -7,6 +8,19 @@
 
 class GDisplayText;
 
+/**
+ * @brief A graphical text object that wraps a `Text`.
+ *
+ * The `GText` has a child item of type `GDisplayText` that displays the text
+ * to the user and handles text editing.
+ *
+ * `GText` is responsible for:
+ *
+ * - synchronization with the model
+ * - manipulation of `GDisplayText` flags to enter/leave edit mode
+ * - any interaction that doesn't involve text editing, e.g object selection,
+ * displaying context menus, etc.
+ */
 class GText : public GObject
 {
     Q_OBJECT
@@ -20,16 +34,15 @@ public:
     bool isInEditMode() const;
 
     // OBJECT EDITING
+    void setEditMode(bool edit);
     void reloadFromModel() override;
     void applyToModel() override;
-    void setEditMode(bool edit);
 
 signals:
     void focusOut();
 
 protected:
     // EVENTS
-    /** Use `GObject`'s implementation */
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     /**
      * In editing mode, let QGraphicsTextItem process the event.
@@ -37,8 +50,6 @@ protected:
      * like any other item.
      */
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    /** @see GText::mousePressEvent */
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     /**
      * On double left click: enable editing, change to IBeam cursor and hide
      * cursor guides.
@@ -65,24 +76,31 @@ private:
     GDisplayText *displayItem;
 };
 
+/**
+ * @brief A helper item for `GText` that displays its textual content.
+ */
 class GDisplayText : public QGraphicsTextItem
 {
     Q_OBJECT
-public:
+protected:
     // EVENTS
     void focusOutEvent(QFocusEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
+signals:
+    /**
+     * @brief Emitted when the item loses focus.
+     *
+     * The `GText` parent of this item should handle this event.
+     */
+    void focusOut();
 
-    // CUSTOM METHODS
-    /** Cast the scene to a `SheetScene*`. */
-    SheetScene *scene();
+public:
+    // OVERRIDE QGraphicsItem
     void setParentItem(GText *parent);
     GText *parentItem();
-
-signals:
-    void focusOut();
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*) override;
 
 private:
     friend class GText;

@@ -1,3 +1,4 @@
+/// @file sheetview.h
 #ifndef SHEETVIEW_H
 #define SHEETVIEW_H
 
@@ -9,6 +10,9 @@
 
 class MainWindow;
 
+/**
+ * @brief A specialized `QGraphicsView` that displays a sheet of paper.
+ */
 class SheetView : public QGraphicsView
 {
     Q_OBJECT
@@ -18,7 +22,7 @@ public:
      * @brief This constructor is only used so that the MainWindow ui can be
      * generated properly.
      *
-     * It is not to be called elsewhere.
+     * It should not be called elsewhere.
      */
     SheetView() = default;
     /**
@@ -57,7 +61,12 @@ public slots:
 private slots:
     // SLOTS
     void onCursorMoved();
-    void onInsertionRequested(Object *obj);
+    /**
+     * @brief Called when the user selects a component to be inserted into the
+     * scene.
+     * @param obj The object that is to be inserted.
+     */
+    void onInsertionRequested(const Object &obj);
 
 private:
     // OVERRIDDE QGraphicsView

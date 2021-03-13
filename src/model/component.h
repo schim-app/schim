@@ -10,6 +10,9 @@
 
 class Device;
 
+/**
+ * @brief Model of an electrical component.
+ */
 class Component : public CompositeObject
 {
 public:

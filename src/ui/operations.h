@@ -70,7 +70,7 @@ protected:
 };
 
 /**
- * @brief A scene operation that is triggered when the user inserts a line.
+ * @brief A scene operation that is triggered when the user wants to insert a line.
  */
 class OpInsertLine : public SceneOperation
 {
@@ -86,7 +86,7 @@ private:
 };
 
 /**
- * @brief A scene operation that is triggered when the user inserts a rectangle.
+ * @brief A scene operation that is triggered when the user wants to insert a rectangle.
  */
 class OpInsertRect : public SceneOperation
 {
@@ -100,7 +100,7 @@ public:
 };
 
 /**
- * @brief A scene operation that is triggered when the user inserts a text.
+ * @brief A scene operation that is triggered when the user wants to insert a text.
  */
 class OpInsertText : public SceneOperation
 {
@@ -115,12 +115,13 @@ public:
 };
 
 /**
- * @brief A scene operation that is triggered when the user inserts a component.
+ * @brief A scene operation that is triggered when the user wants to insert a
+ * component.
  */
 class OpInsertComponent : public SceneOperation
 {
 public:
-    OpInsertComponent(SheetScene *scene, Object *obj);
+    OpInsertComponent(SheetScene *scene, Component *obj);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

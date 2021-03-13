@@ -1,3 +1,4 @@
+/// @file sheetscene.h
 #ifndef SHEETSCENE_H
 #define SHEETSCENE_H
 
@@ -21,7 +22,7 @@ class GConnectionSuggester;
 class SceneOperation;
 
 /**
- * @brief A scene containing a sheet of paper.
+ * @brief A specialized `QGraphicsScene` containing a sheet of paper.
  */
 class SheetScene : public QGraphicsScene
 {
@@ -141,7 +142,11 @@ private:
     // HELPERS
     QPointF constrainToContentArea(QPointF pt) const;
     void applyCursorMovement(const QPointF &pt);
-    void insertComponentOrHeader(Object *obj);
+    /**
+     * @brief Called when the user drags an item from the symbol browser into the
+     * scene.
+     */
+    void insertComponentOrHeader(const Object &obj);
     bool askHeaderChangeConfirmation() const;
     QList<QPair<Terminal::Prong, Terminal::Prong>>
         getConnectionSuggestions(GComponent *component);

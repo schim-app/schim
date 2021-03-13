@@ -1,3 +1,4 @@
+/// @file completer.h
 #ifndef COMPLETER_H
 #define COMPLETER_H
 
@@ -30,13 +31,22 @@ private:
     bool processVimAction(const Vim::Action &action);
 };
 
+/**
+ * @brief A proxy model that flattens a `Database` into a list model.
+ */
 class CompleterProxyModel : public QAbstractProxyModel
 {
 
 public:
     CompleterProxyModel(QObject *parent = nullptr);
 
+    /**
+     * @brief Given an index in the proxy, obtain an index in the source.
+     */
     QModelIndex mapToSource(const QModelIndex &proxyIndex) const override;
+    /**
+     * @brief Given an index in the source, obtain an index in the model.
+     */
     QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
 
     // BORING PART
@@ -49,6 +59,12 @@ public:
     Database *sourceModel() const;
 };
 
+/**
+ * @brief Custom `QCompleter`.
+ *
+ * Currently only creates (and deletes) its own `CompleterProxyModel` for a
+ * `Database` model.
+ */
 class Completer : public QCompleter
 {
     Q_OBJECT

@@ -24,7 +24,8 @@ InsertCompleter::InsertCompleter(QWidget *parent) :
 
     setFocusProxy(ui->edit);
 
-    connect(completer, static_cast<void (QCompleter::*)(const QModelIndex&)>(&QCompleter::activated), this, &InsertCompleter::onActivated);
+    connect(completer,static_cast<void (QCompleter::*)(const QModelIndex&)>(&QCompleter::activated),
+            this, &InsertCompleter::onActivated);
 }
 
 InsertCompleter::~InsertCompleter()
@@ -56,7 +57,7 @@ void InsertCompleter::onActivated(const QModelIndex &index)
     QModelIndex ind = completionModel->mapToSource(index);
     auto *databaseItem = static_cast<DatabaseItem*>(ind.internalPointer());
     hide();
-    emit insertionRequested(databaseItem->getObject());
+    emit insertionRequested(*databaseItem->getObject());
 }
 
 void InsertCompleter::onFocusChanged(QWidget *a, QWidget *b)

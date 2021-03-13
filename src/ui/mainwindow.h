@@ -48,20 +48,12 @@ public:
      */
     Sheet *getSheet(int index = -1);
     bool isOpen(Sheet *sheet);
-    ProjectModel *getProjectModel();
+    ProjectManager *getProjectManager();
 
     // SETTERS
     void setTabId(int id);
     void setVimStatus(const QString &status);
     void setActiveProject(Project *project);
-
-    // OVERRIDEN
-    QMenu *createPopupMenu() override;
-
-    // EVENTS
-    bool eventFilter(QObject *obj, QEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
-    void closeEvent(QCloseEvent *event) override;
 
     // USER ACTIONS
     void nextTab(Vim::N n = 1);
@@ -86,6 +78,15 @@ public:
     void closeProject(Project *project);
     void closeSheetsForProject(Project *project);
 
+protected:
+    // EVENTS
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
+
+    // OVERRIDE QMainWindow
+    QMenu *createPopupMenu() override;
+
 private slots:
     // SLOTS
     void onTabCloseRequested(int index);
@@ -109,7 +110,7 @@ private:
 private:
     // ATTRIBUTES
     Ui::MainWindow *ui;
-    ProjectModel *projects;
+    ProjectManager *projects;
     bool menuBarShownPermanently = true;
     /// @see getPopupMenu()
     QMenu *popupMenu{};

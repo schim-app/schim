@@ -33,7 +33,7 @@ CompleterProxyModel *Completer::model()
     return static_cast<CompleterProxyModel*>(QCompleter::model());
 }
 
-////////////////////////////////////////////////////////////////////////////////
+// class CompleterProxyModel ****************************************************
 
 // HELPER FUNCTIONS
 
@@ -141,7 +141,7 @@ Database *CompleterProxyModel::sourceModel() const
     return static_cast<Database*>(QAbstractProxyModel::sourceModel());
 }
 
-////////////////////////////////////////////////////////////////////////////////
+// class CompleterEdit **********************************************************
 
 CompleterEdit::CompleterEdit(QWidget *parent)
     : QLineEdit(parent) { }

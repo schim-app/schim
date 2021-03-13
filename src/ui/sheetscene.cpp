@@ -9,7 +9,7 @@
 #include "ui/objects/gterminal.h"
 #include "ui/commands.h"
 #include "ui/operations.h"
-#include "ui/widgets/componentlist.h"
+#include "ui/widgets/symbolbrowser.h"
 
 #include <QAction>
 #include <QColor>
@@ -327,14 +327,16 @@ void SheetScene::applyCursorMovement(const QPointF &pt)
     update();
 }
 
-void SheetScene::insertComponentOrHeader(Object *obj)
+void SheetScene::insertComponentOrHeader(const Object &obj)
 {
-    Header *hdr = dynamic_cast<Header*>(obj->clone());
-    if (hdr)
-        // Replace the current sheet header with this one
+    Object *clone = obj.clone();
+    Header *hdr = dynamic_cast<Header*>(clone);
+    if (hdr) // The object is a header
+        // Replace the current sheet's header with this one, provided the user
+        // confirms it.
         tryChangeHeader(hdr);
-    else // Start scene operation
-        startOperation(new OpInsertComponent(this, obj->clone()));
+    else if(dynamic_cast<Component*>(clone)) // The object is a component
+        startOperation(new OpInsertComponent(this, (Component*) clone));
 }
 
 bool SheetScene::askHeaderChangeConfirmation() const
@@ -494,28 +496,28 @@ void SheetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void SheetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    if (dynamic_cast<ComponentList*>(event->source()))
+    if (dynamic_cast<SymbolBrowser*>(event->source()))
         event->accept();
 }
 
 void SheetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-    if (dynamic_cast<ComponentList*>(event->source()))
+    if (dynamic_cast<SymbolBrowser*>(event->source()))
         event->acceptProposedAction();
 }
 
 void SheetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     rawCursorPos = event->scenePos();
-    if (dynamic_cast<ComponentList*>(event->source()))
+    if (dynamic_cast<SymbolBrowser*>(event->source()))
     { // A component is being dragged in
-        auto *componentList = (ComponentList*) event->source();
+        auto *componentList = (SymbolBrowser*) event->source();
         auto indexes = componentList->selectionModel()->selectedIndexes();
         if (indexes.size() > 0) // At least one component is selected
         {
             // Only the first selected component will be inserted
             auto *obj = static_cast<DatabaseItem*>(indexes[0].internalPointer())->getObject();
-            insertComponentOrHeader(obj);
+            insertComponentOrHeader(*obj);
         }
     }
 }

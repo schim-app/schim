@@ -6,29 +6,30 @@
 #include <QAbstractItemModel>
 #include <QString>
 
+/**
+ * @brief An item in a `Database`.
+ */
 class DatabaseItem
 {
 public:
+    /**
+     * @brief Construct a database item.
+     * @param path The path of the symbol represented by this item.
+     * @param parentItem The parent of this item in the tree.
+     *
+     * This will automatically resolve whether `path` points to a directory,
+     * symbol file, or a !meta file.
+     */
     explicit DatabaseItem(const QString &path, DatabaseItem *parentItem = nullptr);
     ~DatabaseItem();
 
     void appendItem(DatabaseItem *child);
 
-    // SETTERS
-    /**
-     * @brief Set the path of this database item.
-     */
-    void setPath(QString path);
-    /**
-     * @brief Set the friendly name of the item.
-     */
-    void setName(const QString &name);
-
     // GETTERS
     QString getName() const;
     QString getPath() const;
     /**
-     * @brief Return the icon used to represent the item in the component list.
+     * @brief Return the icon used to represent the item in the component browser.
      *
      * The icon is dynamically allocated only when it is to be displayed
      * to the user, and persists subsequently.
@@ -37,6 +38,19 @@ public:
     Object *getObject();
     Qt::ItemFlags getFlags() const;
     bool isDir() const;
+
+    // SETTERS
+    /**
+     * @brief Set the path of this database item.
+     */
+    void setPath(QString path);
+    /**
+     * @brief Set the friendly name of the item.
+     *
+     * This will normally be loaded from the symbol file (or !meta file for
+     * directories), but it can be changed manually as well.
+     */
+    void setName(const QString &name);
 
     // BOILERPLATE
     DatabaseItem *getChild(int row);
@@ -55,6 +69,11 @@ private:
     mutable QImage *icon{};
 };
 
+/**
+ * @brief A database of symbols.
+ *
+ * The database is represented by a tree model.
+ */
 class Database : public QAbstractItemModel
 {
     Q_OBJECT
@@ -68,7 +87,9 @@ public:
      * Each item is displayed only with a preview icon and a name.
      */
     QVariant data(const QModelIndex &index, int role) const override;
-    /// @brief Update the database from the file system.
+    /**
+     * @brief Update the database from the file system.
+     */
     void update();
     /**
      * @brief Iterate through all leaves of the database tree.
@@ -92,7 +113,13 @@ public:
 private:
 
     // HELPERS
-    /// @brief Recursively add all subdirectories and subfiles of `parent`.
+    /**
+     * @brief Recursively add all subdirectories and subfiles to `parent`.
+     *
+     * This will iterate through the entire directory tree inside `dir` and form
+     * a corresponding tree in the model. `parent` is the database item that
+     * represents the given directory `dir`.
+     */
     void iterate(const QString &dir, DatabaseItem *parent);
 
     // ATTRIBUTES

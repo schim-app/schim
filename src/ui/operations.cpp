@@ -173,7 +173,7 @@ GText *OpInsertText::object() const
 
 //////////////////////////////////////////////////////////////////////////////////
 
-OpInsertComponent::OpInsertComponent(SheetScene *scene, Object *obj)
+OpInsertComponent::OpInsertComponent(SheetScene *scene, Component *obj)
     : SceneOperation(scene)
 {
     this->obj = GObject::assign(obj);

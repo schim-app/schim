@@ -15,9 +15,9 @@ ProjectBrowser::ProjectBrowser(QWidget *parent)
 {
 }
 
-ProjectModel *ProjectBrowser::model()
+ProjectManager *ProjectBrowser::model()
 {
-    return (ProjectModel*) QTreeView::model();
+    return (ProjectManager*) QTreeView::model();
 }
 
 void ProjectBrowser::mouseDoubleClickEvent(QMouseEvent *event)
@@ -26,8 +26,8 @@ void ProjectBrowser::mouseDoubleClickEvent(QMouseEvent *event)
     {
         auto index = indexAt(event->pos());
         if (!index.isValid()) return; // No item was clicked
-        if (index.data(ProjectModel::EntityTypeRole).toInt()
-                == ProjectModel::ProjectEntity)
+        if (index.data(ProjectManager::EntityTypeRole).toInt()
+                == ProjectManager::ProjectEntity)
         {
             MainWindow::getInstance()->setActiveProject(
                         (Project*) index.internalPointer());
@@ -52,11 +52,11 @@ void ProjectBrowser::contextMenuEvent(QContextMenuEvent *event)
     auto index = indexAt(event->pos());
     if (!index.isValid()) return;
     // Item type - project or sheet
-    int type = index.data(ProjectModel::EntityTypeRole).toInt();
+    int type = index.data(ProjectManager::EntityTypeRole).toInt();
 
     // Create a context menu depending on the type of the selected item
     QMenu *menu;
-    if (type == ProjectModel::ProjectEntity)
+    if (type == ProjectManager::ProjectEntity)
         menu = createProjectMenu((Project*) index.internalPointer());
     else
         menu = createSheetMenu((Sheet*) index.internalPointer());
@@ -64,6 +64,8 @@ void ProjectBrowser::contextMenuEvent(QContextMenuEvent *event)
     menu->exec(event->globalPos());
     delete menu;
 }
+
+// HELPERS
 
 QMenu *ProjectBrowser::createProjectMenu(Project *project)
 {
@@ -115,7 +117,7 @@ QMenu *ProjectBrowser::createSheetMenu(Sheet *sheet)
         actionOpenSheet->setDisabled(true);
     connect(actionDelete, &QAction::triggered, [this, sheet]() {
         MainWindow::getInstance()->closeSheet(sheet);
-        model()->deleteSheet(sheet);
+        model()->removeSheet(sheet);
     });
     connect(actionOpenSheet, &QAction::triggered, [sheet]() {
         MainWindow::getInstance()->openSheet(sheet);
@@ -140,17 +142,17 @@ QMenu *ProjectBrowser::createSheetMenu(Sheet *sheet)
 
 // GETTERS
 
-QList<Project *> &ProjectModel::getProjects()
+QList<Project *> &ProjectManager::getProjects()
 {
     return projects;
 }
 
-Project *ProjectModel::getActiveProject() const
+Project *ProjectManager::getActiveProject() const
 {
     return activeProject;
 }
 
-QModelIndex ProjectModel::getIndex(Entity *entity) const
+QModelIndex ProjectManager::getIndex(Entity *entity) const
 {
     if (dynamic_cast<Project*>(entity))
         return index(projects.indexOf((Project*) entity), 0, {});
@@ -164,14 +166,14 @@ QModelIndex ProjectModel::getIndex(Entity *entity) const
         return {};
 }
 
-bool ProjectModel::isEmpty() const
+bool ProjectManager::isEmpty() const
 {
     return rowCount({}) == 0;
 }
 
 // SETTERS
 
-void ProjectModel::setActiveProject(Project *project)
+void ProjectManager::setActiveProject(Project *project)
 {
     Project *previousActive = activeProject;
     activeProject = project;
@@ -186,7 +188,7 @@ void ProjectModel::setActiveProject(Project *project)
     }
 }
 
-void ProjectModel::addProject(Project *project)
+void ProjectManager::addProject(Project *project)
 {
     for (auto *proj : projects)
         if (proj->getFileName() != "" && resolveAbsPath(proj->getFileName())
@@ -197,7 +199,7 @@ void ProjectModel::addProject(Project *project)
     endInsertRows();
 }
 
-void ProjectModel::addSheet(Sheet *sheet, int index, Project *project)
+void ProjectManager::addSheet(Sheet *sheet, int index, Project *project)
 {
     if (project == nullptr) project = getActiveProject();
 
@@ -206,17 +208,18 @@ void ProjectModel::addSheet(Sheet *sheet, int index, Project *project)
     endInsertRows();
 }
 
-void ProjectModel::removeProject(Project *project)
+void ProjectManager::removeProject(Project *project)
 {
     auto row = projects.indexOf(project);
     beginRemoveRows({}, row, row);
     if (projects.isEmpty())
         setActiveProject(nullptr);
     projects.removeAt(row);
+    delete project;
     endRemoveRows();
 }
 
-void ProjectModel::deleteSheet(Sheet *sheet)
+void ProjectManager::removeSheet(Sheet *sheet)
 {
     Project *project = sheet->getParent();
     int index = sheet->getIndex();
@@ -226,9 +229,9 @@ void ProjectModel::deleteSheet(Sheet *sheet)
     endRemoveRows();
 }
 
-// QAbstractItemModel INTERFACE
+// OVERRIDE QAbstractItemModel
 
-QVariant ProjectModel::data(const QModelIndex &index, int role) const
+QVariant ProjectManager::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return {};
     Entity *ptr = static_cast<Entity*>(index.internalPointer());
@@ -250,7 +253,7 @@ QVariant ProjectModel::data(const QModelIndex &index, int role) const
         return {};
 }
 
-int ProjectModel::rowCount(const QModelIndex &parent) const
+int ProjectManager::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) return projects.size();
     Entity *ptr = static_cast<Entity*>(parent.internalPointer());
@@ -262,12 +265,12 @@ int ProjectModel::rowCount(const QModelIndex &parent) const
         return 0;
 }
 
-int ProjectModel::columnCount(const QModelIndex &parent) const
+int ProjectManager::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QModelIndex ProjectModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex ProjectManager::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
         return {};
@@ -282,7 +285,7 @@ QModelIndex ProjectModel::index(int row, int column, const QModelIndex &parent) 
 
 }
 
-QModelIndex ProjectModel::parent(const QModelIndex &child) const
+QModelIndex ProjectManager::parent(const QModelIndex &child) const
 {
     if (!child.isValid()) return {};
     Entity *ptr = static_cast<Entity*>(child.internalPointer());
@@ -296,7 +299,7 @@ QModelIndex ProjectModel::parent(const QModelIndex &child) const
     }
 }
 
-Qt::ItemFlags ProjectModel::flags() const
+Qt::ItemFlags ProjectManager::flags() const
 {
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }

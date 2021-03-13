@@ -8,7 +8,7 @@
 
 
 /**
- * @brief Graphical representation of a rectangle.
+ * @brief Graphical rectangle object that wraps a `Rect`.
  */
 class GRect : public GObject
 {

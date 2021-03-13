@@ -84,7 +84,7 @@
        <string/>
       </property>
       <property name="statusTip">
-       <string>Widget tabView in src/ui/mainwindow.ui</string>
+       <string>Widget tabWidget in src/ui/mainwindow.ui</string>
       </property>
       <property name="whatsThis">
        <string/>
@@ -261,7 +261,7 @@
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>Components</string>
+    <string>Symbols</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -276,7 +276,7 @@
       </widget>
      </item>
      <item>
-      <widget class="ComponentList" name="componentList">
+      <widget class="SymbolBrowser" name="symbolBrowser">
        <property name="toolTip">
         <string>Component selector</string>
        </property>
@@ -286,6 +286,9 @@
        <property name="whatsThis">
         <string>Here you can browse components and add them to a sheet by dragging. You can also change a sheet's header by dragging it to the sheet.</string>
        </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -563,14 +566,14 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ComponentList</class>
-   <extends>QListWidget</extends>
-   <header>ui/widgets/componentlist.h</header>
-  </customwidget>
-  <customwidget>
    <class>ProjectBrowser</class>
    <extends>QTreeView</extends>
    <header>ui/widgets/projectbrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SymbolBrowser</class>
+   <extends>QTreeView</extends>
+   <header>ui/widgets/symbolbrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

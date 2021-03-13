@@ -67,7 +67,7 @@ add_executable(schim
     ui/sheetview.cpp 
     ui/widgets/completer.cpp
     ui/widgets/insertcompleter.cpp
-    ui/widgets/componentlist.cpp 
+    ui/widgets/symbolbrowser.cpp
     ui/widgets/projectbrowser.cpp
     ui/widgets/variableeditor.cpp 
     ui/windows/componentsettings.cpp 

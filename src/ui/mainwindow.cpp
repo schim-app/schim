@@ -26,7 +26,8 @@
 
 #include <iostream>
 
-MainWindow* MainWindow::instance{};
+/// Singleton instance
+MainWindow *MainWindow::instance{};
 
 // CONSTRUCTORS
 
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->clear();
     setVimStatus("");
     ui->statusBar->hide();
-    ui->projectBrowser->setModel(projects = new ProjectModel);
+    ui->projectBrowser->setModel(projects = new ProjectManager);
 
     // Override tab close requests for proper cleanup
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested,
@@ -110,7 +111,7 @@ bool MainWindow::isOpen(Sheet *sheet)
     return false;
 }
 
-ProjectModel *MainWindow::getProjectModel()
+ProjectManager *MainWindow::getProjectManager()
 {
     return projects;
 }
@@ -141,84 +142,6 @@ void MainWindow::setActiveProject(Project *project)
 
     if (project->getFileName() != "")
         changeSetting("default_path", resolvePath(project->getFileName()));
-}
-
-// OVERRIDEN
-
-QMenu *MainWindow::createPopupMenu()
-{
-    QMenu *menu = QMainWindow::createPopupMenu();
-    if (menu == nullptr) menu = new QMenu;
-
-    // Setup menu
-    menu->setParent(this);
-    menu->setToolTipsVisible(true);
-    menu->setTitle("Widgets");
-
-    // Populate menu
-    menu->addSeparator();
-    QAction *showTabs = menu->addAction("Show tabs");
-    QAction *menuBar = menu->addAction("Show menu bar permanently");
-
-    // Actions initialization
-    showTabs->setCheckable(true);
-    showTabs->setChecked(ui->tabWidget->tabBar()->isVisible());
-    menuBar->setToolTip("Do not display sheets as tabs");
-    menuBar->setCheckable(true);
-    menuBar->setChecked(menuBarShownPermanently);
-    menuBar->setToolTip("Show/hide the menu bar "
-                        "(hold Alt to temporarily show it)");
-    // Connections
-    connect(showTabs, &QAction::triggered, menu, [this, showTabs]() {
-        ui->tabWidget->tabBar()->setVisible(showTabs->isChecked());
-        showTabs->setChecked(showTabs->isChecked());
-    });
-    connect(menuBar, &QAction::triggered, menu, [this, menuBar]() {
-        showMenubarPermanently(menuBar->isChecked());
-        menuBar->setChecked(menuBarShownPermanently);
-    });
-
-    return menu;
-}
-
-// EVENTS
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-    // If the menu bar is shown only temporarily:
-    // 1. If the user holds Alt, show the menu bar while he/she is holding it
-    // 2. If the user presses a mouse button in any widget, hide the menu bar
-    // TODO this is not complete, but it's not a priority to fix this. Problems:
-    // 1. Menu actions don't work when the menuBar is hidden
-    // 2. When a menu is active, hiding the menuBar doesn't hide the menu popup
-    // 3. This implementation is embarrassingly inelegant either way, please help.
-    if (!menuBarShownPermanently)
-    {
-        if (obj != ui->menuBar
-                && event->type() == QEvent::MouseButtonPress)
-            ui->menuBar->hide();
-        else if (event->type() == QEvent::KeyPress
-                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
-            ui->menuBar->show();
-        else if (event->type() == QEvent::KeyRelease
-                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
-            ui->menuBar->hide();
-    }
-    return QMainWindow::eventFilter(obj, event);
-}
-
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-    Vim::registerKeyPress(event, [this](const Vim::Action &action) {
-        processVimAction(action);
-        return true; // Top-level parent should return true
-    });
-    return QMainWindow::keyPressEvent(event);
-}
-
-void MainWindow::closeEvent(QCloseEvent *)
-{
-    saveSettings();
 }
 
 // USER ACTIONS
@@ -480,6 +403,84 @@ void MainWindow::saveSettings()
     changeSetting("GUI/showTabs", ui->tabWidget->tabBar()->isVisible(), false);
     // Vim-mode
     changeSetting("UI/enableVimMode", Vim::enabled(), true);
+}
+
+// EVENTS
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    // If the menu bar is shown only temporarily:
+    // 1. If the user holds Alt, show the menu bar while he/she is holding it
+    // 2. If the user presses a mouse button in any widget, hide the menu bar
+    // TODO this is not complete, but it's not a priority to fix this. Problems:
+    // 1. Menu actions don't work when the menuBar is hidden
+    // 2. When a menu is active, hiding the menuBar doesn't hide the menu popup
+    // 3. This implementation is embarrassingly inelegant either way, please help.
+    if (!menuBarShownPermanently)
+    {
+        if (obj != ui->menuBar
+                && event->type() == QEvent::MouseButtonPress)
+            ui->menuBar->hide();
+        else if (event->type() == QEvent::KeyPress
+                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
+            ui->menuBar->show();
+        else if (event->type() == QEvent::KeyRelease
+                && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt)
+            ui->menuBar->hide();
+    }
+    return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    Vim::registerKeyPress(event, [this](const Vim::Action &action) {
+        processVimAction(action);
+        return true; // Top-level parent should return true
+    });
+    return QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+    saveSettings();
+}
+
+// OVERRIDE QMainWindow
+
+QMenu *MainWindow::createPopupMenu()
+{
+    QMenu *menu = QMainWindow::createPopupMenu();
+    if (menu == nullptr) menu = new QMenu;
+
+    // Setup menu
+    menu->setParent(this);
+    menu->setToolTipsVisible(true);
+    menu->setTitle("Widgets");
+
+    // Populate menu
+    menu->addSeparator();
+    QAction *showTabs = menu->addAction("Show tabs");
+    QAction *menuBar = menu->addAction("Show menu bar permanently");
+
+    // Actions initialization
+    showTabs->setCheckable(true);
+    showTabs->setChecked(ui->tabWidget->tabBar()->isVisible());
+    menuBar->setToolTip("Do not display sheets as tabs");
+    menuBar->setCheckable(true);
+    menuBar->setChecked(menuBarShownPermanently);
+    menuBar->setToolTip("Show/hide the menu bar "
+                        "(hold Alt to temporarily show it)");
+    // Connections
+    connect(showTabs, &QAction::triggered, menu, [this, showTabs]() {
+        ui->tabWidget->tabBar()->setVisible(showTabs->isChecked());
+        showTabs->setChecked(showTabs->isChecked());
+    });
+    connect(menuBar, &QAction::triggered, menu, [this, menuBar]() {
+        showMenubarPermanently(menuBar->isChecked());
+        menuBar->setChecked(menuBarShownPermanently);
+    });
+
+    return menu;
 }
 
 // SLOTS

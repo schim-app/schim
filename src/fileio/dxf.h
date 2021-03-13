@@ -1,3 +1,4 @@
+/// @file dxf.h
 #ifndef DXFFILTER_H
 #define DXFFILTER_H
 
@@ -8,17 +9,19 @@
 #include <model/compositeobject.h>
 
 /**
- * A class that helps dxflib read a DXF file and generate a graphical object.
- * Refer to the dxflib documentation.
+ * @brief A class that facilitates conversion to and from DXF files
+ *
+ * For details refer to the dxflib documentation.
  */
 class DXFFilter : public DL_CreationAdapter
 {
-    CompositeObject *obj;
 public:
 
     DXFFilter(CompositeObject *obj);
 
     virtual void addLine(const DL_LineData &d);
+private:
+    CompositeObject *obj;
 };
 
 CompositeObject *dxfParseCompositeObject(const QString &filename);

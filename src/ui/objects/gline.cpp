@@ -20,7 +20,13 @@ const Line *GLine::get() const
     return (Line*) obj;
 }
 
-// OVERRIDEN QGraphicsItem METHODS
+// OVERRIDE QGraphicsItem
+
+QRectF GLine::boundingRect() const
+{
+    // TODO maybe make this more efficient
+    return shape().boundingRect();
+}
 
 QPainterPath GLine::shape() const
 {
@@ -68,13 +74,7 @@ void GLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawPath(shape());
 }
 
-QRectF GLine::boundingRect() const
-{
-    // TODO maybe make this more efficient
-    return shape().boundingRect();
-}
-
-// FOR EDITING THE OBJECT
+// OBJECT EDITING
 
 void GLine::reloadFromModel()
 {

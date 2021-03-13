@@ -5,6 +5,9 @@
 
 #include "model/compositeobject.h"
 
+/**
+ * @brief A graphical object that wraps a `CompositeObject`.
+ */
 class GCompositeObject : public GObject
 {
 public:

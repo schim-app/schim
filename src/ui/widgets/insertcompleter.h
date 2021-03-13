@@ -29,7 +29,7 @@ signals:
      *
      * @note Do not place `obj` into the scene directly -- clone it first.
      */
-    void insertionRequested(Object *obj);
+    void insertionRequested(const Object &obj);
 
 private slots:
     /**

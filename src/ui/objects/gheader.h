@@ -1,3 +1,4 @@
+/// @file gheader.h
 #ifndef GHEADER_H
 #define GHEADER_H
 
@@ -7,7 +8,7 @@
 #include <QVariant>
 
 /**
- * @brief Graphical representation of a `Header` in a scene.
+ * @brief Graphical object that wraps a `Header`.
  */
 class GHeader : public GCompositeObject
 {

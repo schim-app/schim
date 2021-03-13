@@ -1,4 +1,4 @@
-#include "componentlist.h"
+#include "symbolbrowser.h"
 
 #include "global.h"
 #include "fileio/miscfiles.h"
@@ -15,13 +15,12 @@
 #include <QDebug>
 #include <QFileSystemModel>
 
-ComponentList::ComponentList(QWidget *parent)
+SymbolBrowser::SymbolBrowser(QWidget *parent)
     : QTreeView(parent)
 {
     setDragEnabled(true);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
-    header()->hide();
 
     //TODO this is just a test database
     if (globalDatabase == nullptr)
@@ -30,7 +29,7 @@ ComponentList::ComponentList(QWidget *parent)
     setModel(globalDatabase); // TODO create this database elsewhere
 }
 
-Database *ComponentList::model()
+Database *SymbolBrowser::model()
 {
     return static_cast<Database*>(QTreeView::model());
 }

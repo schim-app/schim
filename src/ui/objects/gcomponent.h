@@ -6,6 +6,9 @@
 
 #include <QObject>
 
+/**
+ * @brief Graphical object that wraps a `Component`.
+ */
 class GComponent : public GCompositeObject
 {
     Q_OBJECT

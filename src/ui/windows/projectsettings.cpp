@@ -2,6 +2,7 @@
 #include "ui_projectsettings.h"
 
 #include "ui/mainwindow.h"
+#include "global.h"
 
 #include <QPushButton>
 
@@ -32,7 +33,7 @@ ProjectSettings::ProjectSettings(QWidget *parent) :
             static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &ProjectSettings::loadProject);
     // When the user selects a settings category
-    connect(ui->selector->selectionModel(), &QItemSelectionModel::currentChanged,
+    connect(ui->navigator->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &ProjectSettings::onCategorySelected);
     connect(ui->buttonBox->button(QDialogButtonBox::Apply),
             &QPushButton::clicked, this, &ProjectSettings::apply);
@@ -97,7 +98,7 @@ void ProjectSettings::reject()
     QDialog::reject();
 }
 
-// SETUP HELPERS
+// HELPERS
 
 void ProjectSettings::populateSelector()
 {
@@ -124,14 +125,14 @@ void ProjectSettings::populateSelector()
     model->appendRow(itemDefaults);
 
     // Display
-    ui->selector->setModel(model);
-    ui->selector->setCurrentIndex(model->index(0, 0));
+    ui->navigator->setModel(model);
+    ui->navigator->setCurrentIndex(model->index(0, 0));
 }
 
 void ProjectSettings::populateProjectComboBox()
 {
     // Add projects to the combo box
-    auto *projModel = MainWindow::getInstance()->getProjectModel();
+    auto *projModel = MainWindow::getInstance()->getProjectManager();
     projects = projModel->getProjects();
     for (int i = 0; i < projects.count(); ++i)
         ui->comboProject->addItem(projects[i]->getName(), i);

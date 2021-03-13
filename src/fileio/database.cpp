@@ -30,33 +30,6 @@ void DatabaseItem::appendItem(DatabaseItem *child)
     child->parent = this;
 }
 
-// SETTERS
-
-void DatabaseItem::setPath(QString path)
-{
-    if (path != this->path)
-    {
-        this->path = path;
-        path = resolvePath(path);
-        delete object;
-        if (QFileInfo(path).isDir())
-            object = nullptr;
-        else
-        {
-            setName(xmlPeekName(path));
-            object = (CompositeObject *) xmlParseObject(path);
-            object->setSourceFile(this->path);
-        }
-        // Invalidate the icon - it will have to be generated again when required
-        icon = nullptr;
-    }
-}
-
-void DatabaseItem::setName(const QString &name)
-{
-    this->name = name;
-}
-
 // GETTERS
 
 QString DatabaseItem::getName() const
@@ -133,6 +106,33 @@ bool DatabaseItem::isDir() const
     return object == nullptr;
 }
 
+// SETTERS
+
+void DatabaseItem::setPath(QString path)
+{
+    if (path != this->path)
+    {
+        this->path = path;
+        path = resolvePath(path);
+        delete object;
+        if (QFileInfo(path).isDir())
+            object = nullptr;
+        else
+        {
+            setName(xmlPeekName(path));
+            object = (CompositeObject *) xmlParseObject(path);
+            object->setSourceFile(this->path);
+        }
+        // Invalidate the icon - it will have to be generated again when required
+        icon = nullptr;
+    }
+}
+
+void DatabaseItem::setName(const QString &name)
+{
+    this->name = name;
+}
+
 // BOILERPLATE
 
 DatabaseItem *DatabaseItem::getChild(int row)
@@ -202,13 +202,15 @@ QVariant Database::data(const QModelIndex &index, int role) const
 
 void Database::update()
 {
+    // Delete the root item and recursively add the directory from scratch
     if (rootItem)
         delete rootItem;
     rootItem = new DatabaseItem(path);
     iterate(resolvePath(path), rootItem);
 }
 
-bool Database::iterateLeaves(const QModelIndex &ind, std::function<bool (const QModelIndex &)> fun)
+bool Database::iterateLeaves(const QModelIndex &ind,
+                             std::function<bool (const QModelIndex &)> fun)
 {
      if (ind.isValid() && !fun(ind))
          return false;
@@ -255,7 +257,7 @@ QModelIndex Database::index(int row, int column, const QModelIndex &parent) cons
 QModelIndex Database::parent(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return {};
+        return {}; // Root item is considered its parent
 
     DatabaseItem *childItem = static_cast<DatabaseItem*>(index.internalPointer());
     DatabaseItem *parentItem = childItem->getParentItem();
@@ -292,18 +294,26 @@ int Database::columnCount(const QModelIndex &parent) const
 
 void Database::iterate(const QString &dir, DatabaseItem *parent)
 {
-    QDir _dir(dir, "", QDir::DirsLast | QDir::Name, QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
-    foreach (auto file, _dir.entryInfoList())
+    QDir _dir(dir, "", QDir::DirsLast | QDir::Name,
+              QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
+    // For each entry (file or directory) in `dir`
+    foreach (auto entry, _dir.entryInfoList())
     {
-        if (file.isDir())
-        {
-            auto *dirItem = new DatabaseItem(file.absoluteFilePath()); // which path to show here?
-            iterate(file.absoluteFilePath(), dirItem);
+        // Test if `entry` is a file or directory
+        if (entry.isDir())
+        { // It is
+            // Form an item that corresponds to the directory
+            auto *dirItem = new DatabaseItem(entry.absoluteFilePath()); // which path to show here?
+            // Recurse into the directory
+            iterate(entry.absoluteFilePath(), dirItem);
+            // Add the directory to its parent in the model
             parent->appendItem(dirItem);
         }
-        else if (file.fileName() == "!meta")
-            parent->setName(readMeta(file.absolutePath()));
+        else if (entry.fileName() == "!meta")
+            // Entry is a meta file that contains info about its directory
+            parent->setName(readMeta(entry.absolutePath()));
         else
-            parent->appendItem(new DatabaseItem(file.absoluteFilePath()));
+            // Normal file - add it as an item in the tree
+            parent->appendItem(new DatabaseItem(entry.absoluteFilePath()));
     }
 }

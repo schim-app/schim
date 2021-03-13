@@ -280,7 +280,7 @@ void SheetView::onCursorMoved()
     setMouseTracking(true);
 }
 
-void SheetView::onInsertionRequested(Object *obj)
+void SheetView::onInsertionRequested(const Object &obj)
 {
     setFocus();
     scene()->insertComponentOrHeader(obj);
