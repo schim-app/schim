@@ -2,6 +2,8 @@
 #ifndef ABSTRACTSETTINGSDIALOG_H
 #define ABSTRACTSETTINGSDIALOG_H
 
+#include "ui/vim.h"
+
 #include <QDialog>
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -67,6 +69,11 @@ protected slots:
     virtual void accept() override;
     virtual void reject() override;
 
+protected:
+    // EVENTS
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual bool eventFilter(QObject *obj, QEvent *e) override;
+
 private slots:
     /**
      * @brief Called when a user changes a settings category.
@@ -74,6 +81,9 @@ private slots:
     void onCategorySelected(const QModelIndex &index);
 
 private:
+    // HELPERS
+    bool processVimAction(const Vim::Action &action);
+
     // ATTRIBUTES
     Ui::AbstractSettingsDialog *ui;
     QStandardItemModel *model{};
