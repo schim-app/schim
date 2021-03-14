@@ -2,17 +2,18 @@
 #ifndef PROJECTSETTINGS_H
 #define PROJECTSETTINGS_H
 
+#include "ui/windows/abstractsettingsdialog.h"
+
 #include "model/project.h"
 
-#include <QDialog>
-#include <QStandardItemModel>
+#include <QComboBox>
 
 namespace Ui { class ProjectSettings; }
 
 /**
  * @brief Dialog to change the project settings.
  */
-class ProjectSettings : public QDialog
+class ProjectSettings : public AbstractSettingsDialog
 {
     Q_OBJECT
 
@@ -21,34 +22,29 @@ public:
     explicit ProjectSettings(QWidget *parent = nullptr);
     ~ProjectSettings();
 
-private slots:
+signals:
+    void nameChanged(int projectId);
+
+protected slots:
+    // USER ACTIONS
+    virtual void apply() override;
+    virtual void accept() override;
+    virtual void reject() override;
+
+private:
+    // HELPERS
+    void initializeProjectComboBox();
     /**
      * @brief Load a project's data into all the widgets.
      */
     void loadProject(int index);
-    /**
-     * @brief Called when a user changes a settings category.
-     */
-    void onCategorySelected(const QModelIndex &index);
-
-    // USER ACTIONS
-    void apply();
-    void accept() override;
-    void reject() override;
-
-private:
-    // HELPERS
-    void populateSelector();
-    void populateProjectComboBox();
 
     // ATTRIBUTES
-    Ui::ProjectSettings *ui;
     QList<Project*> projects;
     Project *project{};
-    QStandardItem *itemInfo{}, *itemVariables{}, *itemDefaults{};
-    QStandardItemModel *model{};
     int activeProjectIndex;
-
+    QComboBox *comboProject;
+    Ui::ProjectSettings *ui{};
 };
 
 #endif // PROJECTSETTINGS_H
