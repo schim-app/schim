@@ -6,7 +6,7 @@ ifeq (${SCHIM_EXECUTABLE},)
   endif
 endif
 
-MINIMAL_XML = ../res/examples/minimal.xml
+MINIMAL_XML = ../res/examples/minimal.schim
 
 .PHONY: cli-export
 

@@ -34,10 +34,10 @@ namespace // Local 'private' functions
     int doExport(QString format, const QString &input, const QString &output)
     {
         if (format == "")
-        { // Format auto-detection based on extension
+        { // Output format is auto-detected based on file extension
             QFileInfo finfo(output);
-            QString ext = finfo.suffix();
-            if (ext.isEmpty())
+            QString ext = finfo.suffix(); // File extension
+            if (ext.isEmpty()) // Output file has no extension
             {
                 std::cerr << "schim export: Unable to detect format based on output file extension.\n"
                           << "Specify the output format with --format=<FORMAT> instead.\n";
@@ -48,7 +48,7 @@ namespace // Local 'private' functions
         }
         if (format == "pdf")
         {
-            // TODO add other input formats
+            // TODO add input formats other than XML
             try
             {
                 Project *project = xmlParseProject(input);
@@ -67,7 +67,8 @@ namespace // Local 'private' functions
         }
         else
         {
-            std::cerr << "schim export: Unknown format '" << format.toStdString() << "'.\n";
+            std::cerr << "schim export: Unknown output format '" <<
+                         format.toStdString() << "'.\n";
         }
         return 0;
     }
@@ -75,7 +76,7 @@ namespace // Local 'private' functions
 
 int cli_export(QStringList args)
 {
-    auto &parser = setupParser();
+    QCommandLineParser &parser = setupParser();
     parser.process(args);
 
     // Help option
@@ -85,9 +86,12 @@ int cli_export(QStringList args)
         return 0;
     }
 
-    // Needed so that we can use QGraphicsScene and such
-    int argc = 1; char *argv[] = {const_cast<char*>("")}; // Dummies
-    QApplication app(argc, argv);
+    // Dummy variables just so we can construct a QApplication
+    int argc = 1; char *argv[] = {const_cast<char*>("")};
+    delete qApp;
+    // We change QCoreApplication to QApplication so we can use QGraphicsScene
+    // and such
+    new QApplication(argc, argv);
 
     // Positional arguments
     auto posArgs = parser.positionalArguments();
@@ -98,6 +102,7 @@ int cli_export(QStringList args)
         return ErrCode::MissingPosArg;
     }
 
+    // Argument that contains the input file
     QString input = posArgs[0];
 
 #ifndef Q_OS_UNIX // TODO Try to support Windows too, but 'tis not a priority.
