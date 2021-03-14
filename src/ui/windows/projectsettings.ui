@@ -131,9 +131,6 @@
            <property name="currentText">
             <string/>
            </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
           </widget>
          </item>
         </layout>
