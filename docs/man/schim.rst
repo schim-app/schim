@@ -7,19 +7,20 @@ SYNOPSIS
 
 .. code-block:: none
 
+   schim
    schim [--version] [--help]
    schim [<options>] [<command>]
 
-By default, if no <command> is specified, **schim-editor(1)** is run.
-This can be changed in the configuration (see **schim-config(1)**).
+By default, if no <command> or <options> are specified, **schim-editor(1)** is
+run.
 
 DESCRIPTION
 ===========
 
 Schim is a modern electrical schematic editor with a focus on industrial
-applications. Schim is most commonly used to create and edit schematics
-using the graphical editor it provides. It also provides a very rich CLI
-interface to automate a wide range of tasks.
+applications. Schim is most commonly used to create and edit schematics using
+the graphical editor it provides. It also provides a very rich CLI interface to
+automate a wide range of tasks.
 
 OPTIONS
 =======

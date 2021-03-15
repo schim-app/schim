@@ -7,6 +7,7 @@
 #include "global.h"
 #include "ui/mainwindow.h"
 #include "cli/cli_common.h"
+#include "cli/cli_editor.h"
 #include "cli/cli_export.h"
 
 void showHelp(const QString &text)
@@ -78,10 +79,13 @@ void renameApp(const QString &name, int &argc, char **argv)
  */
 int delegateCommand(const QStringList &args)
 {
-    if (args[0] == "export")
-    {
+    // The command was just `schim`
+    if (args.empty())
+        return cli_editor({""});
+    else if (args[0] == "editor")
+        return cli_editor(args);
+    else if (args[0] == "export")
         return cli_export(args);
-    }
     else
     {
         unknown_command(args[0]);
@@ -111,31 +115,17 @@ int main(int argc, char *argv[])
     }
 
     auto posArgs = parser.positionalArguments();
-    // The command was `schim editor` or just `schim`
-    if (posArgs.empty() || posArgs[0] == "editor")
-    {
-        QApplication app(argc, argv);
-        parser.process(args);
-        (new MainWindow)->show(); // Open the main window
-        // Any arguments will be opened as projects
-        if (posArgs.size() >= 2)
-            MainWindow::getInstance()->openProjectsFromFiles(
-                        QStringList(posArgs.begin()+1, posArgs.end()), 0);
-        return app.exec();
-    }
-    // A different command was run
-    else
-    {
-        new QCoreApplication(argc, argv);
-        // Process any arguments before the command
-        parser.process(args);
-        // Create a new app with the new application name
-        delete qApp;
-        renameApp("schim " + posArgs[0], argc, argv);
-        // Let the command be handled by its corresponding function
-        delegateCommand(posArgs);
-        delete qApp;
-    }
+    new QCoreApplication(argc, argv);
+    // Process any arguments before the command
+    parser.process(args);
+    // Create a new app with the new application name
+    delete qApp;
+    QString appName = posArgs.isEmpty() ? "schim" : "schim " + posArgs[0];
+    renameApp(appName, argc, argv);
+
+    // Let the command be handled by its corresponding function
+    delegateCommand(posArgs);
+    delete qApp;
 
     return 0;
 }

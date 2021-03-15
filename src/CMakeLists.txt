@@ -74,10 +74,12 @@ add_executable(schim
     ui/windows/abstractsettingsdialog.cpp
     ui/windows/sheetsettings.cpp
     ui/windows/projectsettings.cpp
+    ui/windows/preferences.cpp
     ui/windows/textsettings.cpp
     ui/windows/about.cpp
     cli/cli_common.cpp
     cli/cli_export.cpp
+    cli/cli_editor.cpp
 ### FORMS ###
     ui/mainwindow.ui 
     ui/widgets/insertcompleter.ui
@@ -86,6 +88,7 @@ add_executable(schim
     ui/windows/abstractsettingsdialog.ui
     ui/windows/sheetsettings.ui
     ui/windows/projectsettings.ui
+    ui/windows/preferences.ui
     ui/windows/textsettings.ui
 ### RESOURCES ###
     ../res/resources.qrc

@@ -72,7 +72,14 @@ namespace // Local 'private' functions
         }
         return 0;
     }
+
 }
+
+// Convert QCoreApplication to QApplication
+#define convertAppToGui() \
+        int argc = 1; char *argv[] = {const_cast<char*>("")}; \
+        delete qApp; \
+        new QApplication(argc, argv);
 
 int cli_export(QStringList args)
 {
@@ -86,12 +93,7 @@ int cli_export(QStringList args)
         return 0;
     }
 
-    // Dummy variables just so we can construct a QApplication
-    int argc = 1; char *argv[] = {const_cast<char*>("")};
-    delete qApp;
-    // We change QCoreApplication to QApplication so we can use QGraphicsScene
-    // and such
-    new QApplication(argc, argv);
+    convertAppToGui();
 
     // Positional arguments
     auto posArgs = parser.positionalArguments();

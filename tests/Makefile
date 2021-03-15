@@ -10,10 +10,20 @@ MINIMAL_XML = ../res/examples/minimal.schim
 
 .PHONY: cli-export
 
-tests: cli-export
+tests: cli
+
+cli: cli-info cli-export
+
+cli-info:
+	"${SCHIM_EXECUTABLE}" -h
+	"${SCHIM_EXECUTABLE}" --help
+	"${SCHIM_EXECUTABLE}" -v
+	"${SCHIM_EXECUTABLE}" --version
+	"${SCHIM_EXECUTABLE}" --help --version
 
 cli-export: 
 	mkdir -p _build/
+	"${SCHIM_EXECUTABLE}" export --help
 	"${SCHIM_EXECUTABLE}" export ${MINIMAL_XML} -o _build/minimal_autofmt.pdf
 	"${SCHIM_EXECUTABLE}" export ${MINIMAL_XML} --format=pdf -o _build/minimal_manualfmt.pdf
 	cat ${MINIMAL_XML} | "${SCHIM_EXECUTABLE}" export - -o _build/minimal_cat_o.pdf
