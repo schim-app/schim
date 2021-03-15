@@ -393,7 +393,7 @@ CompositeObject *xmlParseCompositeObject(QXmlStreamReader &stream)
         {
             // The content is taken from another file
             obj = parseCompositeObject(resolvePath(attr.value().toString()));
-            obj->setSourceFile(attr.value().toString());
+            obj->setFileName(attr.value().toString());
         }
     }
 
@@ -461,7 +461,7 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
             header = Header::absorb(
                         xmlParseHeader(resolvePath(attr.value().toString())));
             // TODO how can I make it possible to get the header data from a dxf file
-            header->setSourceFile(attr.value().toString());
+            header->setFileName(attr.value().toString());
         }
     }
 
@@ -548,7 +548,7 @@ Component *xmlParseComponent(QXmlStreamReader &stream)
         if (attr.name() == "from" && obj == nullptr)
         { // The content is taken from another file
             obj = Component::absorb(parseCompositeObject(resolvePath(attr.value().toString())));
-            obj->setSourceFile(attr.value().toString());
+            obj->setFileName(attr.value().toString());
         }
         else if_attr("x") pos.setX(attr.value().toFloat());
         else if_attr("y") pos.setY(attr.value().toFloat());

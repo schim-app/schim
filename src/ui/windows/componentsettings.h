@@ -12,7 +12,7 @@ namespace Ui { class ComponentEditor; }
 class ComponentSettings : public QDialog
 {
 public:
-    ComponentSettings(GComponent *component, QWidget *parent = nullptr);
+    explicit ComponentSettings(GComponent *component, QWidget *parent = nullptr);
     ~ComponentSettings();
 
 private:

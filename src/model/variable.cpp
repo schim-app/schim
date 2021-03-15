@@ -56,7 +56,7 @@ QString Variable::substitute(QString str, const VariableSet &variableSet)
     str.replace("%%", QString() + char(1));
 
     // Search for %pattern or %{pattern} in `str`
-    for(;;)
+    for (;;)
     {
         QRegExp matchedPattern;
         if (pattern1.indexIn(str) != -1)

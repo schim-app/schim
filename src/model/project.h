@@ -19,7 +19,7 @@ public:
     // CONSTRUCTORS
     /// @brief Construct an empty project with default properties.
     Project();
-    Project(const QList<Sheet*> &sheets);
+    explicit Project(const QList<Sheet*> &sheets);
     ~Project();
 
     // GETTERS
@@ -49,7 +49,6 @@ public:
 
 private:
     // ATTRIBUTES
-    VariableSet variables;
     QList<Sheet *> sheets;
     /**
      * Contains all textual project properties, except for the name -- the name

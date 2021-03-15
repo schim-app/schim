@@ -26,7 +26,7 @@ public:
      * Take all children from `obj`. Consequently, `obj` is emptied and this
      * object takes ownership of its children.
      */
-    Header(CompositeObject &&obj);
+    explicit Header(CompositeObject &&obj);
     /**
      * @brief Copy constructor.
      */

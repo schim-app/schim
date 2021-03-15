@@ -17,7 +17,7 @@ class DXFFilter : public DL_CreationAdapter
 {
 public:
 
-    DXFFilter(CompositeObject *obj);
+    explicit DXFFilter(CompositeObject *obj);
 
     virtual void addLine(const DL_LineData &d);
 private:

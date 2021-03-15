@@ -59,7 +59,7 @@ void SheetSettings::accept()
     if (ui->editHeader->text() != "")
     {
         hdr = xmlParseHeader(resolvePath(ui->editHeader->text()));
-        hdr->setSourceFile(ui->editHeader->text());
+        hdr->setFileName(ui->editHeader->text());
     }
     bool changed, confirmed;
     scene()->tryChangeHeader(hdr, &changed, &confirmed);

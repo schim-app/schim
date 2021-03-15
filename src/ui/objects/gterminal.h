@@ -8,7 +8,7 @@
 class GTerminal : public GObject
 {
 public:
-    GTerminal(Terminal *obj);
+    explicit GTerminal(Terminal *obj);
 
     // GETTERS
     Terminal *get();

@@ -16,7 +16,7 @@ class InsertCompleter : public QDialog
     Q_OBJECT
 
 public:
-    InsertCompleter(QWidget *parent);
+    explicit InsertCompleter(QWidget *parent);
     ~InsertCompleter();
 
     void setVisible(bool visible) override;

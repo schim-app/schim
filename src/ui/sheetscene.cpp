@@ -335,7 +335,7 @@ void SheetScene::insertComponentOrHeader(const Object &obj)
         // Replace the current sheet's header with this one, provided the user
         // confirms it.
         tryChangeHeader(hdr);
-    else if(dynamic_cast<Component*>(clone)) // The object is a component
+    else if (dynamic_cast<Component*>(clone)) // The object is a component
         startOperation(new OpInsertComponent(this, (Component*) clone));
 }
 

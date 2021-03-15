@@ -31,7 +31,7 @@ public:
      * The object is movable, selectable and sends geometry changes by default.
      * Hover events are accepted.
      */
-    GObject(Object *obj);
+    explicit GObject(Object *obj);
     /** Destroy any handles that are still active. */
     virtual ~GObject();
 
@@ -200,7 +200,7 @@ public:
      * `obj` is assigned as the parent of the handle in the scene.  The handle
      * is configured to send geometry changes.
      */
-    GObjectHandle(GObject *obj);
+    explicit GObjectHandle(GObject *obj);
 
     /** Return the scene cast to a SheetScene*. */
     SheetScene *scene();

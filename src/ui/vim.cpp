@@ -139,7 +139,7 @@ void updateStroke(const QKeyEvent &event, bool allowCount)
         return;
 }
 
-}
+} // namespace
 
 ////////////////////////////////////////////////////////////////////////////////
 

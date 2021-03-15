@@ -25,7 +25,7 @@ class GText : public GObject
 {
     Q_OBJECT
 public:
-    GText(Text *obj = new Text);
+    explicit GText(Text *obj = new Text);
     ~GText();
 
     // GETTERS
@@ -44,12 +44,6 @@ signals:
 protected:
     // EVENTS
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-    /**
-     * In editing mode, let QGraphicsTextItem process the event.
-     * Otherwise, let GObject process the event, making it behave
-     * like any other item.
-     */
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     /**
      * On double left click: enable editing, change to IBeam cursor and hide
      * cursor guides.

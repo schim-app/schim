@@ -17,7 +17,7 @@ class VariableTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    VariableTableModel(QObject *parent = nullptr);
+    explicit VariableTableModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
@@ -42,7 +42,7 @@ private:
 class VariableTableView : public QTableView
 {
 public:
-    VariableTableView(QWidget *parent = nullptr);
+    explicit VariableTableView(QWidget *parent = nullptr);
 };
 
 class VariableEditor : public QWidget

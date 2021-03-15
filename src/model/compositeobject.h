@@ -26,22 +26,11 @@ public:
 
     // GETTERS
     QPointF getPos() const override;
-    /**
-     * @brief Return the value of the variable with the specified name.
-     * @param name The name of the variable.
-     * @param exists `true` is written to this variable if the variable is
-     * found, and `false` otherwise.
-     */
-    QString getValue(const QString &name, bool *exists = nullptr) const;
-    QString getFileName() const;
     QList<Object *> &getConstituents();
     const QList<Object *> &getConstituents() const;
 
     // SETTERS
     void setPos(const QPointF &pos) override;
-    void setValue(const QString &name, const QString &value);
-    void setSourceFile(const QString &filename);
-
     void add(Object *obj);
     void add(const QList<Object*> &list);
     /**
@@ -60,10 +49,7 @@ public:
 protected:
     QList<Object *> constituents;
     // TODO determine appropriate container
-    VariableSet variables;
     QPointF pos{};
-    // If != "", the object is always taken from the specified file
-    QString file;
 
 };
 

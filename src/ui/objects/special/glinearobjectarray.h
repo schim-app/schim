@@ -7,7 +7,7 @@
 class GLinearObjectArray : public GCompositeObject
 {
 public:
-    GLinearObjectArray(LinearObjectArray *obj);
+    explicit GLinearObjectArray(LinearObjectArray *obj);
 
     LinearObjectArray *get();
     const LinearObjectArray *get() const;

@@ -56,9 +56,11 @@ void Component::addTerminals(const QList<Terminal *> &terminals)
 
 void Component::remove(Object *obj)
 {
-    if (dynamic_cast<Text*>(obj) && texts.removeOne((Text*) obj)) return;
+    if (dynamic_cast<Text*>(obj) &&
+            texts.removeOne(static_cast<Text*>(obj)))
+        return;
     else if (dynamic_cast<Terminal*>(obj) &&
-            terminals.removeOne((Terminal*) obj)) return;
+            terminals.removeOne(static_cast<Terminal*>(obj))) return;
     else CompositeObject::remove(obj);
 }
 

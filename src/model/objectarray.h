@@ -6,7 +6,7 @@
 class ObjectArray : public CompositeObject
 {
 public:
-    ObjectArray(Object *base);
+    explicit ObjectArray(Object *base);
     ObjectArray(const ObjectArray &obj);
     virtual ~ObjectArray();
 

@@ -35,7 +35,7 @@ public:
     /**
      * @brief Construct an empty entity with an optional parent.
      */
-    Entity(Entity *parent = nullptr);
+    explicit Entity(Entity *parent = nullptr);
     /**
      * @brief Default destructor that makes this class virtual.
      */

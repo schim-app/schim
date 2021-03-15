@@ -27,13 +27,13 @@ public:
     Component *getParent() const;
 
     // SETTERS
+    void setParent(Component *component);
     void addProng(float prong);
 
     // OBJECT INTERFACE
-    Object *clone() const;
-    QPointF getPos() const;
-    void setPos(const QPointF &pos);
-    void setParent(Component *component);
+    virtual Object *clone() const override;
+    virtual QPointF getPos() const override;
+    virtual void setPos(const QPointF &pos) override;
 
 private:
     // ATTRIBUTES

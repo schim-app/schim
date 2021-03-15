@@ -12,7 +12,7 @@ class GCompositeObject : public GObject
 {
 public:
     // CONSTRUCTORS
-    GCompositeObject(CompositeObject *obj);
+    explicit GCompositeObject(CompositeObject *obj);
 
     // GETTERS
     virtual CompositeObject *get() override;

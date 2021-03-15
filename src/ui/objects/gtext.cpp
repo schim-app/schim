@@ -131,14 +131,6 @@ QVariant GText::itemChange(QGraphicsItem::GraphicsItemChange change,
     return GObject::itemChange(change, value);
 }
 
-void GText::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    //if (event->buttons() == Qt::RightButton)
-        ;// TODO showContextMenu();
-    //else
-        GObject::mousePressEvent(event);
-}
-
 void GText::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (!isInEditMode() && event->buttons() == Qt::LeftButton)
@@ -169,7 +161,7 @@ void GText::timerEvent(QTimerEvent *event)
     GObject::timerEvent(event);
 }
 
-void GText::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void GText::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
     QMenu menu(MainWindow::getInstance());
     QAction edit("Edit text");

@@ -13,7 +13,7 @@ Sheet::Sheet(bool defaultHeader)
     {
         QString file = "headers/defaultheader.xsym";
         header = xmlParseHeader(QString(resolvePath(file)));
-        header->setSourceFile(file);
+        header->setFileName(file);
     }
 }
 

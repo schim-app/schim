@@ -35,7 +35,7 @@ public:
      * @throws std::logic_error If sheet is null.
      * @note The scene does not take ownership of `sheet`.
      */
-    SheetScene(Sheet *sheet);
+    explicit SheetScene(Sheet *sheet);
 
     // GETTERS
     Sheet *getSheet();

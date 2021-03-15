@@ -204,7 +204,7 @@ void GObject::paint(QPainter *painter, const QStyleOptionGraphicsItem*,
 
 GCompositeObject *GObject::parentItem() const
 {
-    return (GCompositeObject *) QGraphicsItem::parentItem();
+    return static_cast<GCompositeObject*>(QGraphicsItem::parentItem());
 }
 
 Entity *GObject::getModelParent() const
@@ -249,7 +249,7 @@ GObjectHandle::GObjectHandle(GObject *obj)
 
 SheetScene *GObjectHandle::scene()
 {
-    return (SheetScene*) QGraphicsItem::scene();
+    return static_cast<SheetScene*>(QGraphicsItem::scene());
 }
 
 // EVENTS

@@ -28,7 +28,7 @@ public:
     /**
      * @brief Initialize a new SheetView tied to the specified sheet.
      */
-    SheetView(Sheet *sheet, QWidget *parent = nullptr);
+    explicit SheetView(Sheet *sheet, QWidget *parent = nullptr);
     ~SheetView();
 
     // GETTERS

@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     // CONSTRUCTORS
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     static MainWindow *getInstance();
 

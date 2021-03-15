@@ -14,7 +14,7 @@ class SheetSettings : public QDialog
 {
     Q_OBJECT
 public:
-    SheetSettings(MainWindow *parent, int sheetId = 0);
+    explicit SheetSettings(MainWindow *parent, int sheetId = 0);
     ~SheetSettings();
 
     SheetScene *scene() const;

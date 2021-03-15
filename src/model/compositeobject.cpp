@@ -5,21 +5,21 @@
 // CONSTRUCTORS
 
 CompositeObject::CompositeObject()
-    : Object() { }
+    : Object(), Entity() { }
 
 CompositeObject::CompositeObject(const CompositeObject &obj)
-    : Object()
+    : CompositeObject()
 {
     variables = obj.variables;
     constituents.reserve(obj.getConstituents().size());
     for (Object *object : obj.getConstituents())
         add(object->clone());
-    file = obj.file;
+    setFileName(obj.getFileName());
 }
 
 CompositeObject::~CompositeObject()
 {
-    for (Object *child : getConstituents())
+    foreach (Object *child, getConstituents())
         delete child;
 }
 
@@ -33,19 +33,6 @@ Object *CompositeObject::clone() const
 QPointF CompositeObject::getPos() const
 {
     return pos;
-}
-
-QString CompositeObject::getValue(const QString &name, bool *exists) const
-{
-    auto var = Variable::find(getVariables(), name);
-    if (exists != nullptr)
-        *exists = !var.names.empty();
-    return var.value;
-}
-
-QString CompositeObject::getFileName() const
-{
-    return file;
 }
 
 QList<Object *> &CompositeObject::getConstituents()
@@ -63,23 +50,6 @@ const QList<Object*> &CompositeObject::getConstituents() const
 void CompositeObject::setPos(const QPointF &pos)
 {
     this->pos = pos;
-}
-
-void CompositeObject::setValue(const QString &name, const QString &value)
-{
-    for (auto &var : variables)
-        if (var.names.contains(name))
-        {
-            var.value = value;
-            return;
-        }
-    addVariable({{name}, "", value});
-}
-
-void CompositeObject::setSourceFile(const QString &filename)
-{
-    this->file = filename;
-    // TODO maybe load the object from the file...
 }
 
 void CompositeObject::add(Object *object)
@@ -104,7 +74,7 @@ void CompositeObject::remove(Object *obj)
 
 bool CompositeObject::operator==(const CompositeObject &obj) const
 {
-    if (file == obj.file) // Objects are taken from the same file
+    if (getFileName() == obj.getFileName()) // Objects are taken from the same file
         return true;
 
     if (obj.getConstituents().size() != getConstituents().size()

@@ -16,7 +16,7 @@ class GLine : public GObject
 {
 public:
     // CONSTRUCTORS
-    GLine(Line *obj = new Line);
+    explicit GLine(Line *obj = new Line);
 
     // GETTERS
     virtual Line *get() override;

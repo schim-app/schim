@@ -73,7 +73,7 @@ namespace // Local 'private' functions
         return 0;
     }
 
-}
+} // namespace
 
 // Convert QCoreApplication to QApplication
 #define convertAppToGui() \

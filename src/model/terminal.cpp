@@ -29,6 +29,11 @@ Component *Terminal::getParent() const
     return component;
 }
 
+void Terminal::setParent(Component *component)
+{
+    this->component = component;
+}
+
 void Terminal::addProng(float prong)
 {
     prongs.append(prong);
@@ -52,11 +57,6 @@ QPointF Terminal::getPos() const
 void Terminal::setPos(const QPointF &pos)
 {
     this->pos = pos;
-}
-
-void Terminal::setParent(Component *component)
-{
-    this->component = component;
 }
 
 Terminal::Prong::Prong(float angle, Terminal *terminal)

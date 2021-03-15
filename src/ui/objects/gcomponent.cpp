@@ -93,7 +93,7 @@ QVariant GComponent::itemChange(GraphicsItemChange change, const QVariant &value
     return val;
 }
 
-void GComponent::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void GComponent::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
     QMenu menu(MainWindow::getInstance());
     QAction edit("Edit element");

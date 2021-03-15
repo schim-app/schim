@@ -17,7 +17,7 @@ class Sheet : public Entity
 {
 public:
     // CONSTRUCTORS
-    Sheet(bool defaultHeader = true);
+    explicit Sheet(bool defaultHeader = true);
     ~Sheet();
 
     // GETTERS
@@ -59,7 +59,6 @@ private:
     float width = 297, height = 210;
     Header *header = nullptr;
 
-    VariableSet variables;
     QList<Object *> objects;
 };
 

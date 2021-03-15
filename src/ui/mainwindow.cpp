@@ -88,9 +88,9 @@ int MainWindow::getTabId() const
 SheetView *MainWindow::getTab(int index)
 {
     if (index == -1)
-        return (SheetView*) ui->tabWidget->currentWidget();
+        return static_cast<SheetView*>(ui->tabWidget->currentWidget());
     else
-        return (SheetView*) ui->tabWidget->widget(index);
+        return static_cast<SheetView*>(ui->tabWidget->widget(index));
 }
 
 SheetScene *MainWindow::scene()
@@ -639,7 +639,7 @@ int MainWindow::openSheet(Sheet *sheet, int index)
 {
     for (int i = 0; i < ui->tabWidget->count(); ++i)
     {
-        auto *tab = (SheetView*) ui->tabWidget->widget(i);
+        auto *tab = static_cast<SheetView*>(ui->tabWidget->widget(i));
         if (tab->scene()->getSheet() == sheet)
             return i;
     }

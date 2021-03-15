@@ -14,7 +14,7 @@ class GHeader : public GCompositeObject
 {
 public:
     // CONSTRUCTORS
-    GHeader(Header *obj);
+    explicit GHeader(Header *obj);
 
     // GETTERS
     virtual Header *get() override;

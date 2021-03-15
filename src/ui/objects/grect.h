@@ -14,7 +14,7 @@ class GRect : public GObject
 {
 public:
     // CONSTRUCTORS
-    GRect(Rect *obj = new Rect);
+    explicit GRect(Rect *obj = new Rect);
 
     // GETTERS
     virtual Rect *get() override;

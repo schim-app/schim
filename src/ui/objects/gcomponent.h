@@ -14,7 +14,7 @@ class GComponent : public GCompositeObject
     Q_OBJECT
 public:
     // CONSTRUCTORS
-    GComponent(Component *obj);
+    explicit GComponent(Component *obj);
 
     // GETTERS
     virtual Component *get() override;
@@ -30,9 +30,6 @@ private:
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
-
-private:
-    SceneOperation *operation;
 };
 
 #endif // GCOMPONENT_H

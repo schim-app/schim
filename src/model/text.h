@@ -21,7 +21,7 @@ public:
     /**
      * @brief Usual way to construct a text object.
      */
-    Text(const QString &text = "");
+    explicit Text(const QString &text = "");
     /**
      * @brief Copy constructor
      */

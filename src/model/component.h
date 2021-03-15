@@ -18,7 +18,7 @@ class Component : public CompositeObject
 public:
     // CONSTRUCTORS
     Component() = default;
-    Component(QSharedPointer<Device> device);
+    explicit Component(QSharedPointer<Device> device);
     Component(const Component &obj);
     Object *clone() const override;
 

@@ -28,7 +28,7 @@ namespace // Local 'private' functions
 
         return parser;
     }
-}
+} // namespace
 
 // Convert QCoreApplication to QApplication
 #define convertAppToGui() \

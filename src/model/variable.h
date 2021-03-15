@@ -33,7 +33,7 @@ struct Variable
 
     // CONSTRUCTORS
     Variable() = default;
-    Variable(const QStringList &names, const QString &value = "");
+    explicit Variable(const QStringList &names, const QString &value = "");
     Variable(const QStringList &names, const QString &value, const QString
             &description);
 

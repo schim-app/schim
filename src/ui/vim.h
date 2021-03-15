@@ -89,7 +89,7 @@ class Action
 
 public:
     /// @brief Construct a vim-action.
-    Action(const QString &command, int count = 0);
+    explicit Action(const QString &command, int count = 0);
 
     /// @brief Get the vim-command associated with this action.
     QString getCommand() const;
@@ -159,6 +159,6 @@ void resetStroke();
 /// @brief Get the vim status text for the current key sequence.
 QString getStatusText();
 
-}
+} // namespace Vim
 
 #endif // VIM_H

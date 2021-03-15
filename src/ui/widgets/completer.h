@@ -23,7 +23,7 @@ class Completer;
 class CompleterEdit : public QLineEdit
 {
 public:
-    CompleterEdit(QWidget *parent = nullptr);
+    explicit CompleterEdit(QWidget *parent = nullptr);
 
 private:
     // EVENTS
@@ -38,7 +38,7 @@ class CompleterProxyModel : public QAbstractProxyModel
 {
 
 public:
-    CompleterProxyModel(QObject *parent = nullptr);
+    explicit CompleterProxyModel(QObject *parent = nullptr);
 
     /**
      * @brief Given an index in the proxy, obtain an index in the source.

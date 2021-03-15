@@ -26,7 +26,7 @@ public:
     /**
      * @brief Construct a scene operation in the specified scene.
      */
-    SceneOperation(SheetScene *scene);
+    explicit SceneOperation(SheetScene *scene);
     virtual ~SceneOperation();
 
     /**
@@ -106,7 +106,7 @@ class OpInsertText : public SceneOperation
 {
     Q_OBJECT
 public:
-    OpInsertText(SheetScene *scene, GText *text = nullptr);
+    explicit OpInsertText(SheetScene *scene, GText *text = nullptr);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 

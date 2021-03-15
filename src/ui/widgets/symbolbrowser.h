@@ -14,7 +14,7 @@
 class SymbolBrowser : public QTreeView
 {
 public:
-    SymbolBrowser(QWidget *parent = nullptr);
+    explicit SymbolBrowser(QWidget *parent = nullptr);
 
     Database *model();
 };
