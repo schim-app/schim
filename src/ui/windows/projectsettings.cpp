@@ -1,10 +1,8 @@
 #include "projectsettings.h"
 #include "ui_projectsettings.h" // TODO rm?
 
-#include "ui/mainwindow.h"
+#include "ui/projectmanager.h"
 #include "global.h"
-
-#include <QPushButton>
 
 #include <iostream>
 
@@ -68,7 +66,7 @@ void ProjectSettings::initializeProjectComboBox()
     title->addWidget(comboProject);
 
     // Add projects to the combo box
-    auto *pm = MainWindow::getInstance()->getProjectManager();
+    ProjectManager *pm = getProjectManager();
     projects = pm->getProjects();
     for (int i = 0; i < projects.count(); ++i)
         comboProject->addItem(projects[i]->getName(), i);

@@ -65,6 +65,7 @@ add_executable(schim
     ui/operations.cpp 
     ui/sheetscene.cpp 
     ui/sheetview.cpp 
+    ui/projectmanager.cpp
     ui/widgets/completer.cpp
     ui/widgets/insertcompleter.cpp
     ui/widgets/symbolbrowser.cpp

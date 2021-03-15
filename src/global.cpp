@@ -1,12 +1,15 @@
 #include "global.h"
 
+#include "ui/projectmanager.h"
+#include "fileio/database.h"
+
 #include <QSettings>
 #include <QFileInfo>
 #include <QColor>
 #include <QApplication>
 #include <QScreen>
 
-Database *globalDatabase = nullptr;
+// TODO perform deletion of dynamically allocated objects in this file!
 
 /**
  * @brief Dynamically allocate a QSettings object and return a pointer to it.
@@ -53,6 +56,24 @@ QVariant getSetting(const QString &key, const QVariant &defaultValue)
     return value;
 }
 
+ProjectManager *getProjectManager()
+{
+    static ProjectManager *pm = nullptr;
+    if (pm == nullptr)
+        return pm = new ProjectManager;
+    else
+        return pm;
+}
+
+Database *getGlobalDatabase()
+{
+    static Database *globalDatabase = nullptr;
+    if (globalDatabase == nullptr)
+        return globalDatabase = new Database(systemSymbolPath);
+    else
+        return globalDatabase;
+}
+
 QString resolvePath(const QString &path)
 {
     // TODO this function needs to be heavily tested
@@ -74,12 +95,12 @@ QString resolvePath(const QString &path)
 #undef if_exists_return
 }
 
-float dpiInvariant(float pxInput)
-{
-    return pxInput * QApplication::screens().at(0)->logicalDotsPerInch() / 141.21;
-}
-
 QString resolveAbsPath(const QString &path)
 {
     return QFileInfo(resolvePath(path)).absoluteFilePath();
+}
+
+float dpiInvariant(float pxInput)
+{
+    return pxInput * QApplication::screens().at(0)->logicalDotsPerInch() / 141.21;
 }

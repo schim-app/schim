@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->clear();
     setVimStatus("");
     ui->statusBar->hide();
-    ui->projectBrowser->setModel(projects = new ProjectManager);
+    ui->projectBrowser->setModel(getProjectManager());
 
     // Override tab close requests for proper cleanup
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested,
@@ -65,8 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete popupMenu;
-    delete globalDatabase;
-    delete projects;
     delete ui;
 }
 
@@ -113,11 +111,6 @@ bool MainWindow::isOpen(Sheet *sheet)
     return false;
 }
 
-ProjectManager *MainWindow::getProjectManager()
-{
-    return projects;
-}
-
 // SETTERS
 
 void MainWindow::setTabId(int id)
@@ -132,15 +125,16 @@ void MainWindow::setVimStatus(const QString &status)
 
 void MainWindow::setActiveProject(Project *project)
 {
-    if (projects->getActiveProject() == project)
+    ProjectManager *pm = getProjectManager();
+    if (pm->getActiveProject() == project)
         return;
 
-    closeSheetsForProject(projects->getActiveProject());
-    projects->setActiveProject(project);
+    closeSheetsForProject(pm->getActiveProject());
+    pm->setActiveProject(project);
     if (project == nullptr) return;
     setWindowTitle(QString("Schim - ") + project->getName()
                + " (" + project->getFileName() + ")");
-    ui->projectBrowser->setCurrentIndex(projects->getIndex(project));
+    ui->projectBrowser->setCurrentIndex(pm->getIndex(project));
 
     if (project->getFileName() != "")
         changeSetting("default_path", resolvePath(project->getFileName()));
@@ -160,43 +154,46 @@ void MainWindow::prevTab(Vim::N n)
 
 void MainWindow::appendSheet(Vim::N n)
 {
-    if (!projects->getActiveProject())
+    ProjectManager *pm = getProjectManager();
+    if (!pm->getActiveProject())
         return;
 
     n = qMin(int(n), 10);
     vimdo(n) {
         Sheet *sheet = new Sheet;
-        projects->addSheet(sheet);
-        ui->projectBrowser->setCurrentIndex(projects->getIndex(sheet));
+        pm->addSheet(sheet);
+        ui->projectBrowser->setCurrentIndex(pm->getIndex(sheet));
         openSheet(sheet);
     }
 }
 
 void MainWindow::newSheetBefore(Vim::N n)
 {
-    if (!projects->getActiveProject())
+    ProjectManager *pm = getProjectManager();
+    if (!pm->getActiveProject())
         return;
 
     n = qMin(int(n), 10);
     vimdo(n) {
         Sheet *sheet = new Sheet;
-        projects->addSheet(sheet, getTabId());
-        ui->projectBrowser->setCurrentIndex(projects->getIndex(sheet));
+        pm->addSheet(sheet, getTabId());
+        ui->projectBrowser->setCurrentIndex(pm->getIndex(sheet));
         openSheet(sheet, getTabId());
     }
 }
 
 void MainWindow::newSheetAfter(Vim::N n)
 {
-    if (!projects->getActiveProject())
+    ProjectManager *pm = getProjectManager();
+    if (!pm->getActiveProject())
         return;
 
     n = qMin(int(n), 10);
     vimdo(n) {
         int tabId = getTabId() == -1 ? 0 : getTabId();
         Sheet *sheet = new Sheet;
-        projects->addSheet(sheet, tabId + 1);
-        ui->projectBrowser->setCurrentIndex(projects->getIndex(sheet));
+        pm->addSheet(sheet, tabId + 1);
+        ui->projectBrowser->setCurrentIndex(pm->getIndex(sheet));
         openSheet(sheet, tabId + 1);
     }
 }
@@ -222,14 +219,14 @@ void MainWindow::newProject()
 {
     Project *project = new Project;
     Sheet *sheet = new Sheet;
+    ProjectManager *pm = getProjectManager();
     project->addSheet(sheet);
-    projects->addProject(project);
-    ui->projectBrowser->setCurrentIndex(projects->getIndex(project));
-    if (projects->getActiveProject() == nullptr)
+    pm->addProject(project);
+    ui->projectBrowser->setCurrentIndex(pm->getIndex(project));
+    if (pm->getActiveProject() == nullptr)
     {
         setActiveProject(project);
-        ui->projectBrowser->expand(
-                    projects->getIndex(projects->getActiveProject()));
+        ui->projectBrowser->expand(pm->getIndex(pm->getActiveProject()));
         openSheet(sheet);
     }
 }
@@ -248,9 +245,10 @@ void MainWindow::open()
 
 void MainWindow::save()
 {
-    if (projects->getActiveProject() == nullptr) return;
+    ProjectManager *pm = getProjectManager();
+    if (pm->getActiveProject() == nullptr) return;
 
-    if (projects->getActiveProject()->getFileName() == "")
+    if (pm->getActiveProject()->getFileName() == "")
     {
         saveAs();
         return;
@@ -258,7 +256,7 @@ void MainWindow::save()
 
     try
     {
-        xmlWriteProject(projects->getActiveProject());
+        xmlWriteProject(pm->getActiveProject());
     }
     catch (...)
     {
@@ -268,7 +266,8 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-    if (projects->getActiveProject() == nullptr) return;
+    ProjectManager *pm = getProjectManager();
+    if (pm->getActiveProject() == nullptr) return;
 
     QString filename = QFileDialog::getSaveFileName(this, "Save project...",
                             getSetting("default_path", QDir::homePath()).toString());
@@ -278,12 +277,13 @@ void MainWindow::saveAs()
 
     try
     {
-        xmlWriteProject(projects->getActiveProject(), filename);
+        xmlWriteProject(pm->getActiveProject(), filename);
 
-        projects->getActiveProject()->setFileName(filename);
+        pm->getActiveProject()->setFileName(filename);
         changeSetting("default_path", filename);
 
-        setWindowTitle(QString("Schim - ") + projects->getActiveProject()->getName() + " (" + filename + ")");
+        setWindowTitle(QString("Schim - ") +
+                       pm->getActiveProject()->getName() + " (" + filename + ")");
     }
     catch (...)
     {
@@ -293,7 +293,7 @@ void MainWindow::saveAs()
 
 void MainWindow::projectSettings()
 {
-    if (!projects->isEmpty())
+    if (!getProjectManager()->isEmpty())
         ProjectSettings().exec();
 }
 
@@ -304,20 +304,21 @@ void MainWindow::preferences()
 
 void MainWindow::print()
 {
-    if (projects->getActiveProject() == nullptr) return;
+    ProjectManager *pm = getProjectManager();
+    if (pm->getActiveProject() == nullptr) return;
 
     QString filename = QFileDialog::getSaveFileName(
                 this, "Print to file...",
                 getSetting(
                     "print_path",
-                    QFileInfo(projects->getActiveProject()->getFileName())
+                    QFileInfo(pm->getActiveProject()->getFileName())
                         .absolutePath()).toString()
                 );
     if (filename == "") return; // No file chosen
 
     try
     {
-        pdfWriteProject(projects->getActiveProject(), filename);
+        pdfWriteProject(pm->getActiveProject(), filename);
         changeSetting("print_path", filename);
     }
     catch (...)
@@ -618,19 +619,19 @@ void MainWindow::clearTabs()
 
 void MainWindow::openProjectsFromFiles(const QStringList &filenames, int active)
 {
+    ProjectManager *pm = getProjectManager();
     for (const auto &name : filenames)
-        projects->addProject(xmlParseProject(name));
-    if (active == -1 && projects->rowCount({}) > 1)
+        pm->addProject(xmlParseProject(name));
+    if (active == -1 && pm->rowCount({}) > 1)
         // We are not setting any project as active
         return;
     // We want to set an active project in one of two situations:
     // 1. The user has specified the index of the active project in `active`
     // 2. There are no open projects and only one project is to be opened
     if (active == -1) active = 0; // User didn't specify an active project
-    setActiveProject(projects->getProjects()[active]);
-    ui->projectBrowser->expand(
-                projects->getIndex(projects->getActiveProject()));
-    for (auto *sheet : projects->getActiveProject()->getSheets())
+    setActiveProject(pm->getProjects()[active]);
+    ui->projectBrowser->expand(pm->getIndex(pm->getActiveProject()));
+    for (auto *sheet : pm->getActiveProject()->getSheets())
         openSheet(sheet);
 }
 
@@ -664,14 +665,15 @@ void MainWindow::closeSheet(Sheet *sheet)
 
 void MainWindow::closeProject(Project *project)
 {
+    ProjectManager *pm = getProjectManager();
     // Remove the project from the Project Browser
-    projects->removeProject(project);
+    pm->removeProject(project);
     // Close tabs belonging to the project that's being closed
     closeSheetsForProject(project);
 
     // If only one project is left, set it as the active one
-    if (projects->rowCount({}) == 1)
-        setActiveProject(projects->getProjects()[0]);
+    if (pm->rowCount({}) == 1)
+        setActiveProject(pm->getProjects()[0]);
     else
         setActiveProject(nullptr);
     delete project;

@@ -22,11 +22,7 @@ SymbolBrowser::SymbolBrowser(QWidget *parent)
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
 
-    //TODO this is just a test database
-    if (globalDatabase == nullptr)
-        globalDatabase = new Database(systemSymbolPath);
-
-    setModel(globalDatabase); // TODO create this database elsewhere
+    setModel(getGlobalDatabase());
 }
 
 Database *SymbolBrowser::model()

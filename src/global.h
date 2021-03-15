@@ -6,10 +6,10 @@
 #include <QVariant>
 #include <QColor>
 
-#include "fileio/database.h"
-
-/// The global database of components
-extern Database *globalDatabase;
+// This header should not include other headers, because all other headers should
+// in principle include this header
+class ProjectManager;
+class Database;
 
 static QString currentProjectPath = "", userSymbolPath = "~/.local/share/schim/symb";
 
@@ -25,6 +25,9 @@ void changeSetting(const QString &key, const QVariant &value, bool sync = true);
  * @param defaultValue Fallback value if the setting is not found
  */
 QVariant getSetting(const QString &key, const QVariant &defaultValue);
+
+ProjectManager *getProjectManager();
+Database *getGlobalDatabase();
 
 /**
  * Take a loose `path` and return a file path.

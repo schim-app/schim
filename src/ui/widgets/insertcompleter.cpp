@@ -15,7 +15,7 @@ InsertCompleter::InsertCompleter(QWidget *parent) :
     ui->setupUi(this);
 
     // Create and configure the completer
-    completer = new Completer(globalDatabase, this);
+    completer = new Completer(getGlobalDatabase(), this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setCompletionRole(Qt::DisplayRole);
     completer->setFilterMode(Qt::MatchContains);

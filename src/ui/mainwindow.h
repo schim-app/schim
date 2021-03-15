@@ -47,7 +47,6 @@ public:
      */
     Sheet *getSheet(int index = -1);
     bool isOpen(Sheet *sheet);
-    ProjectManager *getProjectManager();
 
     // SETTERS
     void setTabId(int id);
