@@ -521,7 +521,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Preferences... (TODO)</string>
+    <string>&amp;Preferences...</string>
    </property>
   </action>
   <action name="actionExit">

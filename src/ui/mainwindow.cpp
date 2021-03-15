@@ -10,7 +10,9 @@
 #include "ui/operations.h"
 #include "ui/windows/about.h"
 #include "ui/windows/projectsettings.h"
+#include "ui/windows/preferences.h"
 #include "ui/widgets/projectbrowser.h"
+#include "ui/windows/sheetsettings.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -213,8 +215,7 @@ void MainWindow::sheetSettings(Vim::N n)
 
     if (n > ui->tabWidget->count())
         return;
-    SheetSettings settings(this, n - 1);
-    settings.exec();
+    SheetSettings(this, n - 1).exec();
 }
 
 void MainWindow::newProject()
@@ -294,6 +295,11 @@ void MainWindow::projectSettings()
 {
     if (!projects->isEmpty())
         ProjectSettings().exec();
+}
+
+void MainWindow::preferences()
+{
+    Preferences().exec();
 }
 
 void MainWindow::print()
@@ -530,6 +536,8 @@ void MainWindow::setupActions()
             [this]() { if (getTab()) scene()->undo(); });
     connect(ui->actionRedoInSheet, &QAction::triggered,
             [this]() { if (getTab()) scene()->redo(); });
+    connect(ui->actionPreferences, &QAction::triggered,
+            this, &MainWindow::preferences);
     // Sheet
     connect(ui->actionNewSheet, &QAction::triggered,
             this, &MainWindow::newSheetAfter);

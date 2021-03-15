@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Preferences</class>
+ <widget class="QStackedWidget" name="Preferences">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>654</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>StackedWidget</string>
+  </property>
+  <widget class="QWidget" name="pageGeneral"/>
+  <widget class="QWidget" name="pageInput">
+   <widget class="QCheckBox" name="cbVimMode">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>60</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vim mode</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="pageTweaks"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

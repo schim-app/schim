@@ -3,7 +3,6 @@
 
 #include "model/project.h"
 
-#include "ui/windows/sheetsettings.h"
 #include "ui/widgets/projectbrowser.h"
 #include "sheetview.h"
 #include "ui/vim.h"
@@ -68,6 +67,7 @@ public:
     void save();
     void saveAs();
     void projectSettings();
+    void preferences();
     void print();
     void help();
     void takeScreenshot();
