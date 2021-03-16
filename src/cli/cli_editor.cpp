@@ -3,6 +3,7 @@
 #include "ui/mainwindow.h"
 
 #include <QApplication>
+#include <memory>
 
 namespace // Local 'private' functions
 {

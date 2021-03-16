@@ -1,14 +1,11 @@
-#include <QApplication>
-#include <list>
-
-#include <model/component.h>
-#include <model/line.h>
-
 #include "global.h"
 #include "ui/mainwindow.h"
 #include "cli/cli_common.h"
 #include "cli/cli_editor.h"
 #include "cli/cli_export.h"
+
+#include <QApplication>
+#include <memory>
 
 void showHelp(const QString &text)
 {
@@ -92,9 +89,6 @@ int delegateCommand(const QStringList &args)
     }
 }
 
-// TODO tmp
-#include "fileio/xml.h"
-
 int main(int argc, char *argv[])
 {
     // Convert arguments array to QStringList
@@ -107,7 +101,7 @@ int main(int argc, char *argv[])
     new QCoreApplication(argc, argv);
 
     // The command was `schim --help` or `schim --version`, or their shortened
-    // versions, or any combination
+    // versions, or any combination of those
     if (parser.isSet("help") || parser.isSet("version"))
     {
         renameApp("schim", argv);

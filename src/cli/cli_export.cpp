@@ -5,6 +5,7 @@
 
 #include <QApplication>
 #include <QFileInfo>
+#include <memory>
 
 namespace // Local 'private' functions
 {
