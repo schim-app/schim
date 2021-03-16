@@ -1,0 +1,40 @@
+name: "CodeQL checks"
+
+on:
+  push:
+    branches: [ master, actions ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install bash cmake qt5-default qttools5-dev libqt5help5 libqt5svg5 libqt5svg5-dev python3-pip
+        sudo pip3 install sphinx
+
+    - name: Build schim
+      run: make
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

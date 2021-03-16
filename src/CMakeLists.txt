@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 configure_file(symbols.h.in symbols.h @ONLY)
 
-find_package(Qt5 5.12 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
+find_package(Qt5 5.9 COMPONENTS Core Gui Widgets Xml Svg PrintSupport Help REQUIRED)
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a

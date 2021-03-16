@@ -7,6 +7,7 @@
 
 ---
 
+[![Build](https://github.com/schim-app/schim/actions/workflows/build.yml/badge.svg)](https://github.com/schim-app/schim/actions/workflows/build.yml)
 [![Docs](https://img.shields.io/readthedocs/schim?color=blue&label=ReadTheDocs)](https://schim.rtfd.io)
 [![License](https://img.shields.io/badge/license-GPL%203-blueviolet)](./LICENSE)
 

@@ -1,7 +1,7 @@
 
 TYPE ?= Release
 VERSION = 0.0.1
-SHELL = '/usr/bin/bash'
+SHELL = bash
 
 # Directories
 INSTALL_DIR   ?= /usr/local
@@ -81,6 +81,7 @@ man:
 ##############
 
 install: app man
+	@echo -e "\033[1;35mInstallation directory is: ${INSTALL_DIR}\e[0m"
 	@echo "Copying files to installation directory..."
 	@umask 022
 	@mkdir -p "${INSTALL_DIR}/${MAN_DIR}"
