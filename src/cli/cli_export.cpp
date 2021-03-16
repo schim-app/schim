@@ -15,20 +15,17 @@ namespace // Local 'private' functions
                   << std::endl;
     }
 
-    QCommandLineParser &setupParser()
+    void setupParser(QCommandLineParser &parser)
     {
         // Name that appears in an error message
         qApp->setApplicationName("schim export");
 
-        QCommandLineParser &parser = *new QCommandLineParser;
         // OPTIONS
         parser.addOption({{"h", "help"}, "Prints this help message."});
         parser.addOption({{"f", "format"}, "The output file format: pdf, svg (soon). Default: auto.", "FORMAT", ""});
         parser.addOption({{"o", "output"}, "Output file. Uses stdout if unspecified.", "FILE"});
         // POSITIONAL ARGS
         parser.addPositionalArgument("input", "The input file. Can also be '-' for stdin.");
-
-        return parser;
     }
 
     int doExport(QString format, const QString &input, const QString &output)
@@ -48,14 +45,17 @@ namespace // Local 'private' functions
         }
         if (format == "pdf")
         {
+            Project *project = nullptr;
             // TODO add input formats other than XML
             try
             {
                 Project *project = xmlParseProject(input);
                 pdfWriteProject(project, output);
+                delete project;
             }
             catch (std::exception &e)
             {
+                delete project;
                 std::cerr << "schim: " << e.what() << ".\n";
                 return ErrCode::FileError;
             }
@@ -73,17 +73,23 @@ namespace // Local 'private' functions
         return 0;
     }
 
-} // namespace
+    void convertToGuiApp()
+    {
+        // Create some dummy variables
+        static int argc = 1;
+        static std::unique_ptr<char[]> argv_0(new char[1]{});
+        static std::unique_ptr<char*[]> argv(new char*[1]{argv_0.get()});
+        // Required so we can use Qt's GUI module
+        delete qApp;
+        new QApplication(argc, argv.get());
+    }
 
-// Convert QCoreApplication to QApplication
-#define convertAppToGui() \
-        int argc = 1; char *argv[] = {const_cast<char*>("")}; \
-        delete qApp; \
-        new QApplication(argc, argv);
+} // namespace
 
 int cli_export(QStringList args)
 {
-    QCommandLineParser &parser = setupParser();
+    QCommandLineParser parser;
+    setupParser(parser);
     parser.process(args);
 
     // Help option
@@ -93,7 +99,7 @@ int cli_export(QStringList args)
         return 0;
     }
 
-    convertAppToGui();
+    convertToGuiApp();
 
     // Positional arguments
     auto posArgs = parser.positionalArguments();

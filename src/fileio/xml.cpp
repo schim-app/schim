@@ -5,7 +5,6 @@
 #include "model/component.h"
 
 #include <QFile>
-#include <QMap>
 #include <QXmlStreamReader>
 #include <iostream>
 #include <QDebug>
@@ -91,22 +90,9 @@ void xmlReadProperties(Object *object, QXmlStreamReader &stream)
 
 Object *xmlParseObject(const QString &filename)
 {
-    // TODO What happens when the file is changed? Currently, this creates an
-    // object using the last loaded file version as the template. In the future,
-    // make it so that when a file is changed, the cache is automatically updated.
-    static QMap<QString, Object *> cache;
-
-    auto iter = cache.find(filename);
-    if (iter != cache.end())
-        return (*iter)->clone();
-
     read_xml_file(filename);
     xmlConsumeFirstElement(stream);
-
-    Object *obj = xmlParseObject(stream);
-    cache[filename] = obj->clone();
-
-    return obj;
+    return xmlParseObject(stream);
 }
 
 CompositeObject *xmlParseCompositeObject(const QString &filename)
@@ -125,19 +111,9 @@ CompositeObject *xmlParseFromDxf(const QString &filename)
 
 Header *xmlParseHeader(const QString &filename)
 {
-    static QMap<QString, Header *> cache;
-
-    auto iter = cache.find(filename);
-    if (iter != cache.end())
-        return (*iter)->clone();
-
     read_xml_file(filename);
     xmlTestRootTag(stream, "header");
-
-    Header *header = xmlParseHeader(stream);
-    cache[filename] = header->clone();
-
-    return header;
+    return xmlParseHeader(stream);
 }
 
 QString xmlPeekName(const QString &filename)
@@ -440,10 +416,16 @@ LinearObjectArray *xmlParseLinearObjectArray(QXmlStreamReader &stream)
         if (!conversion_ok)
             throw std::logic_error("Linear object array attribute \"" + attr.name().toString().toStdString() + "\" is of invalid format");
     }
+
     CompositeObject *baseObj = xmlParseCompositeObject(stream);
     if (baseObj->getConstituents().size() == 1 &&
             dynamic_cast<CompositeObject*>(baseObj->getConstituents()[0]))
+    { // baseObj is just a container for a single composite object, discard it
+        auto *oldBaseObj = baseObj;
         baseObj = static_cast<CompositeObject*>(baseObj->getConstituents()[0]);
+        oldBaseObj->getConstituents().clear();
+        delete oldBaseObj;
+    }
 
     return new LinearObjectArray(baseObj, dx, dy, count);
 }
@@ -470,7 +452,12 @@ Header *xmlParseHeader(QXmlStreamReader &stream)
     try
     {
         parse_children (
-            if_name("content-area") header->setContentArea(*xmlParseRect(stream));
+            if_name("content-area")
+            {
+                Rect *rect = xmlParseRect(stream);
+                header->setContentArea(*rect);
+                delete rect;
+            }
             else header->add(xmlParseObject(stream));
         )
     }

@@ -20,6 +20,7 @@ public:
     Component() = default;
     explicit Component(QSharedPointer<Device> device);
     Component(const Component &obj);
+    virtual ~Component();
     Object *clone() const override;
 
     // GETTERS

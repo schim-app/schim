@@ -34,9 +34,8 @@ inline QStringList argsToList(int argc, char *argv[])
 /**
  * @brief Setup the parser for the command `schim` with general options.
  */
-inline QCommandLineParser &setupParser()
+void setupParser(QCommandLineParser &parser)
 {
-    QCommandLineParser &parser = *new QCommandLineParser;
     parser.setOptionsAfterPositionalArgumentsMode(
                 QCommandLineParser::ParseAsPositionalArguments);
 
@@ -48,7 +47,6 @@ inline QCommandLineParser &setupParser()
     parser.addOption(optVersion);
 
     parser.addPositionalArgument("command", "The schim command to run.");
-    return parser;
 }
 
 /**
@@ -58,19 +56,20 @@ inline QCommandLineParser &setupParser()
  * `QCommandLineParser` provides default help messages and usage information.
  * When it displays this information, it uses `argv[0]` that was passed to the
  * currently active `qApp` object as the name of the executable. In this
- * function, `argv[0]` is set to `name` and a new application object is
- * allocated, which is now configured with `name` as the executable name.
+ * function, the contents of `argv[0]` are set to `name`.
  *
- * @note The parameters `argc` and `argv` are used only so that the application
- * object can be constructed properly.
  */
-void renameApp(const QString &name, int &argc, char **argv)
+void renameApp(const QString &name, char **argv)
 {
+    static std::unique_ptr<char[]> argv_0; // will be a smart pointer to argv[0]
     int len = name.length();
-    auto *str = const_cast<char*>(name.toStdString().c_str());
-    argv[0] = new char[len + 1];
-    strncpy(argv[0], str, len);
-    new QCoreApplication(argc, argv);
+
+    // Note: any previous object owned by the unique_ptr will be deleted
+    argv_0 = std::unique_ptr<char[]>(new char[len + 1]{});
+
+    argv[0] = argv_0.get();
+    // argv[0] shall contain `name`
+    strncpy(argv[0], name.toStdString().c_str(), len);
 }
 
 /**
@@ -93,19 +92,25 @@ int delegateCommand(const QStringList &args)
     }
 }
 
+// TODO tmp
+#include "fileio/xml.h"
+
 int main(int argc, char *argv[])
 {
     // Convert arguments array to QStringList
     QStringList args = argsToList(argc, argv);
     // Parse CLI arguments
-    auto &parser = setupParser();
+    QCommandLineParser parser;
+    setupParser(parser);
     parser.parse(args);
 
-    // The command was `schim --help` or `schim --version`, or both, or their
-    // short versions
+    new QCoreApplication(argc, argv);
+
+    // The command was `schim --help` or `schim --version`, or their shortened
+    // versions, or any combination
     if (parser.isSet("help") || parser.isSet("version"))
     {
-        renameApp("schim", argc, argv);
+        renameApp("schim", argv);
         parser.process(args); // Potentially print out unknown options and quit
         if (parser.isSet("version"))
             std::cout << "schim version " VERSION "\n";
@@ -114,18 +119,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    auto posArgs = parser.positionalArguments();
-    new QCoreApplication(argc, argv);
     // Process any arguments before the command
     parser.process(args);
-    // Create a new app with the new application name
-    delete qApp;
+
+    auto posArgs = parser.positionalArguments();
+    // Rename the app for proper display in auto-generated help message
     QString appName = posArgs.isEmpty() ? "schim" : "schim " + posArgs[0];
-    renameApp(appName, argc, argv);
+    renameApp(appName, argv);
 
     // Let the command be handled by its corresponding function
     delegateCommand(posArgs);
-    delete qApp;
 
+    delete qApp;
     return 0;
 }

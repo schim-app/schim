@@ -27,9 +27,8 @@ void LinearObjectArray::generate()
         return;
     getConstituents().reserve(count);
 
-    add(baseObj);
     // TODO preliminary remove baseObj->setParent(this);
-    for (int i = 1; i < count; ++i)
+    for (int i = 0; i < count; ++i)
     {
         Object *obj = baseObj->clone();
         obj->setPos(baseObj->getPos() + i * QPointF{deltaX, deltaY});

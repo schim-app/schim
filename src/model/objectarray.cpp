@@ -6,10 +6,14 @@ ObjectArray::ObjectArray(Object *base)
 ObjectArray::ObjectArray(const ObjectArray &obj)
 {
     variables = obj.variables;
+    delete baseObj;
     baseObj = obj.baseObj->clone();
 }
 
-ObjectArray::~ObjectArray() { }
+ObjectArray::~ObjectArray()
+{
+    delete baseObj;
+}
 
 void ObjectArray::rebase(int index)
 {

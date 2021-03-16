@@ -25,15 +25,15 @@ GText::GText(Text *obj)
     GObject::setAcceptHoverEvents(true);
     displayItem = new GDisplayText;
     displayItem->setDefaultTextColor(qApp->palette().color(QPalette::Text));
-    displayItem->setDocument(new QTextDocument);
+    displayItem->setDocument(new QTextDocument(displayItem));
     displayItem->document()->setDocumentMargin(1);
     connect(displayItem, &GDisplayText::focusOut, this, &GText::onFocusOut);
 }
 
 GText::~GText()
 {
-    delete displayItem->document();
-    delete displayItem;
+    if (!displayItem->scene())
+        delete displayItem;
 }
 
 // GETTERS

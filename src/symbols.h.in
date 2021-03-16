@@ -5,6 +5,7 @@
 
 #define VERSION "@PROJECT_VERSION@"
 #define SHARE_DIR qApp->applicationDirPath() + "/../share/schim"
+#define SYMBOL_DIR SHARE_DIR "/symb"
 #define DOC_DIR qApp->applicationDirPath() + "/../share/doc/schim"
 #define ICON_DIR qApp->applicationDirPath() + "/../share/icons/hicolor/scalable"
 #define SCHIM_ICON_DIR SHARE_DIR "/icons"

@@ -1,3 +1,4 @@
+/// @file global.h
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -10,6 +11,9 @@
 // in principle include this header
 class ProjectManager;
 class Database;
+
+namespace Schim
+{
 
 static QString currentProjectPath = "", userSymbolPath = "~/.local/share/schim/symb";
 
@@ -41,5 +45,9 @@ QString resolveAbsPath(const QString &path);
  * @brief Take an input in pixels and return a value that is independent of screen DPI.
  */
 float dpiInvariant(float pxInput);
+
+} // namespace Schim
+
+using namespace Schim; // TODO temporary perhaps
 
 #endif // GLOBAL_H

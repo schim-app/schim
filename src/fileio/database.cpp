@@ -203,8 +203,7 @@ QVariant Database::data(const QModelIndex &index, int role) const
 void Database::update()
 {
     // Delete the root item and recursively add the directory from scratch
-    if (rootItem)
-        delete rootItem;
+    delete rootItem;
     rootItem = new DatabaseItem(path);
     iterate(resolvePath(path), rootItem);
 }

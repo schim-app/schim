@@ -31,5 +31,6 @@ void pdfWriteProject(const Project *project, const QString &filename)
         }
         SheetScene *scene = new SheetScene((project->getSheets()).at(i));
         scene->render(&painter);
+        delete scene;
     }
 }

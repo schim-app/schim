@@ -11,16 +11,19 @@ CompositeObject::CompositeObject(const CompositeObject &obj)
     : CompositeObject()
 {
     variables = obj.variables;
+    // Purge the existing contents of the object
+    qDeleteAll(getConstituents());
+    constituents.clear();
+
     constituents.reserve(obj.getConstituents().size());
     for (Object *object : obj.getConstituents())
-        add(object->clone());
+        add(object->clone()); // Add a deep copy of object
     setFileName(obj.getFileName());
 }
 
 CompositeObject::~CompositeObject()
 {
-    foreach (Object *child, getConstituents())
-        delete child;
+    qDeleteAll(getConstituents());
 }
 
 Object *CompositeObject::clone() const
@@ -67,7 +70,8 @@ void CompositeObject::add(const QList<Object *> &list)
 
 void CompositeObject::remove(Object *obj)
 {
-    constituents.removeOne(obj);
+    if (constituents.removeOne(obj))
+        delete obj;
 }
 
 // OPERATORS

@@ -13,32 +13,36 @@ namespace // Local 'private' functions
                   << std::endl;
     }
 
-    QCommandLineParser &setupParser()
+    void setupParser(QCommandLineParser &parser)
     {
         // Name that appears in an error message
         qApp->setApplicationName("schim export");
 
-        QCommandLineParser &parser = *new QCommandLineParser;
         // OPTIONS
         parser.addOption({{"h", "help"}, "Prints this help message."});
         // POSITIONAL ARGS
         parser.addPositionalArgument(
                     "input-files",
                     "The input files to open in the editor.");
-
-        return parser;
     }
-} // namespace
 
-// Convert QCoreApplication to QApplication
-#define convertAppToGui() \
-        int argc = 1; char *argv[] = {const_cast<char*>("")}; \
-        delete qApp; \
-        new QApplication(argc, argv);
+    void convertToGuiApp()
+    {
+        // Create some dummy variables
+        static int argc = 1;
+        static std::unique_ptr<char[]> argv_0(new char[1]{});
+        static std::unique_ptr<char*[]> argv(new char*[1]{argv_0.get()});
+        // Required so we can use Qt's GUI module
+        delete qApp;
+        new QApplication(argc, argv.get());
+    }
+
+} // namespace
 
 int cli_editor(const QStringList &args)
 {
-    QCommandLineParser &parser = setupParser();
+    QCommandLineParser parser;
+    setupParser(parser);
     parser.process(args);
 
     if (parser.isSet("help"))
@@ -47,17 +51,18 @@ int cli_editor(const QStringList &args)
         return 0;
     }
 
-    // Required so we can use Qt's GUI module
-    convertAppToGui();
+    convertToGuiApp();
 
     // Open the main window
-    (new MainWindow)->show();
+    MainWindow *window = new MainWindow;
+    window->show();
 
-    // Open files that may have been specified
+    // Open any files that may have been specified
     auto posArgs = parser.positionalArguments();
     if (!posArgs.isEmpty())
-        MainWindow::getInstance()->openProjectsFromFiles(
-                QStringList(posArgs.begin(), posArgs.end()), 0);
+        MainWindow::getInstance()->openProjectsFromFiles(posArgs, 0);
 
-    return qApp->exec();
+    int code = qApp->exec();
+    delete window;
+    return code;
 }

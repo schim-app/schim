@@ -8,7 +8,7 @@ Header::Header(CompositeObject &&obj)
     : Header()
 {
     add(obj.getConstituents());
-    obj.getConstituents().clear();
+    obj.getConstituents().clear(); // Take away ownership from obj
 }
 
 Header::Header(const Header &obj)
@@ -37,10 +37,8 @@ void Header::setContentArea(const QRectF &rect)
 
 Header *Header::absorb(CompositeObject *obj)
 {
-    Header *retVal = new Header;
-    retVal->add(obj->getConstituents());
-    obj->getConstituents().clear(); // Take away ownership from obj
-    delete obj; //TODO maybe not do this here
+    Header *retVal = new Header(std::move(*obj));
+    delete obj;
     return retVal;
 }
 

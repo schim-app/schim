@@ -21,7 +21,7 @@ public:
     CompositeObject();
     /// @brief Copy constructor
     CompositeObject(const CompositeObject &obj);
-    ~CompositeObject();
+    virtual ~CompositeObject();
     Object *clone() const override;
 
     // GETTERS

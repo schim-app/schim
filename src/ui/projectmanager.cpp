@@ -4,6 +4,11 @@
 
 #include <QFont>
 
+ProjectManager::~ProjectManager()
+{
+    qDeleteAll(projects);
+}
+
 // GETTERS
 
 QList<Project *> &ProjectManager::getProjects()

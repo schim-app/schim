@@ -26,6 +26,7 @@ public:
 
     // CONSTRUCTORS
     ProjectManager() = default;
+    ~ProjectManager();
 
     // GETTERS
     QList<Project*> &getProjects();

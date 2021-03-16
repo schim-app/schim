@@ -11,6 +11,12 @@ Component::Component(const Component &obj)
     //TODO what to do with device
 }
 
+Component::~Component()
+{
+    qDeleteAll(texts);
+    qDeleteAll(terminals);
+}
+
 Object *Component::clone() const
 {
     return new Component(*this);
