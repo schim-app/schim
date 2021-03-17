@@ -8,6 +8,8 @@ endif
 
 MINIMAL_XML = ../res/examples/minimal.schim
 
+export QT_QPA_PLATFORMTHEME := qt
+
 .PHONY: cli-export
 
 tests: cli
