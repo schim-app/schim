@@ -60,16 +60,13 @@ public:
     void timerEvent(QTimerEvent *event) override;
 
 signals:
-
     void changed();
     void focused();
 
 private:
-
     void updateVariableName();
 
 private slots:
-
     void on_btnAddVariable_clicked();
     void on_btnRemoveVariable_clicked();
 

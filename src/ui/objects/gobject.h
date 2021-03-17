@@ -113,18 +113,18 @@ public:
     /**
      * @brief Set `hovered=true` so that it can be used by paint.
      */
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     /**
      * @brief Disable the bool `hovered` so that it can be used by paint.
      */
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 protected:
     /**
      * If the item is being dragged (left button is down),
      * snap the cursor guides to the grid.
      */
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void keyPressEvent(QKeyEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     /**
      * @brief Process item changes that should behave uniformly across different
      * object types.

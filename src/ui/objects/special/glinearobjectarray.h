@@ -14,7 +14,6 @@ public:
 
     void reloadFromModel() override;
     void applyToModel() override;
-
 };
 
 #endif // GLINEAROBJECTARRAY_H

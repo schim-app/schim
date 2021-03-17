@@ -66,13 +66,13 @@ public:
 protected slots:
     // USER ACTIONS
     virtual void apply();
-    virtual void accept() override;
-    virtual void reject() override;
+    void accept() override;
+    void reject() override;
 
 protected:
     // EVENTS
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual bool eventFilter(QObject *obj, QEvent *e) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *e) override;
 
 private slots:
     /**

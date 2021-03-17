@@ -54,5 +54,4 @@ void Preferences::loadGlobalConfig()
 
 void Preferences::loadLocalConfig()
 {
-
 }

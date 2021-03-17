@@ -111,7 +111,6 @@ public:
     int columnCount(const QModelIndex &parent = {}) const override;
 
 private:
-
     // HELPERS
     /**
      * @brief Recursively add all subdirectories and subfiles to `parent`.
@@ -125,7 +124,6 @@ private:
     // ATTRIBUTES
     DatabaseItem *rootItem{};
     QString path;
-
 };
 
 #endif // DATABASE_H

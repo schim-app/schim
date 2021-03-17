@@ -15,8 +15,8 @@ public:
     explicit GCompositeObject(CompositeObject *obj);
 
     // GETTERS
-    virtual CompositeObject *get() override;
-    virtual const CompositeObject *get() const override;
+    CompositeObject *get() override;
+    const CompositeObject *get() const override;
 
     // SETTERS
     /**
@@ -38,8 +38,8 @@ protected:
                         const QVariant &value) override;
 
     // OVERRIDE QGraphicsObject
-    virtual QPainterPath shape() const override;
-    virtual QRectF boundingRect() const override;
+    QPainterPath shape() const override;
+    QRectF boundingRect() const override;
 };
 
 #endif // GCOMPOSITEOBJECT_H

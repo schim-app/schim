@@ -15,7 +15,6 @@
  */
 class CompositeObject : public Object, public Entity
 {
-
 public:
     // CONSTRUCTORS
     CompositeObject();
@@ -50,7 +49,6 @@ protected:
     QList<Object *> constituents;
     // TODO determine appropriate container
     QPointF pos{};
-
 };
 
 #endif // COMPOSITEOBJECT_H

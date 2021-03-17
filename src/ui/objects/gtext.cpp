@@ -261,7 +261,7 @@ void GDisplayText::setParentItem(GText *parent)
 
 GText *GDisplayText::parentItem()
 {
-    return (GText *) QGraphicsTextItem::parentItem();
+    return static_cast<GText*>(QGraphicsTextItem::parentItem());
 }
 
 void GText::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)

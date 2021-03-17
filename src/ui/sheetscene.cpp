@@ -105,7 +105,7 @@ void SheetScene::setHeader(Header *hdr, bool destroy)
     if (headerItem != nullptr)
         removeItem(headerItem);
     delete headerItem;
-    headerItem = (GHeader*) GObject::assign(hdr);
+    headerItem = static_cast<GHeader*>(GObject::assign(hdr));
     addItem(headerItem);
 
     // Update model
@@ -424,7 +424,7 @@ void SheetScene::onSelectionChanged()
     // Add potential connection suggestions
     auto selected = selectedItems();
     if (selected.size() == 1 && dynamic_cast<GComponent*>(selected[0]))
-        suggestConnections((GComponent*) selected[0]);
+        suggestConnections(static_cast<GComponent*>(selected[0]));
 }
 
 // EVENTS

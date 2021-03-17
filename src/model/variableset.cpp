@@ -2,5 +2,4 @@
 
 VariableSet::VariableSet()
 {
-
 }

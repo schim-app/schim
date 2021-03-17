@@ -27,9 +27,9 @@ signals:
 
 protected slots:
     // USER ACTIONS
-    virtual void apply() override;
-    virtual void accept() override;
-    virtual void reject() override;
+    void apply() override;
+    void accept() override;
+    void reject() override;
 
 private:
     // HELPERS

@@ -54,7 +54,6 @@ static QMap<QString, QString> actionMap = {
     {"<C-g>", "sheet-settings"},
     {"g<C-g>", "project-settings"},
     // NEW (update)
-
 };
 static QString fullStroke(10);
 static QString bareStroke;

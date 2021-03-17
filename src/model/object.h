@@ -21,7 +21,6 @@ class Sheet;
 class Object
 {
 public:
-
     // CONSTRUCTORS
     /**
      * @brief This destructor does nothing.
