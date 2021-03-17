@@ -31,9 +31,9 @@ public:
     void addProng(float prong);
 
     // OBJECT INTERFACE
-    virtual Object *clone() const override;
-    virtual QPointF getPos() const override;
-    virtual void setPos(const QPointF &pos) override;
+    Object *clone() const override;
+    QPointF getPos() const override;
+    void setPos(const QPointF &pos) override;
 
 private:
     // ATTRIBUTES
@@ -45,7 +45,6 @@ private:
 class Terminal::Prong
 {
 public:
-
     enum Type {
         Simple, Wide
     };
@@ -64,7 +63,6 @@ protected:
 class Terminal::WideProng
 {
 public:
-
 private:
     float angle2 = 0;
 };

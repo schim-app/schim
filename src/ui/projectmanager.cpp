@@ -151,7 +151,6 @@ QModelIndex ProjectManager::index(int row, int column, const QModelIndex &parent
                            static_cast<Project*>(ptr)->getSheets()[row]);
     else
         return {};
-
 }
 
 QModelIndex ProjectManager::parent(const QModelIndex &child) const

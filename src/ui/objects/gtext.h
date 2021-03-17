@@ -29,8 +29,8 @@ public:
     ~GText();
 
     // GETTERS
-    virtual Text *get() override;
-    virtual const Text *get() const override;
+    Text *get() override;
+    const Text *get() const override;
     bool isInEditMode() const;
 
     // OBJECT EDITING

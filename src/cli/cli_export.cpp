@@ -50,7 +50,7 @@ namespace // Local 'private' functions
             // TODO add input formats other than XML
             try
             {
-                Project *project = xmlParseProject(input);
+                project = xmlParseProject(input);
                 pdfWriteProject(project, output);
                 delete project;
             }

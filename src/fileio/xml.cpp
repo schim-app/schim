@@ -202,7 +202,6 @@ Sheet *xmlParseSheet(QXmlStreamReader &stream)
             else if_name("var") sheet->addVariable(xmlParseVariable(stream));
             else sheet->addObject(xmlParseObject(stream));
         )
-
     }
     catch (...)
     {
