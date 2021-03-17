@@ -4,5 +4,4 @@
 
 Device::Device()
 {
-
 }

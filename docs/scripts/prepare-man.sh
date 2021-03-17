@@ -17,11 +17,9 @@ noextension="${src/.rst/}"
 # Name of the command (e.g. file <path>/schim.1 gives schim)
 name="$(basename "$noextension")"
 
-# Create a sequence of # of the same length as the command name
-hashes="$(echo $name | sed 's/./=/g')"
 # Path to descriptions.py file
 desc_path="$(dirname "${BASH_SOURCE[0]}")/../man/descriptions.py"
-description="$(python3 -c "exec(open('$desc_path').read()); print(__get_description('$name'))")"
+description="$(python3 -c "exec(open('$desc_path').read()); print(get_description('$name'))")"
 
 head -4 "$src" > "$dest/$name.rst"
 echo -e "NAME\n====\n\n    $name - $description\n" >> "$dest/$name.rst"

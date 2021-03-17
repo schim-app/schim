@@ -36,7 +36,6 @@ private:
  */
 class CompleterProxyModel : public QAbstractProxyModel
 {
-
 public:
     explicit CompleterProxyModel(QObject *parent = nullptr);
 

@@ -62,7 +62,6 @@ void Terminal::setPos(const QPointF &pos)
 Terminal::Prong::Prong(float angle, Terminal *terminal)
     : angle(angle), terminal(terminal)
 {
-
 }
 
 float Terminal::Prong::getAngle() const

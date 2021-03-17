@@ -42,7 +42,7 @@ SheetView::~SheetView()
 
 SheetScene *SheetView::scene()
 {
-    return (SheetScene*) QGraphicsView::scene();
+    return static_cast<SheetScene*>(QGraphicsView::scene());
 }
 
 // USER ACTIONS

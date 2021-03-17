@@ -16,8 +16,9 @@ public:
     ~ComponentSettings();
 
 private:
-
-    /** @brief Reload the widget with data from the component */
+    /**
+     * @brief Reload the widget with data from the component.
+     */
     void reload();
 
     QString compileDesignator();

@@ -17,8 +17,8 @@ public:
     explicit GRect(Rect *obj = new Rect);
 
     // GETTERS
-    virtual Rect *get() override;
-    virtual const Rect *get() const override;
+    Rect *get() override;
+    const Rect *get() const override;
 
     // OVERRIDDE QGraphicsItem
     QRectF boundingRect() const override;
@@ -34,7 +34,6 @@ public:
     void showHandles(bool show = true) override;
     /** @copybrief GObject::handleChanged */
     void handleChanged(GObjectHandle *handle) override;
-
 };
 
 #endif // GRECT_H

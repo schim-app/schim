@@ -1,8 +1,6 @@
+_build/
+docs/_intermediate/
+__pycache__/
+src/**/ui_*.h
 *.user
 *.bak
-_build/
-**/_build/
-.qmake.stash
-src/**/ui_*.h
-docs/_intermediate
-

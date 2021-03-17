@@ -244,7 +244,6 @@ GObjectHandle::GObjectHandle(GObject *obj)
     _pen.setColor(qApp->palette().color(QPalette::Highlight));
     setPen(_pen);
     setBrush(qApp->palette().color(QPalette::Highlight));
-
 }
 
 SheetScene *GObjectHandle::scene()

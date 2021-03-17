@@ -17,8 +17,8 @@ public:
     explicit GComponent(Component *obj);
 
     // GETTERS
-    virtual Component *get() override;
-    virtual const Component *get() const override;
+    Component *get() override;
+    const Component *get() const override;
 
 private slots:
     void onContextEdit();

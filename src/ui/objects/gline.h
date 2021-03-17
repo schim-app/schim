@@ -19,8 +19,8 @@ public:
     explicit GLine(Line *obj = new Line);
 
     // GETTERS
-    virtual Line *get() override;
-    virtual const Line *get() const override;
+    Line *get() override;
+    const Line *get() const override;
 
     // OBJECT EDITING
     void reloadFromModel() override;
@@ -33,7 +33,6 @@ public:
 protected:
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
 };
 
 #endif // GLINE_H
