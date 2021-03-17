@@ -142,7 +142,7 @@ protected:
      * implementation.
      *
      */
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value)
         override;
 
 public:

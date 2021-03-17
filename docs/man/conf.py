@@ -8,7 +8,7 @@ man_pages = []
 
 # Provides function get_description to load command descriptions for man pages
 sys.path.append(os.path.dirname(__file__))
-from descriptions import *
+from descriptions import get_description
 
 for f in glob.glob('schim*.rst'):
     man_pages.append((
