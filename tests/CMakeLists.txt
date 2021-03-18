@@ -10,7 +10,7 @@ set(CMAKE_AUTOMOC ON)
 
 enable_testing(true)
 
-add_executable(unittests model/deleteme.cpp)
+add_executable(unittests model/tst_line.cpp)
 add_test(unittests unittests)
 
 target_link_libraries(unittests Qt5::Test ${CMAKE_CURRENT_SOURCE_DIR}/../_build/release/libschimlib.a)
