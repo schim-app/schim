@@ -1,18 +1,24 @@
 
-SCHIM_EXECUTABLE ?= 
-ifeq (${SCHIM_EXECUTABLE},)
-  ifneq (${MAKECMDGOALS},clean)
-    $(error Variable SCHIM_EXECUTABLE must be specified!)
-  endif
-endif
+# TODO remove probably
+#SCHIM_EXECUTABLE ?= 
+#ifeq (${SCHIM_EXECUTABLE},)
+#  ifneq (${MAKECMDGOALS},clean)
+#    $(error Variable SCHIM_EXECUTABLE must be specified!)
+#  endif
+#endif
 
 MINIMAL_XML = ../res/examples/minimal.schim
 
 export QT_QPA_PLATFORMTHEME := qt
 
-.PHONY: cli-export
+.PHONY: tests
 
-tests: cli
+tests: 
+	@echo "Building unittests executable"
+	@mkdir -p _build
+	@cd _build && cmake .. && cmake --build .
+
+# TODO The rest of the file shall be moved somewhere else
 
 cli: cli-info cli-export
 

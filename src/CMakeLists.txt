@@ -26,14 +26,14 @@ add_custom_command(
 )
 add_custom_target(dxf DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a)
 
-add_executable(schim
+# This library exists so we can conveniently link to it in unit tests (see [*])
+add_library(schimlib
     fileio/database.cpp 
     fileio/dxf.cpp 
     fileio/miscfiles.cpp 
     fileio/pdf.cpp 
     fileio/xml.cpp 
     global.cpp 
-    main.cpp 
     model/entity.cpp
     model/component.cpp 
     model/compositeobject.cpp 
@@ -94,6 +94,10 @@ add_executable(schim
 ### RESOURCES ###
     ../res/resources.qrc
 )
+add_executable(schim main.cpp)
+# see [*]
+target_link_libraries(schim schimlib)
+
 if (WIN32)
     target_link_options(schim PRIVATE -mwindows)
 endif()
@@ -105,7 +109,7 @@ add_library(dxflib STATIC IMPORTED)
 set_target_properties(dxflib PROPERTIES
     IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a"
 )
-target_link_libraries(schim
+target_link_libraries(schimlib
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
