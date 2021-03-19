@@ -1,18 +1,25 @@
 
-SCHIM_EXECUTABLE ?= 
-ifeq (${SCHIM_EXECUTABLE},)
-  ifneq (${MAKECMDGOALS},clean)
-    $(error Variable SCHIM_EXECUTABLE must be specified!)
-  endif
-endif
+# TODO remove probably
+#SCHIM_EXECUTABLE ?= 
+#ifeq (${SCHIM_EXECUTABLE},)
+#  ifneq (${MAKECMDGOALS},clean)
+#    $(error Variable SCHIM_EXECUTABLE must be specified!)
+#  endif
+#endif
+JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).*_\2_p')
 
 MINIMAL_XML = ../res/examples/minimal.schim
 
 export QT_QPA_PLATFORMTHEME := qt
 
-.PHONY: cli-export
+.PHONY: tests
 
-tests: cli
+tests: 
+	@echo "Building unittests executable"
+	@mkdir -p _build/cov
+	@cd _build && cmake .. && cmake --build . -j ${JOBS}
+
+# TODO The rest of the file shall be moved somewhere else
 
 cli: cli-info cli-export
 
