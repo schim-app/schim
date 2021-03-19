@@ -6,6 +6,7 @@
 #    $(error Variable SCHIM_EXECUTABLE must be specified!)
 #  endif
 #endif
+JOBS = $(shell echo ${MAKEFLAGS} | sed -n 's_.*\(-j\|--jobs=\) *\([0-9][0-9]*\).*_\2_p')
 
 MINIMAL_XML = ../res/examples/minimal.schim
 
@@ -15,8 +16,8 @@ export QT_QPA_PLATFORMTHEME := qt
 
 tests: 
 	@echo "Building unittests executable"
-	@mkdir -p _build
-	@cd _build && cmake .. && cmake --build .
+	@mkdir -p _build/cov
+	@cd _build && cmake .. && cmake --build . -j ${JOBS}
 
 # TODO The rest of the file shall be moved somewhere else
 

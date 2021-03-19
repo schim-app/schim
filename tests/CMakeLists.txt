@@ -1,17 +1,29 @@
 cmake_minimum_required(VERSION 3.5)
 project(unittests LANGUAGES CXX)
 
-find_package(Qt5Test REQUIRED)
+# Configuration
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 
-include_directories(../src)
+# Variables
+set(QT_VERSION_MAJOR 5)
+set(QT_VERSION 5.9)
+set(EXECUTABLE ${CMAKE_PROJECT_NAME})
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/../src)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
+# Find QtTest library
+find_package(Qt5 5.9 COMPONENTS Test REQUIRED)
+
+include_directories(${SRC_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+include(${SRC_DIR}/common.cmake)
+target_sources(${EXECUTABLE} PRIVATE
+    model/tst_line.cpp
+)
 
 enable_testing(true)
+add_test(${EXECUTABLE} ${EXECUTABLE})
 
-add_executable(unittests model/tst_line.cpp)
-add_test(unittests unittests)
-
-target_link_libraries(unittests Qt5::Test ${CMAKE_CURRENT_SOURCE_DIR}/../_build/release/libschimlib.a)
-
+target_link_libraries(${EXECUTABLE} Qt5::Test)
