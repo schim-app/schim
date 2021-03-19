@@ -22,7 +22,6 @@ jobs:
         run: |
           QT_QPA_PLATFORM=offscreen tests/_build/unittests
           lcov -c -d tests/_build/ -o coverage.info --exclude '/usr/*' --exclude '*dxflib*' --exclude '*_build/unittests_autogen*'
-          cat coverage.info
           lcov --list coverage.info
       - name: Upload to Codecov
         run: bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
