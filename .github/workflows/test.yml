@@ -20,7 +20,7 @@ jobs:
         run: cd tests && make tests
       - name: Run tests
         run: |
-          QT_DEBUG_PLUGINS=1 tests/_build/unittests
+          QT_QPA_PLATFORM=offscreen QT_DEBUG_PLUGINS=1 tests/_build/unittests
           lcov -c -d tests/_build/ -o coverage.info --exclude '/usr/*' --exclude '*dxflib*' --exclude '*_build/unittests_autogen*'
           lcov --list coverage.info
       - name: Upload to Codecov
