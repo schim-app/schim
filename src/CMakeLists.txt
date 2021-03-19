@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(schim VERSION $ENV{VERSION} LANGUAGES CXX)
+if(DEFINED ENV{VERSION})
+    project(schim VERSION $ENV{VERSION} LANGUAGES CXX)
+else()
+    project(schim LANGUAGES CXX)
+endif()
 
 # Variables
 set(QT_VERSION_MAJOR 5)

@@ -99,18 +99,19 @@ add_custom_command(
     # TODO I don't know why it compiles inside release/ on Windows
     COMMAND cp dxflib/release/libdxflib.a dxflib/ || true
 )
-add_custom_target(dxf DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a)
+add_custom_target(dxfbuild DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a)
 
-# Create dependency on generated dxf
-add_dependencies(${EXECUTABLE} dxf)
+# Create dependency on generated dxflib
+add_dependencies(${EXECUTABLE} dxfbuild)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/dxflib)
 add_library(dxflib STATIC IMPORTED)
 set_target_properties(dxflib PROPERTIES
     IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a"
 )
 
+# Link dependencies
+
 target_link_libraries(${EXECUTABLE}
-    # Dependencies of schim
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
