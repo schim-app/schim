@@ -15,12 +15,12 @@ jobs:
           submodules: 'recursive'
       - name: Install dependencies
         run: |
-          sudo apt-get install bash cmake qt5-default qttools5-dev libqt5help5 libqt5svg5 libqt5svg5-dev libqt5test5 libxcb1-dev libxcb1 libxcb-xinerama0 lcov
+          sudo apt-get install bash cmake qt5-default qttools5-dev libqt5help5 libqt5svg5 libqt5svg5-dev libqt5test5 lcov
       - name: Build tests
         run: cd tests && make tests
       - name: Run tests
         run: |
-          QT_QPA_PLATFORM=offscreen QT_DEBUG_PLUGINS=1 tests/_build/unittests
+          QT_QPA_PLATFORM=offscreen tests/_build/unittests
           lcov -c -d tests/_build/ -o coverage.info --exclude '/usr/*' --exclude '*dxflib*' --exclude '*_build/unittests_autogen*'
           lcov --list coverage.info
       - name: Upload to Codecov
