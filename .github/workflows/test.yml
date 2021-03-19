@@ -15,7 +15,7 @@ jobs:
           submodules: 'recursive'
       - name: Install dependencies
         run: |
-          sudo apt-get install bash cmake qt5-default qttools5-dev libqt5help5 libqt5svg5 libqt5svg5-dev lcov
+          sudo apt-get install bash cmake qt5-default qttools5-dev libqt5help5 libqt5svg5 libqt5svg5-dev libqt5test5 lcov
       - name: Build tests
         run: cd tests && make tests
       - name: Run tests
