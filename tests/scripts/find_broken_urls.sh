@@ -33,3 +33,4 @@ for file in $files; do
 done
 
 echo "END."; echo "Bad URLs: $bad_count"
+[ $bad_count == 0 ] || exit 1
