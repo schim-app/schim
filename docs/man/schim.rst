@@ -69,7 +69,7 @@ graphical editor.
 REPORTING BUGS
 ==============
 
-Report all bugs on `<https://github.com/HarisGusic/schim/issues>`_.
+Report all bugs on `<https://github.com/schim-app/schim/issues>`_.
 
 SEE ALSO
 ========

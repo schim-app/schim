@@ -25,3 +25,14 @@ jobs:
           lcov --list coverage.info
       - name: Upload to Codecov
         run: bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+
+  test-urls:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Find broken URLs
+        run: tests/scripts/find_broken_urls.sh

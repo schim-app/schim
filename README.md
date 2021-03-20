@@ -57,7 +57,7 @@ TODO: Make AUR repo
 ### Cloning
 
 ```shell
-git clone --recurse-submodules 'https://github.com/HarisGusic/schim'
+git clone --recurse-submodules 'https://github.com/schim-app/schim'
 ```
 
 ### Build dependencies (TODO check versions)
