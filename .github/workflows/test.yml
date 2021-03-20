@@ -35,4 +35,4 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Find broken URLs
-        run: sudo tests/scripts/find_broken_urls.sh
+        run: tests/scripts/find_broken_urls.sh
