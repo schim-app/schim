@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc='An electrical schematic editor for the modern computer user'
 arch=('x86_64')
 url='https://github.com/schim-app/schim'
-license=('TBD')
+license=('GPL3')
 # TODO figure out what to do with dxflib dependency
 depends=('qt5-base')
 makedepends=('git')
@@ -20,5 +20,5 @@ prepare() {
 
 package() {
 	cd "$srcdir/$pkgname"
-	make install INSTALL_DIR="$pkgdir"/usr
+	make install PREFIX="$pkgdir"/usr
 }

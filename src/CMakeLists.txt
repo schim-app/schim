@@ -10,8 +10,10 @@ endif()
 set(QT_VERSION_MAJOR 5)
 set(QT_VERSION 5.9)
 set(EXECUTABLE schim)
-set(SRC_DIR ${CMAKE_SOURCE_DIR})
+set(SRC_DIR "${CMAKE_SOURCE_DIR}")
 
 include(common.cmake)
 target_sources(${EXECUTABLE} PRIVATE main.cpp)
 
+# This is just for those using Vim with YouCompleteMe :)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

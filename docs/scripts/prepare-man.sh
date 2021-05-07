@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Add NAME section for man page when displayed as HTML.
 # The source rst files for the man pages do not include this section -- it is added
@@ -13,14 +13,14 @@ src="$1"
 dest="$2"
 
 # File name without extension (e.g. file <path>/schim.1 gives <path>/schim)
-noextension="${src/.rst/}"
+noextension="${src%.rst}"
 # Name of the command (e.g. file <path>/schim.1 gives schim)
 name="$(basename "$noextension")"
 
 # Path to descriptions.py file
-desc_path="$(dirname "${BASH_SOURCE[0]}")/../man/descriptions.py"
-description="$(python3 -c "exec(open('$desc_path').read()); print(get_description('$name'))")"
+desc_file="$(dirname "$0")/../man/descriptions.py"
+description="$(python3 "$desc_file" "$name")"
 
 head -4 "$src" > "$dest/$name.rst"
-echo -e "NAME\n====\n\n    $name - $description\n" >> "$dest/$name.rst"
+echo "NAME\n====\n\n    $name - $description\n" >> "$dest/$name.rst"
 tail +5 "$src" >> "$dest/$name.rst"

@@ -88,18 +88,11 @@ cd _build/release/;
 ./schim.sh
 ```
 
-If you wish to install Schim into a custom directory, run the following command:
+If you wish to install Schim on your system, run the following commands:
 
 ```shell
-make install INSTALL_DIR=<DIR>
-```
-
-replacing `<DIR>` with the desired destination directory. This will create a
-directory structure inside `<DIR>` mimicking `/` on a Linux system. In this
-case, the application can be run as:
-```shell
-cd <DIR>/bin/;
-./schim
+make
+sudo make install
 ```
 
 ## Contributing

@@ -18,7 +18,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 configure_file(${SRC_DIR}/symbols.h.in symbols.h @ONLY)
 
 add_executable(${EXECUTABLE}
@@ -103,7 +103,7 @@ add_custom_target(dxfbuild DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.
 
 # Create dependency on generated dxflib
 add_dependencies(${EXECUTABLE} dxfbuild)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/dxflib)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/dxflib")
 add_library(dxflib STATIC IMPORTED)
 set_target_properties(dxflib PROPERTIES
     IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dxflib/libdxflib.a"
