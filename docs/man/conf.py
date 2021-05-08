@@ -1,6 +1,4 @@
-import glob
-import sys
-import os
+import glob, sys, os
 
 project = 'Schim Manual' # Displayed on top of a manpage when viewed in man
 

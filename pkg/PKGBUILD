@@ -20,5 +20,5 @@ prepare() {
 
 package() {
 	cd "$srcdir/$pkgname"
-	make install PREFIX="$pkgdir"/usr
+	make install PREFIX=/usr DESTDIR="$pkgdir"
 }
