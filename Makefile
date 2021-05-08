@@ -74,8 +74,7 @@ qthelp:
 	@echo "Help files successfully generated."
 
 man:
-	mkdir -p "${BUILD_DIR}/dest/${SHARE_DIR}"
-	cd docs/ && make man
+	cd docs/ && "${MAKE}" man
 
 # ┏━━━━━━━━━━━━┓
 # ┃ DEPLOYMENT ┃
@@ -85,8 +84,8 @@ install: man
 	@echo -e "\033[1;35mInstallation directory is: ${DESTDIR}\e[0m"
 	@echo "Copying files to installation directory..."
 	@umask 022
-	@mkdir -p "${DESTDIR}/${PREFIX}/${MAN_DIR}"
-	@# PREFIX can be the same as BUILD_DIR
+	@mkdir -p "${DESTDIR}/${PREFIX}/${MAN_DIR}" \
+			  "${DESTDIR}/${PREFIX}/${DOC_DIR}"
 	@cp -r "${BUILD_DIR}"/dest/** "${DESTDIR}/${PREFIX}" 2>/dev/null || true
 	@cp docs/_build/man/*.1* "${DESTDIR}/${PREFIX}/${MAN_DIR}" 				# Manpages
 	@cp -r res/examples "${DESTDIR}/${PREFIX}/${SHARE_DIR}"    				# Examples
